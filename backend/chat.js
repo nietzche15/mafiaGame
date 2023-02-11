@@ -1,5 +1,6 @@
 const chat = require("../socket");
 
+// 로비 채팅
 chat.on("connection", async (socket) => {
   socket.on("enterLobby", (nickname, cb) => {
     console.log(`${nickname} 로비 입장`);
@@ -17,7 +18,7 @@ chat.on("connection", async (socket) => {
     cb();
   });
 
-  // 룸 입장 메세지
+  // 방
   socket.on("enterRoomMsg", (roomNum, nickname, cb) => {
     console.log(`${nickname} ${roomNum}번 방 입장(enterRoomMsg)`);
     const msg = `${nickname} 님이 입장하셨습니다.`;
