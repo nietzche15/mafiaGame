@@ -1,45 +1,39 @@
-import { Box, Checkbox, Slider, Stack, Typography } from "@mui/material";
-import VolumeDown from "@mui/icons-material/VolumeDown";
-import VolumeUp from "@mui/icons-material/VolumeUp";
+import React from "react";
+import { Box, Checkbox, Typography } from "@mui/material";
+// import VolumeDown from "@mui/icons-material/VolumeDown";
+// import VolumeUp from "@mui/icons-material/VolumeUp";
 import JobMemo from "./JobMemo";
 import Vote from "./Vote";
-import Target from "./Target";
+// import Vote from "./Vote";
+// import Target from "./Target";
 
 export default function Video() {
   return (
-    <Box sx={{ width: "200px", p: 1 }}>
-      <Box
-        sx={{
-          display: "grid",
-          alignItems: "center",
-          justifyItems: "center",
-        }}
-      >
-        <Box sx={{ width: "150px", height: "150px", backgroundColor: "red" }}>
-          <Box></Box>
-        </Box>
-        {/* <Box
+    <Box p={1}>
+      <Box>
+        <Box
+          sx={{ width: "200px", height: "200px", backgroundColor: "#E4D9C6" }}
+        />
+        <Box
           sx={{
+            mt: 1,
+            width: "200px",
             display: "flex",
             alignItems: "center",
             justifyItems: "center",
+            backgroundColor: "#D9D9D9",
           }}
-        >
-          <VolumeDown />
-          <Slider sx={{ width: "50px", mr: 1, ml: 1 }} />
-          <VolumeUp />
-        </Box> */}
-        <Box
-          sx={{ display: "flex", alignItems: "center", justifyItems: "center" }}
         >
           <Typography variant="h7" component="div">
             닉네임
           </Typography>
-          <Checkbox />
+          <Checkbox disabled sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }} />
         </Box>
-        <Box sx={{ width: "200px" }}>
+        <Box sx={{ width: "200px", backgroundColor: "#D9D9D9", mt: 1 }}>
           <JobMemo />
-          <JobMemo />
+        </Box>
+        <Box sx={{ width: "200px", backgroundColor: "#D9D9D9", mt: 1 }}>
+          <Vote />
         </Box>
       </Box>
     </Box>
