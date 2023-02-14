@@ -12,7 +12,7 @@ export default function JobMemo() {
     setJob(event.target.value);
   };
   return (
-    <Box sx={{ minWidth: 20 }}>
+    <Box sx={{ width: "200px" }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">직업메모</InputLabel>
         <Select
