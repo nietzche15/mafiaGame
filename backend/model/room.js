@@ -26,7 +26,7 @@ const RoomSchema = new Schema({
     default: null,
   },
   // 방장
-  roomMaster: {
+  roomCaptain: {
     type: String,
     required: false,
     default: null,
