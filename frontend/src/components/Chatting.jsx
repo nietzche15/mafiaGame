@@ -1,25 +1,22 @@
-import { Box } from "@mui/material";
-import React from "react";
-import MyChatting from "./MyChatting";
-import ChattingText from "./ChattingText";
-import SystemCahtting from "./SystemCahtting";
-import Timer from "./Timer";
+import { Box } from '@mui/material';
+import React from 'react';
+import MyChatting from './MyChatting';
+import ChattingText from './ChattingText';
+import SystemCahtting from './SystemCahtting';
+import Timer from './Timer';
 
 export default function Chatting() {
   return (
     <Box
       sx={{
-        width: "800px",
-        height: "100vh",
-        backgroundColor: "#8B7F70",
+        height: '100%',
+        width: '900px',
+        backgroundColor: '#8B7F70',
+        borderRadius: '10px',
       }}
     >
       <Box>
-        <Box
-          sx={{
-            p: 1,
-          }}
-        >
+        <Box>
           <Timer />
         </Box>
         <Box>
@@ -27,7 +24,7 @@ export default function Chatting() {
         </Box>
 
         <MyChatting />
-        <Box sx={{ position: "absolute", bottom: -69 }}>
+        <Box>
           <ChattingText />
         </Box>
       </Box>
