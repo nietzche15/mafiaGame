@@ -12,7 +12,7 @@ export default function Vote() {
     setJob(event.target.value);
   };
   return (
-    <Box sx={{ minWidth: 15 }}>
+    <Box sx={{ minWidth: 15, display: "none" }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">투표</InputLabel>
         <Select
