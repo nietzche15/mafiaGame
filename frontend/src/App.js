@@ -1,4 +1,3 @@
-<<<<<<< HEAD:frontend/src/App.js
 import { Routes, Route, Link } from 'react-router-dom';
 import GamePage from "./pages/GamePage";
 import Main from "./components/Main"
@@ -19,17 +18,5 @@ function App() {
         <Route path='/*' element={<Notfound />} />
       </Routes>
     </>
-=======
-import React from "react";
-import GamePage from "./pages/GamePage";
-
-function App() {
-  return (
-    <div>
-      <GamePage />
-    </div>
->>>>>>> develop:frontend/src/App.jsx
   );
 }
-
-export default App;
