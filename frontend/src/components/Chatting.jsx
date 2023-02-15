@@ -15,18 +15,17 @@ export default function Chatting() {
         borderRadius: '10px',
       }}
     >
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Timer />
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <SystemCahtting />
+      </Box>
       <Box>
-        <Box>
-          <Timer />
-        </Box>
-        <Box>
-          <SystemCahtting />
-        </Box>
-
         <MyChatting />
-        <Box>
-          <ChattingText />
-        </Box>
+      </Box>
+      <Box sx={{ mt: 89 }}>
+        <ChattingText />
       </Box>
     </Box>
   );
