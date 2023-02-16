@@ -1,5 +1,7 @@
 import React from 'react'
 import './styles/lobby.css';
+import { Link } from "react-router-dom";
+
 export default function Lobby() {
 
     return (
@@ -10,7 +12,8 @@ export default function Lobby() {
             </div>
             <div className='right'>
                 <div className='button'>방 생성</div><br />
-                <div className='button'>마이 페이지</div>
+                <div className='button'>
+                    <Link to='/mypage'>마이 페이지</Link></div>
             </div>
         </div >
     )

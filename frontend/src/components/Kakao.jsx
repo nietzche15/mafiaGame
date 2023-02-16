@@ -21,6 +21,7 @@ export default function Kakao() {
                 }
             })
         console.log(res2.data.kakao_account.email)
+        location.href = 'http://localhost:3000/lobby'
     }, [])
     // const a = await axios.post();
     // const b = await axios.post(a);
