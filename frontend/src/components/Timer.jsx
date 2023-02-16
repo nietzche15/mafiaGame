@@ -1,9 +1,29 @@
 import { Box, Button } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
-export default function Timer() {
+export default function Timer({ setChange }) {
   const [counts, setCount] = useState(60);
 
+  const timeControl = (isUp) => {
+    setChange({ isUp });
+    if (isUp) {
+      setCount((prev) => {
+        if (prev > 80) {
+          alert('증가불가');
+
+          return 80;
+        }
+        return prev + 10;
+      });
+    } else {
+      setCount((prev) => {
+        if (prev < 10) {
+          return 0;
+        }
+        return prev - 10;
+      });
+    }
+  };
   useEffect(() => {
     const id = setInterval(() => {
       setCount((prev) => {
@@ -19,28 +39,14 @@ export default function Timer() {
     return () => clearInterval(id);
   }, [counts]);
 
-  const timeUp = () =>
-    setCount((prev) => {
-      if (prev > 80) {
-        alert('증가불가');
-        return 80;
-      }
-      return prev + 10;
-    });
-  const timeDown = () =>
-    setCount((prev) => {
-      if (prev < 10) {
-        return 0;
-      }
-      return prev - 10;
-    });
-
   return (
     <Box>
       <Button
         variant="contained"
         sx={{ m: 1, backgroundColor: '#940404' }}
-        onClick={timeUp}
+        onClick={() => {
+          timeControl(true);
+        }}
       >
         +10
       </Button>
@@ -48,7 +54,9 @@ export default function Timer() {
       <Button
         variant="contained"
         sx={{ m: 1, backgroundColor: '#940404' }}
-        onClick={timeDown}
+        onClick={() => {
+          timeControl(false);
+        }}
       >
         -10
       </Button>

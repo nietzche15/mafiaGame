@@ -7,7 +7,7 @@ import Vote from './Vote';
 // import Vote from "./Vote";
 // import Target from "./Target";
 
-export default function Video() {
+export default function Video(props) {
   return (
     <Box
       sx={{
@@ -33,7 +33,7 @@ export default function Video() {
           }}
         >
           <Typography variant="h7" component="div">
-            닉네임
+            {props.name}
           </Typography>
           <Checkbox disabled sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }} />
         </Box>
