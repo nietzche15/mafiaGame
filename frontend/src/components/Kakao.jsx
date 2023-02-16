@@ -1,58 +1,41 @@
-import React from "react";
-import { useEffect } from "react";
-import axios from "axios";
-import qs from "qs";
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from "react";
+import axios from 'axios';
 
 export default function Kakao() {
-
-    const code2 = new URL(window.location.href).searchParams.get("code");
-    console.log('code2 : ' + code2)
-
-    const Auth = () => {
-        const REST_API_KEY = `${process.env.REACT_APP_REST_API_KEY}`;
-        const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URI}`;
-        const CLIENT_SECRET = `${process.env.REACT_APP_CLIENT_SECRET}`;
-        // calllback으로 받은 인가코드
+    useEffect(async () => {
         const code = new URL(window.location.href).searchParams.get("code");
-        const navigate = useNavigate();
-        const getToken = async () => {
-            const payload = qs.stringify({
-                grant_type: "authorization_code",
-                client_id: REST_API_KEY,
-                redirect_uri: REDIRECT_URI,
-                code: code,
-                client_secret: CLIENT_SECRET,
-            });
-            console.log(code)
-            try {
-                // access token 가져오기
-                const res = await axios.post(
-                    "https://kauth.kakao.com/oauth/token",
-                    payload
-                );
+        let grant_type = "authorization_code";
+        let client_id = "ec651559127139e56f9dc2e455e69667";
+        let redirect = 'http://localhost:3000/kakao';
+        const res = await axios.post(`https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirect}&code=${code}`,
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+        const res2 = await axios.get("https://kapi.kakao.com/v2/user/me",
+            {
+                headers: {
+                    'Authorization': `Bearer ${res.data.access_token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+                }
+            })
+        console.log(res2.data.kakao_account.email)
+    }, [])
+    // const a = await axios.post();
+    // const b = await axios.post(a);
 
-                // Kakao Javascript SDK 초기화
-                window.Kakao.init(REST_API_KEY);
-                // access token 설정
-                window.Kakao.Auth.setAccessToken(res.data.access_token);
-                navigate.replace("/profile");
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        useEffect(() => {
-            getToken();
-        }, []);
+    const API = 'ec651559127139e56f9dc2e455e69667';
+    const logout = 'http://localhost:3000';
+
+    function kakaoLogout() {
+        location.href = `https://kauth.kakao.com/oauth/logout?client_id=${API}&logout_redirect_uri=${logout}`
     }
 
-
-
-    // const code = new URL(window.location.href).searchParams.get("code")
-
-
     return (
-        <div>g</div>
+        <div>카카오로그인
+            <button onClick={kakaoLogout}>로그아웃</button>
+        </div>
 
     )
 }

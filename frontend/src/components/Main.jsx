@@ -2,9 +2,7 @@ import React, { useRef, useState } from "react";
 import axios from "axios";
 import "./styles/main.css";
 export default function Main() {
-    // const REST_API_KEY = 'ec651559127139e56f9dc2e455e69667';
-    // const REDIRECT_URI = 'http://localhost:3000/kakao';
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=openid,account_email,talk_message`;
 
     const kakaoLogin = () => {
         window.location.href = KAKAO_AUTH_URL;
