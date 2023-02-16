@@ -24,6 +24,7 @@ io.on('connection', (socket) => {
     socket
       .in(roomName)
       .emit('joinNotice', `${socket.id} 님이 접속하셨네요. 할 일 없는 듯`);
+    socket.in(roomName).emit('joinName', `${socket.id}`);
   });
 
   // 같은 방 입장한 회원 분류 roomID - socket.id
