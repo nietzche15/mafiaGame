@@ -13,19 +13,28 @@ export default function Chatting() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    socket.connect();
-    if (!socket.hasListeners('joinNotice')) {
-      socket.on('joinNotice', function (message) {
-        setMessages((prev) => [...prev, message]);
-      });
-    }
-    return () => {
-      if (socket.hasListeners('joinNotice')) {
-        socket.off('joinNotice');
-      }
-      socket.disconnect();
-    };
+    socket.emit('joinRoom', 'test');
+    socket.on('joinNotice', function (message) {
+      console.log(message);
+      setMessages((prev) => [...prev, message]);
+    });
   }, []);
+
+  // useEffect(() => {
+  //   socket.connect();
+  //   if (!socket.hasListeners('disconnect')) {
+  //     socket.on('disconnect', function (message) {
+  //       console.log(message);
+  //       setMessages((prev) => [...prev, message]);
+  //     });
+  //   }
+  //   return () => {
+  //     socket.disconnect();
+  //     if (socket.hasListeners('disconnect')) {
+  //       socket.off('disconnect');
+  //     }
+  //   };
+  // }, []);
 
   return (
     <Box
@@ -40,12 +49,14 @@ export default function Chatting() {
         <Timer setChange={setChange} />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        {messages.map((msg, index) => (
-          <SystemCahtting change={change} key={index}>
-            {msg}
-          </SystemCahtting>
-        ))}
-        {/* <SystemCahtting change={change} />a  */}
+        <Box>
+          {messages.map((msg, index) => (
+            <SystemCahtting change={change} key={index}>
+              {msg}
+            </SystemCahtting>
+          ))}
+          {/* <SystemCahtting change={change} />a  */}
+        </Box>
       </Box>
       <Box>
         <NotMyChatting />

@@ -1,12 +1,12 @@
 import { Box, Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
-import { socket } from '../utils/socket';
+// import { socket } from '../utils/socket';
 
 export default function ChattingText() {
   const [value, setValue] = useState('');
   const handleChange = (event) => setValue(event.target.value);
   const handleSubmit = () => {
-    socket.emit('join', value);
+    // socket.emit('join', value);
   };
 
   return (

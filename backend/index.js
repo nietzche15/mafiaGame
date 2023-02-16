@@ -17,15 +17,22 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('Server Socket Connected', socket.id);
 
-  socket.emit('joinNotice', `${socket.id} 님이 접속하셨네요. 할일없는듯`);
+  let roomName;
+  socket.on('joinRoom', function (n) {
+    socket.join(n);
+    roomName = n;
+    socket
+      .in(roomName)
+      .emit('joinNotice', `${socket.id} 님이 접속하셨네요. 할 일 없는 듯`);
+  });
+
   // 같은 방 입장한 회원 분류 roomID - socket.id
   // socket.on('join', function (message) {
   //   console.log(message);
   // });
 
   socket.on('disconnect', () => {
-    console.log(`${socket.id}님과 연결이 끊어졌어요.`);
-    // delete
+    socket.emit(`${socket.id}님은 우리 게임을 떠나셨어요.`);
   });
 });
 
