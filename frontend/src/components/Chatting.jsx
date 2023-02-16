@@ -12,14 +12,6 @@ export default function Chatting() {
   const [change, setChange] = useState(false);
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    socket.emit('joinRoom', 'test');
-    socket.on('joinNotice', function (message) {
-      console.log(message);
-      setMessages((prev) => [...prev, message]);
-    });
-  }, []);
-
   // useEffect(() => {
   //   socket.connect();
   //   if (!socket.hasListeners('disconnect')) {
