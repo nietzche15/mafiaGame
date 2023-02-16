@@ -4,6 +4,15 @@ import MyChatting from './MyChatting';
 import ChattingText from './ChattingText';
 import SystemCahtting from './SystemCahtting';
 import Timer from './Timer';
+import { io } from 'socket.io-client';
+
+let socket = io.connect('http://localhost:4000', {
+  cors: { origin: '*' },
+});
+
+socket.on('connect', () => {
+  console.log('Server connected');
+});
 
 export default function Chatting() {
   return (

@@ -8,7 +8,7 @@ export default function GamePage() {
   const [users, setUsers] = useState([]);
   return (
     <Box sx={{ backgroundColor: '#2B1D23', p: 2 }}>
-      <Box item xs={12}>
+      <Box xs={12}>
         <ButtonGroup />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
