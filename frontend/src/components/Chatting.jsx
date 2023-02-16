@@ -5,16 +5,11 @@ import ChattingText from './ChattingText';
 import SystemCahtting from './SystemCahtting';
 import Timer from './Timer';
 import { io } from 'socket.io-client';
+import { useState } from 'react';
+import NotMyChatting from './NotMyChatting';
 
-let socket = io.connect('http://localhost:4000', {
-  cors: { origin: '*' },
-});
-
-socket.on('connect', () => {
-  console.log('Server connected');
-});
-
-export default function Chatting() {
+export default function Chatting(props) {
+  const [change, setChange] = useState(false);
   return (
     <Box
       sx={{
@@ -25,10 +20,13 @@ export default function Chatting() {
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Timer />
+        <Timer setChange={setChange} />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <SystemCahtting />
+        <SystemCahtting change={change}> {props.time} </SystemCahtting>
+      </Box>
+      <Box>
+        <NotMyChatting />
       </Box>
       <Box>
         <MyChatting />

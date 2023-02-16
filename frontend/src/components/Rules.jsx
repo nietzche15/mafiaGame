@@ -1,7 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export default function Rules() {
-    return (
-        <div>Rules</div>
-    )
+  return <div>Rules</div>;
 }

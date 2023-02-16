@@ -18,14 +18,16 @@ io.on('connection', (socket) => {
   console.log('Server Socket Connected', socket.id);
 
   // 같은 방 입장한 회원 분류 roomID - socket.id
-  socket.on('join', function (roomID) {
-    let rooms = io.sockets.adapter.rooms;
-    let room = rooms.get(roomID);
+  socket.on('join', function (message) {
+    console.log(message);
+    // const rooms = io.sockets.adapter.rooms;
+    // const room = rooms.get(roomID);
   });
 
-  socket.on('disconnect', () => {
-    console.log('Server  Socket disconnected');
+  socket.emit('sendJoinMessage', socket.id);
 
+  socket.on('disconnect', () => {
+    console.log('Server Socket disconnected');
     // delete
   });
 });
