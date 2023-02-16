@@ -8,6 +8,7 @@ export default function ChattingText() {
   const handleSubmit = () => {
     socket.emit('join', value);
   };
+
   return (
     <Box
       sx={{

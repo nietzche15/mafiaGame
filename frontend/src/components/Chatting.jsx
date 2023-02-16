@@ -1,15 +1,32 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import MyChatting from './MyChatting';
 import ChattingText from './ChattingText';
 import SystemCahtting from './SystemCahtting';
 import Timer from './Timer';
-import { io } from 'socket.io-client';
+import { socket } from '../utils/socket';
 import { useState } from 'react';
 import NotMyChatting from './NotMyChatting';
 
-export default function Chatting(props) {
+export default function Chatting() {
   const [change, setChange] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    socket.connect();
+    if (!socket.hasListeners('joinNotice')) {
+      socket.on('joinNotice', function (message) {
+        setMessages((prev) => [...prev, message]);
+      });
+    }
+    return () => {
+      if (socket.hasListeners('joinNotice')) {
+        socket.off('joinNotice');
+      }
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <Box
       sx={{
@@ -23,7 +40,12 @@ export default function Chatting(props) {
         <Timer setChange={setChange} />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <SystemCahtting change={change}> {props.time} </SystemCahtting>
+        {messages.map((msg, index) => (
+          <SystemCahtting change={change} key={index}>
+            {msg}
+          </SystemCahtting>
+        ))}
+        {/* <SystemCahtting change={change} />a  */}
       </Box>
       <Box>
         <NotMyChatting />
