@@ -2,95 +2,59 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Insert title here</title>
-    <style type="text/css">
-        #fullscreen {
-            width: 600px;
-            height: 600px;
-            background-color: grey;
-        }
-
-        #screen1 {
-            width: 200px;
-            height: 600px;
-            background-color: black;
-            float: left;
-        }
-
-        #screen1-1 {
-            width: 200px;
-            height: 500px;
-            background-color: rgb(255, 0, 0);
-        }
-
-        #screen1-2 {
-            width: 200px;
-            height: 100px;
-            background-color: yellow;
-        }
-
-        #screen2 {
-            width: 200px;
-            height: 600px;
-            background-color: black;
-            float: left;
-        }
-
-        #screen2-1 {
-            width: 200px;
-            height: 200px;
-            background-color: blue;
-        }
-
-        #screen2-2 {
-            width: 200px;
-            height: 400px;
-            background-color: green;
-        }
-
-        #screen3 {
-            width: 200px;
-            height: 600px;
-            background-color: black;
-            float: left;
-        }
-
-        #screen3-1 {
-            width: 200px;
-            height: 300px;
-            background-color: black;
-        }
-
-        #screen3-2 {
-            width: 200px;
-            height: 300px;
-            background-color: pink;
-        }
-    </style>
+    <!-- content에 자신의 OAuth2.0 클라이언트ID를 넣습니다. -->
+    <meta name="google-signin-client_id"
+        content="954763838673-6gv021b89hochcg8qi3lfdssdaetnj7m.apps.googleusercontent.com">
 </head>
 
 <body>
-    <div id="fullscreen">
-        <div id="screen1">
-            <div id="screen1-1">
-            </div>
-            <div id="screen1-2">
-            </div>
-        </div>
-        <div id="screen2">
-            <div id="screen2-1">
-            </div>
-            <div id="screen2-2">
-            </div>
-        </div>
-        <div id="screen3">
-            <div id="screen3-1">
-            </div>
-            <div id="screen3-2">
-            </div>
-        </div>
-    </div>
+    <ul>
+        <li id="GgCustomLogin">
+            <a href="javascript:void(0)">
+                <span>Login with Google</span>
+            </a>
+        </li>
+    </ul>
+    <script>
+
+        //처음 실행하는 함수
+        function init() {
+            gapi.load('auth2', function () {
+                gapi.auth2.init();
+                options = new gapi.auth2.SigninOptionsBuilder();
+                options.setPrompt('select_account');
+                // 추가는 Oauth 승인 권한 추가 후 띄어쓰기 기준으로 추가
+                options.setScope('email profile openid https://www.googleapis.com/auth/user.birthday.read');
+                // 인스턴스의 함수 호출 - element에 로그인 기능 추가
+                // GgCustomLogin은 li태그안에 있는 ID, 위에 설정한 options와 아래 성공,실패시 실행하는 함수들
+                gapi.auth2.getAuthInstance().attachClickHandler('GgCustomLogin', options, onSignIn, onSignInFailure);
+            })
+        }
+
+        function onSignIn(googleUser) {
+            var access_token = googleUser.getAuthResponse().access_token
+            $.ajax({
+                // people api를 이용하여 프로필 및 생년월일에 대한 선택동의후 가져온다.
+                url: 'https://people.googleapis.com/v1/people/me'
+                // key에 자신의 API 키를 넣습니다.
+                , data: { personFields: 'birthdays', key: 'AIzaSyBOdmeC4SOSzXmPGLEM2vZueqiBSWKg3wk', 'access_token': access_token }
+                , method: 'GET'
+            })
+                .done(function (e) {
+                    //프로필을 가져온다.
+                    var profile = googleUser.getBasicProfile();
+                    console.log(profile)
+                })
+                .fail(function (e) {
+                    console.log(e);
+                })
+        }
+        function onSignInFailure(t) {
+            console.log(t);
+        }
+    </script>
+    //구글 api 사용을 위한 스크립트
+    <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
 </body>
 
 </html>
