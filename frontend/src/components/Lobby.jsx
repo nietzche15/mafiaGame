@@ -14,6 +14,7 @@ export default function Lobby() {
                 <div className='button'>방 생성</div><br />
                 <div className='button'>
                     <Link to='/mypage'>마이 페이지</Link></div>
+
             </div>
         </div >
     )
