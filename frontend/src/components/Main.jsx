@@ -35,7 +35,7 @@ export default function Main() {
                 </div>
                 <br />
                 <div className="login2">
-                    <span><img className='naver' style={{ width: '23px' }} src='./images/naver.png' ></img>네이버 로그인</span>
+                    <span><img className='naver' style={{ width: '23px' }} src='./images/naver.png' ></img>구글 로그인</span>
                 </div>
             </div>
         </div >

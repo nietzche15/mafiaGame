@@ -6,6 +6,9 @@ import Profile from './components/Profile';
 import Notfound from "./components/Notfound";
 import Lobby from './components/Lobby';
 import Mypage from './components/Mypage';
+import Google from './components/Google';
+
+
 
 function App() {
   return (
@@ -17,6 +20,7 @@ function App() {
         <Route path='/profile' element={<Profile />} />
         <Route path='/lobby' element={<Lobby />} />
         <Route path='/mypage' element={<Mypage />} />
+
         <Route path='/*' element={<Notfound />} />
       </Routes>
     </>
