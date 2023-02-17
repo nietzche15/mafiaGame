@@ -6,7 +6,8 @@ import Profile from './components/Profile';
 import Notfound from "./components/Notfound";
 import Lobby from './components/Lobby';
 import Mypage from './components/Mypage';
-import Google from './components/Google';
+import Naver from './components/Naver';
+
 
 
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/gamepage" element={<GamePage />} />
         <Route path='/kakao' element={<Kakao />} />
+        <Route path='/naver' element={<Naver />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/lobby' element={<Lobby />} />
         <Route path='/mypage' element={<Mypage />} />
