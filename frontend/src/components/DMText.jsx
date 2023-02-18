@@ -2,18 +2,18 @@ import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
-let userList;
 
-export default function DMText(props) {
-  userList = props.userList;
+export default function DMText() {
+  const userList = useSelector((state) => state.room.userList);
   const roomID = useSelector((state) => state.room.roomID);
+
   const DMInput = useRef();
   const selectDM = useRef();
 
-  socket.on('getUserList', (data) => {
-    console.log('getUserList: ', userList);
-    userList = data.userList;
-  });
+  // socket.on('getUserList', (data) => {
+  //   console.log('getUserList: ', userList);
+  //   userList = data.userList;
+  // });
 
   const showUserList = () => {
     console.log('userList in dm: ', userList);

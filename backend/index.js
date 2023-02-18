@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('reqUserList', (data) => {
-    io.to(`${data.from_id}`).emit('getUserList', {
+    io.to(userToRoom[data.from_id]).emit('getUserList', {
       userList: roomToUser[userToRoom[data.from_id]],
     });
   });
@@ -99,6 +99,17 @@ io.on('connection', (socket) => {
 
   socket.emit('sendJoinMessage', socket.id);
 
+  let checkReady = {};
+  socket.on('gameReady', (data) => {
+    let roomID = userToRoom[data.from_id];
+    let length = roomToUser[roomID].length;
+    checkReady[roomID] === length
+      ? io.to(roomID).emit('readyComplete')
+      : checkReady[roomID]
+      ? (checkReady[roomID] += 1)
+      : (checkReady[roomID] = 0);
+  });
+
   // 방장이 gameStart 누름
   socket.on('gameStart', (data) => {
     io.to(userToRoom[data.from_id]).emit('gameStart');
@@ -106,12 +117,21 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     let roomID = userToRoom[socket.id];
-    // roomToUser[roomID] = roomToUser[roomID].filter((e) => e !== socket.id);
+    console.log('dis1 roomToUser[roomID]: ', roomToUser[roomID]);
 
-    io.to(userToRoom[socket.id]).emit('notice', {
+    io.to(roomID).emit('notice', {
       msg: `${socket.id}님이 퇴장하셨습니다.`,
       roomToUser: roomToUser[roomID],
     });
+
+    roomToUser[socket.id]?.length > 1
+      ? (roomToUser[roomID] = roomToUser[roomID].filter((e) => {
+          console.log(e, socket.id);
+          return e !== socket.id;
+        }))
+      : delete roomToUser[socket.id];
+
+    console.log('dis2 roomToUser[roomID]: ', roomToUser[roomID]);
     console.log('User Disconnected :' + socket.id);
     // console.log('check:', userToRoom[socket.id]?.slice(0, -2));
     socket.leave(roomID, socket.id);

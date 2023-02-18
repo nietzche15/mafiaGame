@@ -3,17 +3,21 @@ import React, { useEffect, useState } from 'react';
 import Chatting from '../components/Chatting';
 import Video from '../components/Video';
 import ButtonGroup from '../components/ButtonGroup';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
 import { useLocation } from 'react-router';
+import { getUserList } from '../store/modules/room';
 
 socket.on('connect', () => {
   console.log('User Connected', socket.id);
 });
+
 export default function GamePage() {
   const [isGame, setIsGame] = useState(false);
   const location = useLocation();
   const roomID = location.state;
+  const userList = useSelector((state) => state.room.userList);
+  // const dispatch = useDispatch();
 
   // const roomID = useSelector((state) => state.room.roomID);
   useEffect(() => {

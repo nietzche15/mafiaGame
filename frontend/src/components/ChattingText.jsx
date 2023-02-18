@@ -1,10 +1,10 @@
 import { Box, Button, TextField } from '@mui/material';
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
 
 export default function ChattingText() {
-  const roomID = useSelector((state) => state.room.roomID);
+  // const roomID = useSelector((state) => state.room.roomID);
   const chatInput = useRef();
   // const [value, setValue] = useState('');
   // const handleChange = (event) => setValue(event.target.value);
