@@ -1,4 +1,5 @@
 import { Routes, Route, Link } from 'react-router-dom';
+import "./App.css";
 import GamePage from "./pages/GamePage";
 import Main from "./components/Main"
 import Kakao from './components/Kakao';
@@ -11,9 +12,10 @@ import Naver from './components/Naver';
 
 
 
+
 function App() {
   return (
-    <>
+    <div className='App'>
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/gamepage" element={<GamePage />} />
@@ -25,7 +27,7 @@ function App() {
 
         <Route path='/*' element={<Notfound />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
