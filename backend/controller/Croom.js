@@ -1,4 +1,4 @@
-const Room = require("../schemas/room");
+const Room = require('../model/room');
 
 const autoIncrease = function () {
   let a = 1;

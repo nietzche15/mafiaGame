@@ -1,64 +1,59 @@
-import { Grid, Box } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import { Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import Chatting from '../components/Chatting';
 import Video from '../components/Video';
 import ButtonGroup from '../components/ButtonGroup';
+import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
+import { useLocation } from 'react-router';
+import { getUserList } from '../store/modules/room';
+
+socket.on('connect', () => {
+  console.log('User Connected', socket.id);
+});
 
 export default function GamePage() {
-  const [users, setUsers] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [isGame, setIsGame] = useState(false);
+  const location = useLocation();
+  const roomID = location.state;
+  const userList = useSelector((state) => state.room.userList);
+  // const dispatch = useDispatch();
 
+  // const roomID = useSelector((state) => state.room.roomID);
   useEffect(() => {
-    socket.connect();
-    return () => {
-      socket.disconnect();
-    };
+    console.log('check roomID in GamePage: ', roomID);
+    socket.emit('join room', roomID);
   }, []);
 
-  useEffect(() => {
-    socket.on('joinName', function (users) {
-      console.log(users);
-      setUsers((prev) => [...prev, users]);
-    });
-    socket.on('joinNotice', function (message) {
-      console.log(message);
-      setMessages((prev) => [...prev, message]);
-    });
-    socket.emit('joinRoom', 'test');
-  }, []);
+  socket.on('gameStart', () => {
+    setIsGame(true);
+    console.log('game started');
+  });
 
-  useEffect(() => {
-    socket.connect();
-    if (!socket.hasListeners('disconnect')) {
-      socket.on('disconnect', function (message) {
-        console.log(message);
-        setMessages((prev) => [...prev, message]);
-      });
-    }
-    return () => {
-      socket.disconnect();
-      if (socket.hasListeners('disconnect')) {
-        socket.off('disconnect');
-      }
-    };
-  }, []);
   return (
     <Box sx={{ backgroundColor: '#2B1D23', p: 2 }}>
       <Box xs={12}>
         <ButtonGroup />
       </Box>
-      <Box mb={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Box mr={2}>
           <Box ml={2} mb={2}>
-            {users.map((user, index) => (
-              <Video name={user} key={index} />
-            ))}
+            <Video name="" />
+          </Box>
+          <Box ml={2} mb={2}>
+            <Video name="" />
+          </Box>
+          <Box ml={2} mb={2}>
+            <Video name="" />
+          </Box>
+          <Box ml={2}>
+            <Video name="" />
           </Box>
         </Box>
         <Box>
-          <Chatting />
+          <Chatting roomID={roomID} />
         </Box>
+
         <Box>
           <Box ml={2} mb={2}>
             <Video name="" />
