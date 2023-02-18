@@ -5,28 +5,31 @@ import SystemCahtting from './SystemCahtting';
 import Timer from './Timer';
 import { useState } from 'react';
 import DMText from './DMText';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
 import './styles/Chatting.css';
-
-let userList;
+import { getUserList } from '../store/modules/room';
 
 export default function Chatting(props) {
   const chatBox = useRef();
-  const roomID = useSelector((state) => state.room.roomID);
+  const dispatch = useDispatch();
+  const userList = useSelector((state) => {
+    console.log('state.room.userList : ', state.room.userList);
+    return state.room.userList;
+  });
+  // const roomID = useSelector((state) => state.room.roomID);
   const [isDM, setIsDM] = useState(false);
   const [change, setChange] = useState(false);
   const changeToDM = () => {
     console.log('dm');
     setIsDM(!isDM);
-    socket.emit('reqUserList', { from_id: socket.id });
+    // socket.emit('reqUserList', { from_id: socket.id });
   };
 
   useEffect(() => {
     // Realtime User Notice
     socket.on('notice', (data) => {
-      userList = data.roomToUser;
-      console.log(userList);
+      dispatch(getUserList(data.roomToUser));
       chatBox.current.insertAdjacentHTML(
         'beforeend',
         `<div class='chatNotice'>${data.msg}</div>`
@@ -73,6 +76,7 @@ export default function Chatting(props) {
       <Box>
         <div ref={chatBox} id="chatBox"></div>
       </Box>
+
       <Box sx={{ mt: 89 }}>
         <Button onClick={changeToDM}>{isDM ? 'quitDM' : 'sendDM'}</Button>
         {isDM || <ChattingText />}
