@@ -8,7 +8,11 @@ export default function Main() {
         window.location.href = KAKAO_AUTH_URL;
     }
 
+    const naver_api_url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + '27NfAweZlVIdEWFecF3p' + '&redirect_uri=' + 'http://localhost:3000/naver' + '&state=' + Math.random().toString(36).substr(3, 14);
 
+    const naverLogin = () => {
+        window.location.href = naver_api_url;
+    }
 
     const [text, setText] = useState('첫번째 내용입니다.');
     const text1 = '첫번째 내용입니다.'
@@ -34,7 +38,7 @@ export default function Main() {
                     <span><img className='kakao' style={{ width: '30px' }} src='./images/kakao.png' />카카오 로그인</span>
                 </div>
                 <br />
-                <div className="login2">
+                <div className="login2" onClick={naverLogin}>
                     <span><img className='naver' style={{ width: '23px' }} src='./images/naver.png' ></img>네이버 로그인</span>
                 </div>
             </div>

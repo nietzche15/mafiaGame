@@ -57,6 +57,7 @@ export default function Chatting(props) {
     });
   }, []);
 
+
   return (
     <Box
       sx={{
@@ -70,7 +71,14 @@ export default function Chatting(props) {
         <Timer setChange={setChange} />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <SystemCahtting change={change}> {props.time} </SystemCahtting>
+        <Box>
+          {messages.map((msg, index) => (
+            <SystemCahtting change={change} key={index}>
+              {msg}
+            </SystemCahtting>
+          ))}
+          {/* <SystemCahtting change={change} />a  */}
+        </Box>
       </Box>
       <Box>
         <div ref={chatBox} id="chatBox"></div>

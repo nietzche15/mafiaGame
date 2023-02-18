@@ -3,6 +3,7 @@ import './styles/lobby.css';
 import { useDispatch } from 'react-redux';
 import { getRoomID } from '../store/modules/room';
 import { useNavigate } from 'react-router';
+import { Link } from "react-router-dom";
 
 export default function Lobby() {
   const roomInput = useRef();
@@ -21,17 +22,19 @@ export default function Lobby() {
         navigate('/gamepage', { state: roomID, replace: true }));
   };
 
-  return (
-    <div className="lobby">
-      <div className="left">
-        <div className="roomlist">방 리스트</div>
-        <div className="chatlist">채팅창</div>
-      </div>
-      <div className="right">
-        <div className="button">방 생성</div>
-        <br />
-        <div className="button">마이 페이지</div>
-        <div>
+
+    return (
+        <div className='lobby'>
+            <div className='left'>
+                <div className='roomlist'>방 리스트</div>
+                <div className='chatlist'>채팅창</div>
+            </div>
+            <div className='right'>
+                <div className='button'>방 생성</div><br />
+                <div className='button'>
+                    <Link to='/mypage'>마이 페이지</Link></div>
+            </div>
+            <div>
           <input
             ref={roomInput}
             id="roomName"
@@ -42,7 +45,6 @@ export default function Lobby() {
             Join
           </button>
         </div>
-      </div>
-    </div>
-  );
+        </div >
+    )
 }

@@ -95,9 +95,13 @@ io.on('connection', (socket) => {
       to_id: data.to_id,
       msg: data.msg,
     });
+
   });
 
-  socket.emit('sendJoinMessage', socket.id);
+  // 같은 방 입장한 회원 분류 roomID - socket.id
+  // socket.on('join', function (message) {
+  //   console.log(message);
+  // });
 
   // 방장이 gameStart 누름
   socket.on('gameStart', (data) => {
@@ -114,6 +118,7 @@ io.on('connection', (socket) => {
     socket.leave(roomID, socket.id);
     // roomToUser[roomID] = roomToUser[roomID].filter((e) => e !== socket.id);
     delete userToRoom[socket.id];
+
   });
 });
 

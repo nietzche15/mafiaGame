@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
 import { useLocation } from 'react-router';
 
+
 socket.on('connect', () => {
   console.log('User Connected', socket.id);
 });
@@ -33,25 +34,17 @@ export default function GamePage() {
       <Box xs={12}>
         <ButtonGroup />
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box mb={2} sx={{ display: 'flex', justifyContent: 'center' }}>
         <Box mr={2}>
           <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2}>
-            <Video name="" />
+            {users.map((user, index) => (
+              <Video name={user} key={index} />
+            ))}
           </Box>
         </Box>
         <Box>
           <Chatting roomID={roomID} />
         </Box>
-
         <Box>
           <Box ml={2} mb={2}>
             <Video name="" />

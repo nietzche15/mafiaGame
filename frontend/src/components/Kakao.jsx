@@ -21,20 +21,15 @@ export default function Kakao() {
                 }
             })
         console.log(res2.data.kakao_account.email)
+        location.href = 'http://localhost:3000/lobby'
     }, [])
-    // const a = await axios.post();
-    // const b = await axios.post(a);
 
-    const API = 'ec651559127139e56f9dc2e455e69667';
-    const logout = 'http://localhost:3000';
 
-    function kakaoLogout() {
-        location.href = `https://kauth.kakao.com/oauth/logout?client_id=${API}&logout_redirect_uri=${logout}`
-    }
+
 
     return (
-        <div>카카오로그인
-            <button onClick={kakaoLogout}>로그아웃</button>
+        <div>
+
         </div>
 
     )

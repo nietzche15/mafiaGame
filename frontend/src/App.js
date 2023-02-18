@@ -5,7 +5,11 @@ import Kakao from './components/Kakao';
 import Profile from './components/Profile';
 import Notfound from './components/Notfound';
 import Lobby from './components/Lobby';
-import DMText from './components/DMText';
+import Mypage from './components/Mypage';
+import Naver from './components/Naver';
+
+
+
 
 function App() {
   return (
@@ -15,8 +19,10 @@ function App() {
         <Route path="/kakao" element={<Kakao />} />
         <Route path="/lobby" element={<Lobby />} />
         <Route path="/gamepage" element={<GamePage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/*" element={<Notfound />} />
+        <Route path='/naver' element={<Naver />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/mypage' element={<Mypage />} />
+        <Route path='/*' element={<Notfound />} />
       </Routes>
     </>
   );
