@@ -1,45 +1,39 @@
-import React, { useRef, useState } from "react";
-import axios from "axios";
+import React from 'react'
+import Rules from './Rules';
 import "./styles/main.css";
+
 export default function Main() {
+
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=openid,account_email,talk_message`;
 
     const kakaoLogin = () => {
         window.location.href = KAKAO_AUTH_URL;
     }
 
-    const naver_api_url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + '27NfAweZlVIdEWFecF3p' + '&redirect_uri=' + 'http://localhost:3000/naver' + '&state=' + Math.random().toString(36).substr(3, 14);
+    const naver_api_url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + '27NfAweZlVIdEWFecF3p' + '&redirect_uri=' + 'http://localhost:3000/naver' + '&state=' + '1234';
 
     const naverLogin = () => {
         window.location.href = naver_api_url;
     }
 
-    const [text, setText] = useState('첫번째 내용입니다.');
-    const text1 = '첫번째 내용입니다.'
-    const text2 = '두번째 내용입니다.'
-    const text3 = '세번째 내용입니다.'
-    const text4 = '네번째 내용입니다.'
+
     return (
-        <div>
-            <div className="outer">
-                <div className='title'>
-                    용산 마피아
+        <div className='back'>
+            <div className="wrapper">
+                <div className="a">
+                    <img src='./images/mafiaImg.png' style={{ width: '80%' }}></img>
                 </div>
-                <img className='rule1' onClick={() => setText(text1)} style={{ width: '17px' }} src='./images/o.png' />
-                <img className='rule2' onClick={() => setText(text2)} style={{ width: '17px' }} src='./images/o.png' />
-                <img className='rule3' onClick={() => setText(text3)} style={{ width: '17px' }} src='./images/o.png' />
-                <img className='rule4' onClick={() => setText(text4)} style={{ width: '17px' }} src='./images/o.png' />
-                <br />
-                <div className='rule'>
-                    {text}
+                <div className="b">
+                    <Rules />
                 </div>
-                <br />
-                <div className="login" onClick={kakaoLogin}>
-                    <span><img className='kakao' style={{ width: '30px' }} src='./images/kakao.png' />카카오 로그인</span>
-                </div>
-                <br />
-                <div className="login2" onClick={naverLogin}>
-                    <span><img className='naver' style={{ width: '23px' }} src='./images/naver.png' ></img>네이버 로그인</span>
+                <div className="c">
+                    <div className="login" onClick={kakaoLogin}>
+                        <span><img className='kakao' style={{ width: '30px' }} src='./images/kakao.png' />카카오 로그인</span>
+                    </div>
+                    <br />
+                    <div className="login2" onClick={naverLogin}>
+                        <span><img className='naver' style={{ width: '23px' }} src='./images/naver.png' ></img>네이버 로그인</span>
+                    </div>
                 </div>
             </div>
         </div >
