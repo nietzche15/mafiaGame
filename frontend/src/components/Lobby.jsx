@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './styles/lobby.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getRoomID } from '../store/modules/room';
 
 export default function Lobby() {
   const roomInput = useRef();

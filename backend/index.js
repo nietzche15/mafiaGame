@@ -37,9 +37,16 @@ io.on('connection', (socket) => {
       socket.join(roomID);
       userToRoom[socket.id] = roomID;
       console.log('usersInfo: ', roomToUser[roomID]);
+
       io.to(roomID).emit('notice', {
         msg: `${socket.id}님이 입장하셨습니다.`,
         roomToUser: roomToUser[roomID],
+      });
+      // User 입장 시 개인 welcome msg
+      io.to(`${socket.id}`).emit('getDM', {
+        from_id: 'admin',
+        to_id: socket.id,
+        msg: `Hello, ${socket.id}`,
       });
     }
 
@@ -65,13 +72,6 @@ io.on('connection', (socket) => {
       (id) => id !== socket.id
     );
     socket.broadcast.to(roomID).emit('usersInThisRoom', usersInThisRoom);
-  });
-
-  // User 입장 시 개인 welcome msg
-  io.to(`${socket.id}`).emit('getDM', {
-    from_id: 'admin',
-    to_id: socket.id,
-    msg: `Hello, ${socket.id}`,
   });
 
   // User의 chat 수신 - 전체 전송
@@ -106,13 +106,15 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     let roomID = userToRoom[socket.id];
+    // roomToUser[roomID] = roomToUser[roomID].filter((e) => e !== socket.id);
+
     io.to(userToRoom[socket.id]).emit('notice', {
       msg: `${socket.id}님이 퇴장하셨습니다.`,
+      roomToUser: roomToUser[roomID],
     });
     console.log('User Disconnected :' + socket.id);
     // console.log('check:', userToRoom[socket.id]?.slice(0, -2));
     socket.leave(roomID, socket.id);
-    // roomToUser[roomID] = roomToUser[roomID].filter((e) => e !== socket.id);
     delete userToRoom[socket.id];
   });
 });

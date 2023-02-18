@@ -1,11 +1,9 @@
 import { Box, Button } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
-import MyChatting from './MyChatting';
 import ChattingText from './ChattingText';
 import SystemCahtting from './SystemCahtting';
 import Timer from './Timer';
 import { useState } from 'react';
-import NotMyChatting from './NotMyChatting';
 import DMText from './DMText';
 import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
@@ -24,16 +22,16 @@ export default function Chatting(props) {
     socket.emit('reqUserList', { from_id: socket.id });
   };
 
-  // Realtime User Notice
-  socket.on('notice', (data) => {
-    userList = data.roomToUser;
-    console.log(userList);
-    chatBox.current.insertAdjacentHTML(
-      'beforeend',
-      `<div class='chatNotice'>${data.msg}</div>`
-    );
-  });
   useEffect(() => {
+    // Realtime User Notice
+    socket.on('notice', (data) => {
+      userList = data.roomToUser;
+      console.log(userList);
+      chatBox.current.insertAdjacentHTML(
+        'beforeend',
+        `<div class='chatNotice'>${data.msg}</div>`
+      );
+    });
     // MyChat과 다른 Chat 구별하여 수신
     socket.on('getChat', (data) => {
       chatBox.current.insertAdjacentHTML(
