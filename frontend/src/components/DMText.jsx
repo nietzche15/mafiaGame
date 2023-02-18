@@ -2,16 +2,16 @@ import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
-let userList = ['NoOne'];
+let userList;
 
 export default function DMText(props) {
   userList = props.userList;
   const roomID = useSelector((state) => state.room.roomID);
-  const [dmID, setDmID] = useState('');
   const DMInput = useRef();
   const selectDM = useRef();
 
   socket.on('getUserList', (data) => {
+    console.log('getUserList: ', userList);
     userList = data.userList;
   });
 
@@ -21,7 +21,7 @@ export default function DMText(props) {
       .filter((e) => e !== socket.id)
       .map((el, idx) => (
         <MenuItem key={idx} value={el}>
-          {userList[idx]}
+          {el}
         </MenuItem>
       ));
   };
