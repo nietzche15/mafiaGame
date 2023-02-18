@@ -1,5 +1,6 @@
 .back {
     background-color: #2B1D23;
+    text-align: center;
 }
 
 .wrapper {
@@ -106,6 +107,7 @@
     margin-right: 5px;
     float: left;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .r2 {
@@ -116,6 +118,7 @@
     margin-right: 5px;
     float: left;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .r3 {
@@ -126,6 +129,7 @@
     margin-right: 5px;
     float: left;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .r4 {
@@ -136,4 +140,5 @@
     margin-right: 5px;
     float: left;
     border-radius: 10px;
+    cursor: pointer;
 }
