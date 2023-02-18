@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema({
   // 이메일
@@ -17,7 +17,7 @@ const UserSchema = new Schema({
   profileImg: {
     type: String,
     required: true,
-    default: "default img",
+    default: 'default img',
   },
   // 마피아 플레이 횟수
   mafiaPlayCount: {
@@ -51,5 +51,5 @@ const UserSchema = new Schema({
   },
 });
 
-const User = model("user", UserSchema);
+const User = model('user', UserSchema);
 module.exports = User;
