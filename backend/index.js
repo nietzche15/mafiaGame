@@ -11,51 +11,109 @@ const io = require('socket.io')(http, {
 const roomToUser = {}; // roomID - [user1(socekt.id) , user2(socekt.id), user3(socekt.id), ...]
 const userToRoom = {}; // socket.id - roomID
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/../frontend/src/components/Chatting.jsx');
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + '/../frontend/src/pages/GamePage.jsx');
+// });
 
 io.on('connection', (socket) => {
-  console.log('Server Socket Connected', socket.id);
+  console.log('User Connected', socket.id);
 
   // 방 입장
   // 같은 방 입장한 회원 구분 roomID - socket.id
   socket.on('join room', (roomID) => {
-    if (roomToUser[roomID]) {
-      const length = roomToUser[roomID].length;
-      if (length === 8) {
-        socket.emit('room full');
-        return;
-      }
-      roomToUser[roomID].push(socket.id);
-    } else {
-      roomToUser[roomID] = [socket.id];
-    }
-    userToRoom[socket.id] = roomID;
+    console.log('roomID: ', roomID);
+    let rooms = io.sockets.adapter.rooms;
+    let room = rooms.get(roomID);
 
-    // ----나중에 영상과 연결 시 사용
-    // let rooms = io.sockets.adapter.rooms;
-    // let room = rooms.get(roomID);
-    // if (room === undefined) {
-    //   socket.join(roomName);
-    //   userToRoom[socket.id] = roomID;
-    //   roomToUser[roomID] = [socket.id];
-    // } else if (room.size <= 8) {
-    //   socket.join(roomName);
-    //   userToRoom[socket.id] = roomID;
+    console.log('roomSize: ', room?.size);
+
+    if (room?.size > 8) {
+      socket.emit('room full');
+      return;
+    } else {
+      room
+        ? roomToUser[roomID].push(socket.id)
+        : (roomToUser[roomID] = [socket.id]);
+      socket.join(roomID);
+      userToRoom[socket.id] = roomID;
+      console.log('usersInfo: ', roomToUser[roomID]);
+      io.to(roomID).emit('notice', {
+        msg: `${socket.id}님이 입장하셨습니다.`,
+        roomToUser: roomToUser[roomID],
+      });
+    }
+
+    // if (roomToUser[roomID]) {
+    //   const length = roomToUser[roomID].length;
+    //   if (length === 8) {
+    //     socket.emit('room full');
+    //     return;
+    //   }
     //   roomToUser[roomID].push(socket.id);
     // } else {
-    //   socket.emit('room full');
+    //   roomToUser[roomID] = [socket.id];
     // }
 
-    const usersInThisRoom = roomToUser[roomID].filter((id) => id !== socket.id);
-    socket.emit('all users', usersInThisRoom);
+    console.log('rooms :', rooms);
+    console.log('room :', room);
+    console.log('userToRoom:', userToRoom);
+    console.log('roomToUser:', roomToUser);
+
+    // ----나중에 영상과 연결 시 사용
+
+    const usersInThisRoom = roomToUser[roomID]?.filter(
+      (id) => id !== socket.id
+    );
+    socket.broadcast.to(roomID).emit('usersInThisRoom', usersInThisRoom);
+  });
+
+  // User 입장 시 개인 welcome msg
+  io.to(`${socket.id}`).emit('getDM', {
+    from_id: 'admin',
+    to_id: socket.id,
+    msg: `Hello, ${socket.id}`,
+  });
+
+  // User의 chat 수신 - 전체 전송
+  socket.on('sendChat', (data) => {
+    io.to(userToRoom[data.from_id]).emit('getChat', {
+      from_id: data.from_id,
+      msg: data.msg,
+    });
+  });
+
+  socket.on('reqUserList', (data) => {
+    io.to(`${data.from_id}`).emit('getUserList', {
+      userList: roomToUser[userToRoom[data.from_id]],
+    });
+  });
+
+  // DM 수신 후 전송 (보낸 user, 받는 user both)
+  socket.on('sendDM', (data) => {
+    io.to(`${data.to_id}`).to(`${data.from_id}`).emit('getDM', {
+      from_id: data.from_id,
+      to_id: data.to_id,
+      msg: data.msg,
+    });
+  });
+
+  socket.emit('sendJoinMessage', socket.id);
+
+  // 방장이 gameStart 누름
+  socket.on('gameStart', (data) => {
+    io.to(userToRoom[data.from_id]).emit('gameStart');
   });
 
   socket.on('disconnect', () => {
-    console.log('Server  Socket disconnected');
-
-    // delete
+    let roomID = userToRoom[socket.id];
+    io.to(userToRoom[socket.id]).emit('notice', {
+      msg: `${socket.id}님이 퇴장하셨습니다.`,
+    });
+    console.log('User Disconnected :' + socket.id);
+    // console.log('check:', userToRoom[socket.id]?.slice(0, -2));
+    socket.leave(roomID, socket.id);
+    // roomToUser[roomID] = roomToUser[roomID].filter((e) => e !== socket.id);
+    delete userToRoom[socket.id];
   });
 });
 

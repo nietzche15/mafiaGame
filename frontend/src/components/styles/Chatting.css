@@ -1,0 +1,58 @@
+.chatNotice {
+  height: 50px;
+  text-align: center;
+  font-style: italic;
+}
+
+#chatBox {
+  /* height: 900px; */
+  overflow-y: auto;
+}
+
+/* My Chat */
+.MyChatBox {
+  text-align: right;
+}
+.MyChatBox > .MyChat {
+  display: inline-block;
+  margin: 5px 10px 5px 10px;
+  padding: 5px 10px 5px 10px;
+  background-color: palegoldenrod;
+}
+.MyChatBox > .MyDM {
+  display: inline-block;
+  margin: 5px 10px 5px 10px;
+  padding: 5px 10px 5px 10px;
+  background-color: lightpink;
+}
+
+/* Server Chat */
+.ServerChat {
+  text-align: start;
+  margin: 5px 10px 5px 10px;
+  padding: 5px 10px 5px 10px;
+  background-color: ghostwhite;
+  width: fit-content;
+}
+/* Direct Chat */
+.DirectChat {
+  text-align: start;
+  margin: 5px 10px 5px 10px;
+  padding: 5px 10px 5px 10px;
+  background-color: lightpink;
+  width: fit-content;
+}
+
+/* Chat Box 동일 항목 */
+#inputBox,
+#DMinputBox {
+  width: 600px;
+  margin: 0 !important;
+  position: absolute;
+  bottom: 0px;
+}
+
+#DMinputBox *,
+#inputBox * {
+  height: 60px;
+}
