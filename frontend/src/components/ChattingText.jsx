@@ -25,7 +25,7 @@ export default function ChattingText() {
         display: 'flex',
         backgroundColor: 'white',
         justifyContent: 'center',
-        width: '900px',
+        width: '880px',
       }}
     >
       <TextField
@@ -34,13 +34,14 @@ export default function ChattingText() {
         label=""
         inputRef={chatInput}
         variant="outlined"
-        sx={{ width: '100%' }}
+        sx={{ width: '800px' }}
         // onChange={handleChange}
         onKeyDown={enterSubmit}
       />
       <Button
         variant="contained"
-        sx={{ backgroundColor: '#940404' }}
+        color="primary"
+        sx={{ alignItems: 'center' }}
         onClick={handleSubmit}
       >
         전송

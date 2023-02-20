@@ -1,6 +1,6 @@
 const initState = {
   roomID: '',
-  userList: [],
+  userList: ['', '', '', '', '', '', '', ''],
   jobList: [],
   myJob: '',
 };
@@ -28,7 +28,11 @@ export default function room(state = initState, action) {
     case GETROOMID:
       return { ...state, roomID: action.payload.roomID };
     case GETUSERLIST:
-      return { ...state, userList: action.payload.userList };
+      const newUserList = [...action.payload.userList];
+      for (let i = 0; i < 8; i++) {
+        if (!newUserList[i]) newUserList.push('');
+      }
+      return { ...state, userList: newUserList };
     case GETJOBLIST:
       return {
         ...state,
