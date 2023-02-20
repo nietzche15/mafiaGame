@@ -1,7 +1,34 @@
-.chatNotice {
-  height: 50px;
+.chatNotice,
+.gameNotice,
+.gameNotice_Day,
+.gameNotice_Night {
   text-align: center;
-  font-style: italic;
+  text-align: middle;
+  padding: 10px 0 10px 0;
+}
+.gameNotice {
+  color: whitesmoke;
+}
+.gameNotice > mark {
+  font-weight: bolder;
+  background-color: cadetblue;
+}
+.gameNotice_Day {
+  background-color: lavenderblush;
+}
+.gameNotice_Day > mark {
+  border-radius: 20%;
+  color: whitesmoke;
+  font-weight: bolder;
+}
+.gameNotice_Night {
+  background-color: midnightblue;
+}
+.gameNotice_Night > mark {
+  border-radius: 20%;
+  background-color: transparent;
+  color: whitesmoke;
+  font-weight: bolder;
 }
 
 #chatBox {
