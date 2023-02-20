@@ -10,6 +10,7 @@ import { socket } from '../utils/socket';
 import './styles/Chatting.css';
 import { getJobList, getUserList } from '../store/modules/room';
 import MafiaText from './MafiaText';
+import GlobalStyle from './common/GlobalStyle';
 
 let jobList;
 let myJob;
@@ -119,35 +120,43 @@ export default function Chatting(props) {
   }, [userList]);
 
   return (
-    <Box
-      sx={{
-        width: '900px',
-        backgroundColor: '#8B7F70',
-        borderRadius: '10px',
-        height: 976,
-        position: 'relative',
-        overflowY: 'auto',
-      }}
-    >
-      {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    <>
+      <GlobalStyle />
+      <Box
+        sx={{
+          width: '900px',
+          backgroundColor: '#8B7F70',
+          borderRadius: '10px',
+          height: 976,
+          position: 'relative',
+          overflowY: 'auto',
+        }}
+      >
+        {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Timer setChange={setChange} />
       </Box> */}
 
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <SystemCahtting change={change}> </SystemCahtting>
-      </Box>
-      <Box>
-        <div ref={chatBox} id="chatBox"></div>
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <SystemCahtting change={change}> </SystemCahtting>
+        </Box>
+        <Box>
+          <div ref={chatBox} id="chatBox"></div>
+        </Box>
 
-      <Box sx={{ position: 'absolute', bottom: 0 }}>
-        {isNight || (
-          <Button onClick={changeToDM}>{isDM ? 'quitDM' : 'sendDM'}</Button>
-        )}
-        {!isNight && !isDM && <ChattingText />}
-        {!isNight && isDM && <DMText userList={userList} />}
-        {isNight && isMafia && <MafiaText />}
+        <Box sx={{ position: 'absolute', bottom: 0 }}>
+          {isNight || (
+            <Button
+              onClick={changeToDM}
+              sx={{ fontFamily: 'MaplestoryOTFBold' }}
+            >
+              {isDM ? 'quitDM' : 'sendDM'}
+            </Button>
+          )}
+          {!isNight && !isDM && <ChattingText />}
+          {!isNight && isDM && <DMText userList={userList} />}
+          {isNight && isMafia && <MafiaText />}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }

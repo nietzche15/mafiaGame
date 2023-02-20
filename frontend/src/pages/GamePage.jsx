@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Chatting from '../components/Chatting';
 import Video from '../components/Video';
+import GlobalStyle from '../components/common/GlobalStyle';
 import ButtonGroup from '../components/ButtonGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
@@ -74,29 +75,14 @@ export default function GamePage() {
   }, [userList]);
 
   return (
-    <Box sx={{ backgroundColor: '#2B1D23', p: 2 }}>
-      <Box xs={12}>{isGame || <ButtonGroup />}</Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Box mr={2}>
-          {userList.map((user, index) => {
-            if (index > 3) return null;
-            return (
-              <Box ml={2} mb={2} key={index}>
-                <Video name={user} />
-              </Box>
-            );
-          })}
-        </Box>
-        <Box>
-          <Chatting roomID={roomID} />
-        </Box>
-
-        <Box>
+    <>
+      <GlobalStyle />
+      <Box sx={{ backgroundColor: '#2B1D23', p: 2 }}>
+        <Box xs={12}>{isGame || <ButtonGroup />}</Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Box mr={2}>
             {userList.map((user, index) => {
-              if (index <= 3) {
-                return null;
-              }
+              if (index > 3) return null;
               return (
                 <Box ml={2} mb={2} key={index}>
                   <Video name={user} />
@@ -104,8 +90,26 @@ export default function GamePage() {
               );
             })}
           </Box>
+          <Box>
+            <Chatting roomID={roomID} />
+          </Box>
+
+          <Box>
+            <Box mr={2}>
+              {userList.map((user, index) => {
+                if (index <= 3) {
+                  return null;
+                }
+                return (
+                  <Box ml={2} mb={2} key={index}>
+                    <Video name={user} />
+                  </Box>
+                );
+              })}
+            </Box>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }

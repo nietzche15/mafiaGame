@@ -2,6 +2,7 @@ import { Box, Button } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
+import GlobalStyle from './common/GlobalStyle';
 
 export default function ButtonGroup() {
   const [isReady, setIsReady] = useState(false);
@@ -41,8 +42,10 @@ export default function ButtonGroup() {
   });
 
   return (
-    <Box sx={{ p: 1, textAlign: 'right' }}>
-      {/* {isCaptain ? (
+    <>
+      <GlobalStyle />
+      <Box sx={{ p: 1, textAlign: 'right' }}>
+        {/* {isCaptain ? (
         <Button
           ref={startBtn}
           variant="contained"
@@ -53,29 +56,37 @@ export default function ButtonGroup() {
           'Game START'
         </Button>
       ) : ( */}
-      <Button
-        ref={readyBtn}
-        variant="contained"
-        color="primary"
-        sx={{ m: 1, '* .Mui_disabled': { background: '#E38989' } }}
-        onClick={gameReady}
-        disabled={isReady ? true : false}
-      >
-        {isCaptain ? 'Game START' : 'READY'}
-      </Button>
-      {/* )} */}
-      <Button
-        ref={exitBtn}
-        variant="contained"
-        color="secondary"
-        sx={{ m: 1 }}
-        onClick={() => {
-          location.href = '/lobby';
-          // navigate('/lobby', { replace: true });
-        }}
-      >
-        나가기
-      </Button>
-    </Box>
+        <Button
+          ref={readyBtn}
+          variant="contained"
+          color="primary"
+          sx={{
+            m: 1,
+            fontFamily: 'MaplestoryOTFBold',
+            '* .Mui_disabled': {
+              background: '#E38989',
+              fontFamily: 'MaplestoryOTFBold',
+            },
+          }}
+          onClick={gameReady}
+          disabled={isReady ? true : false}
+        >
+          {isCaptain ? 'Game START' : 'READY'}
+        </Button>
+        {/* )} */}
+        <Button
+          ref={exitBtn}
+          variant="contained"
+          color="secondary"
+          sx={{ m: 1, fontFamily: 'MaplestoryOTFBold', fontWeight: 'bolder' }}
+          onClick={() => {
+            location.href = '/lobby';
+            // navigate('/lobby', { replace: true });
+          }}
+        >
+          나가기
+        </Button>
+      </Box>
+    </>
   );
 }
