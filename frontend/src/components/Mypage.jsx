@@ -1,6 +1,7 @@
 import React from 'react'
 import './styles/mypage.css';
 import { Link } from "react-router-dom";
+import { Box, Button, TextField } from '@mui/material';
 
 export default function Mypage() {
 
@@ -25,12 +26,18 @@ export default function Mypage() {
                         <td colspan="2">승률</td>
                     </tr>
                 </table>
-            </div>
-            <div className='right'>
-                <div className='button'>수정</div><br />
-                <div className='button' onClick={kakaoLogout} style={{ cursor: 'pointer' }}>로그아웃</div><br />
-                <div className='button'>
-                    <Link to='/lobby'>나가기</Link>
+                <div className='right2'>
+                    <Button variant="contained" onClick={kakaoLogout} color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989'} }}>
+                        로그아웃
+                    </Button>
+                    <br /><br />
+                    <Button variant="contained" color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}>
+                        <Link to="/mypage" style={{ textDecoration: "none", color:'white' }}>수정</Link>
+                    </Button>
+                    <br /><br />
+                    <Button variant="contained" color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}>
+                        <Link to="/lobby" style={{ textDecoration: "none", color:'white' }}>나가기</Link>
+                    </Button>
                 </div>
             </div>
         </div>
