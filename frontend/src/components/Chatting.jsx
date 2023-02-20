@@ -10,6 +10,7 @@ import { socket } from '../utils/socket';
 import './styles/Chatting.css';
 import { getJobList, getUserList } from '../store/modules/room';
 import MafiaText from './MafiaText';
+
 let jobList;
 let myJob;
 let finalist;
@@ -34,10 +35,19 @@ export default function Chatting(props) {
     // socket.emit('reqUserList', { from_id: socket.id });
   };
 
+  //채팅방 입장 시 입퇴장 알림
   useEffect(() => {
     // Realtime User Notice
     socket.on('notice', (data) => {
-      dispatch(getUserList(data.roomToUser));
+      const outMessgae = '님이 방을 나갔습니다.';
+      if (data.msg.includes(outMessgae)) {
+        const outUser = data.msg.replace(outMessgae, '');
+        dispatch(
+          getUserList(data.roomToUser.filter((user) => user !== outUser))
+        );
+      } else {
+        dispatch(getUserList(data.roomToUser));
+      }
       chatBox.current.insertAdjacentHTML(
         'beforeend',
         `<div class='chatNotice'>${data.msg}</div>`
@@ -84,8 +94,8 @@ export default function Chatting(props) {
       chatBox.current.insertAdjacentHTML(
         'beforeend',
         data.from_id === socket.id
-          ? `<div class='MyChatBox'><div class='MyChat'>${data.msg}</div></div>`
-          : `<div class='ServerChat'>${data.msg}</div>`
+          ? `<div class='MyChatBox'><div >ME</div><div class='MyChat'>${data.msg}</div></div>`
+          : `<div class='NickName'>${data.from_id}<div><div class='ServerChat'>${data.msg}</div>`
       );
     });
 
@@ -111,23 +121,26 @@ export default function Chatting(props) {
   return (
     <Box
       sx={{
-        height: '100%',
         width: '900px',
         backgroundColor: '#8B7F70',
         borderRadius: '10px',
+        height: 976,
+        position: 'relative',
+        overflowY: 'auto',
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Timer setChange={setChange} />
-      </Box>
+      </Box> */}
+
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <SystemCahtting change={change}> {props.time} </SystemCahtting>
+        <SystemCahtting change={change}> </SystemCahtting>
       </Box>
       <Box>
         <div ref={chatBox} id="chatBox"></div>
       </Box>
 
-      <Box sx={{ mt: 89 }}>
+      <Box sx={{ position: 'absolute', bottom: 0 }}>
         {isNight || (
           <Button onClick={changeToDM}>{isDM ? 'quitDM' : 'sendDM'}</Button>
         )}

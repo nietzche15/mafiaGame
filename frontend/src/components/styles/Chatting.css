@@ -40,11 +40,18 @@
 .MyChatBox {
   text-align: right;
 }
+.MyChatBox > div {
+  width: 50%;
+  padding-left: 20px;
+}
 .MyChatBox > .MyChat {
+  border-radius: 10px 10px 10px 10px;
+  text-align: left;
   display: inline-block;
+  height: 50px;
   margin: 5px 10px 5px 10px;
   padding: 5px 10px 5px 10px;
-  background-color: palegoldenrod;
+  background-color: #e4d9c6;
 }
 .MyChatBox > .MyDM {
   display: inline-block;
@@ -54,12 +61,15 @@
 }
 
 /* Server Chat */
+
 .ServerChat {
   text-align: start;
+  border-radius: 10px 10px 10px 10px;
+  height: 50px;
   margin: 5px 10px 5px 10px;
   padding: 5px 10px 5px 10px;
-  background-color: ghostwhite;
-  width: fit-content;
+  background-color: #e4d9c6;
+  width: 50%;
 }
 /* Direct Chat */
 .DirectChat {

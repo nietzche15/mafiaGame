@@ -31,6 +31,8 @@ export default function GamePage() {
 
   useEffect(() => {
     console.log('check roomID in GamePage: ', roomID);
+
+    // 프로필 카드 생성
     socket.emit('join room', roomID);
 
     // 게임 중 서버 메세지
@@ -76,35 +78,31 @@ export default function GamePage() {
       <Box xs={12}>{isGame || <ButtonGroup />}</Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Box mr={2}>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2}>
-            <Video name="" />
-          </Box>
+          {userList.map((user, index) => {
+            if (index > 3) return null;
+            return (
+              <Box ml={2} mb={2} key={index}>
+                <Video name={user} />
+              </Box>
+            );
+          })}
         </Box>
         <Box>
           <Chatting roomID={roomID} />
         </Box>
 
         <Box>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2} mb={2}>
-            <Video name="" />
-          </Box>
-          <Box ml={2}>
-            <Video name="" />
+          <Box mr={2}>
+            {userList.map((user, index) => {
+              if (index <= 3) {
+                return null;
+              }
+              return (
+                <Box ml={2} mb={2} key={index}>
+                  <Video name={user} />
+                </Box>
+              );
+            })}
           </Box>
         </Box>
       </Box>

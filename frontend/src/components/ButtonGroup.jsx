@@ -56,7 +56,8 @@ export default function ButtonGroup() {
       <Button
         ref={readyBtn}
         variant="contained"
-        sx={{ m: 1, backgroundColor: '#940404' }}
+        color="primary"
+        sx={{ m: 1, '* .Mui_disabled': { background: '#E38989' } }}
         onClick={gameReady}
         disabled={isReady ? true : false}
       >
@@ -66,7 +67,8 @@ export default function ButtonGroup() {
       <Button
         ref={exitBtn}
         variant="contained"
-        sx={{ m: 1, backgroundColor: '#940404' }}
+        color="secondary"
+        sx={{ m: 1 }}
         onClick={() => {
           location.href = '/lobby';
           // navigate('/lobby', { replace: true });
