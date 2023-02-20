@@ -2,37 +2,34 @@ import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
+let jobList;
 
-export default function DMText() {
+export default function MafiaText() {
   const userList = useSelector((state) => state.room.userList);
   const roomID = useSelector((state) => state.room.roomID);
+  const jobList = useSelector((state) => state.room.jobList);
+  const myJob = useSelector((state) => state.room.myJob);
+  console.log('inMafiaTxt: ', myJob);
+
+  let onlyMafia = userList.length <= 4; // userList.length <=4 면 mafia 한 명(true)
 
   const DMInput = useRef();
   const selectDM = useRef();
 
-  // socket.on('getUserList', (data) => {
-  //   console.log('getUserList: ', userList);
-  //   userList = data.userList;
-  // });
-
-  const showUserList = () => {
-    console.log('userList in DM: ', userList);
-    return userList
-      .filter((e) => e !== socket.id)
-      .map((el, idx) => (
-        <MenuItem key={idx} value={el}>
-          {el}
-        </MenuItem>
-      ));
-  };
+  // useEffect(() => {
+  //   socket.on('gameStart', (data) => {
+  //     jobList = data.jobList;
+  //   });
+  // }, []);
 
   const handleSubmit = () => {
-    // socket.emit('join', value);
-    console.log('selectDM:', selectDM.current.value);
     socket.emit('sendDM', {
       roomID: roomID,
       from_id: socket.id,
-      to_id: selectDM.current.value,
+      to_id:
+        userList.filter(
+          (e, i) => e !== socket.id && jobList[i] === 'mafia'
+        )[0] || socket.id,
       msg: DMInput.current.value,
     });
   };
@@ -49,9 +46,6 @@ export default function DMText() {
         width: '900px',
       }}
     >
-      <Select label="DM" inputRef={selectDM}>
-        {showUserList()}
-      </Select>
       <TextField
         // value={value}
         id="outlined-basic"
@@ -61,6 +55,12 @@ export default function DMText() {
         sx={{ width: '100%' }}
         // onChange={handleChange}
         onKeyDown={enterSubmit}
+        disabled={onlyMafia ? true : false}
+        placeholder={
+          onlyMafia
+            ? 'CHOOSE ONE TO KILL'
+            : 'ONLY MAFIA can send a message during the NIGHT'
+        }
       />
       <Button
         variant="contained"

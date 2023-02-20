@@ -4,55 +4,67 @@ import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
 
 export default function ButtonGroup() {
+  const [isReady, setIsReady] = useState(false);
   const [isCaptain, setIsCaptain] = useState(false);
-  const startBtn = useRef();
+  const exitBtn = useRef();
+  const readyBtn = useRef();
+  // const startBtn = useRef();
   const userList = useSelector((state) => state.room.userList);
 
-  socket.on('readyComplete', () => {
-    gameBtn.current.disabled = false;
-  });
-
+  // userList의 첫번째 socket.id 가 captain, userList 바뀔때마다 update
   useEffect(() => {
     userList.indexOf(socket.id) === 0
       ? setIsCaptain(true)
       : setIsCaptain(false);
-  }, []);
-
-  const gameStart = () => {
-    console.log('isCaptain ?', isCaptain, socket.id);
-    socket.emit('gameStart', {
-      from_id: socket.id,
-    });
-  };
+    !isCaptain && userList.length >= 4 ? setIsReady(false) : setIsReady(true);
+  }, [userList]);
 
   const gameReady = () => {
-    socket.emit('gameReady', {
-      from_id: socket.id,
-    });
+    setIsReady(true);
+    isCaptain
+      ? socket.emit('gameStart', {
+          from_id: socket.id,
+        })
+      : socket.emit('gameReady', {
+          from_id: socket.id,
+        });
   };
+
+  // const gameStart = () => {
+  //   socket.emit('gameStart', {
+  //     from_id: socket.id,
+  //   });
+  // };
+
+  socket.on('readyComplete', () => {
+    setIsReady(false);
+  });
 
   return (
     <Box sx={{ p: 1, textAlign: 'right' }}>
-      {isCaptain ? (
+      {/* {isCaptain ? (
         <Button
           ref={startBtn}
           variant="contained"
           sx={{ m: 1, backgroundColor: '#940404' }}
           onClick={gameStart}
-          disabled
+          disabled={isReady ? true : false}
         >
           'Game START'
         </Button>
-      ) : (
-        <Button
-          variant="contained"
-          sx={{ m: 1, backgroundColor: '#940404' }}
-          onClick={gameReady}
-        >
-          'READY'
-        </Button>
-      )}
+      ) : ( */}
       <Button
+        ref={readyBtn}
+        variant="contained"
+        sx={{ m: 1, backgroundColor: '#940404' }}
+        onClick={gameReady}
+        disabled={isReady ? true : false}
+      >
+        {isCaptain ? 'Game START' : 'READY'}
+      </Button>
+      {/* )} */}
+      <Button
+        ref={exitBtn}
         variant="contained"
         sx={{ m: 1, backgroundColor: '#940404' }}
         onClick={() => {
