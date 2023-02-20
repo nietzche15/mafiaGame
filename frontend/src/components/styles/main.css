@@ -41,7 +41,7 @@
     position: relative;
     top: 70px;
     width: 300px;
-    height: 30px;
+    height: 40px;
     background: rgb(244, 223, 111);
     color: rgb(0, 0, 0);
     border-radius: 8px;
@@ -56,7 +56,7 @@
     position: relative;
     top: 80px;
     width: 300px;
-    height: 30px;
+    height: 40px;
     background: rgb(121, 194, 80);
     color: rgb(0, 0, 0);
     position: relative;
@@ -69,13 +69,13 @@
 
 .kakao {
     position: relative;
-    left: -28%;
+    left: -25%;
     top: 4px;
 }
 
 .naver {
     position: relative;
-    left: -28%;
+    left: -25%;
     top: 4px;
 }
 
@@ -85,10 +85,12 @@
 }
 
 .box {
+    text-align: left;
     position: relative;
     background-color: #E4D9C6;
-    width: 200px;
-    height: 405px;
+    margin-top: 60px;
+    width: 330px;
+    height: 80%;
     padding: 60px;
     border-radius: 10px;
 }
@@ -96,7 +98,8 @@
 .rbox {
     bottom: 30px;
     position: absolute;
-    left: 34%;
+    display: inline-block;
+    
 }
 
 .r1 {
