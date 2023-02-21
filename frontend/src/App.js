@@ -3,10 +3,11 @@ import './App.css';
 import GamePage from './pages/GamePage/GamePage';
 import Main from './components/Main';
 import Kakao from './components/Kakao';
+
 import Profile from './components/Profile';
-import Lobby from './components/Lobby';
-import Mypage from './components/Mypage';
-import Naver from './components/Naver';
+import Lobby from './components/lobby/Lobby';
+import Mypage from './components/mypage/Mypage';
+import Naver from './components/main/Naver';
 import NotFound from './pages/NotFound';
 
 function App() {
