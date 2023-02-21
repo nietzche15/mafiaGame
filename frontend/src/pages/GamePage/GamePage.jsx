@@ -1,13 +1,14 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import Chatting from '../components/Chatting';
-import Video from '../components/Video';
-import GlobalStyle from '../components/common/GlobalStyle';
-import ButtonGroup from '../components/ButtonGroup';
+import GlobalStyle from '../../components/common/GlobalStyle';
 import { useDispatch, useSelector } from 'react-redux';
-import { socket } from '../utils/socket';
+import { socket } from '../../utils/socket';
 import { useLocation } from 'react-router';
-import { getJobList } from '../store/modules/room';
+import { getJobList } from '../../store/modules/room';
+import useSocket from '../../hooks/useSocket';
+import ButtonGroup from '../../components/gamepage/ButtonGroup';
+import Chatting from '../../components/gamepage/Chatting';
+import Video from '../../components/gamepage/Video';
 let jobList;
 let myJob;
 let finalist;
@@ -19,6 +20,8 @@ socket.on('connect', () => {
 
 export default function GamePage() {
   //isGame : Captain이 게임 시작 누르면 true
+
+  useSocket();
   const [isGame, setIsGame] = useState(false);
   const [isNight, setIsNight] = useState(false);
   const [isKilled, setIsKilled] = useState(false);

@@ -1,8 +1,8 @@
 import { Box, Button, TextField } from '@mui/material';
 import React, { useRef, useState } from 'react';
 // import { useSelector } from 'react-redux';
-import { socket } from '../utils/socket';
-import GlobalStyle from './common/GlobalStyle';
+import { socket } from '../../utils/socket';
+import GlobalStyle from '../common/GlobalStyle';
 
 export default function ChattingText() {
   // const roomID = useSelector((state) => state.room.roomID);
@@ -26,7 +26,7 @@ export default function ChattingText() {
         display: 'flex',
         backgroundColor: 'white',
         justifyContent: 'center',
-        width: '880px',
+        width: '800px',
       }}
     >
       <TextField
@@ -35,14 +35,21 @@ export default function ChattingText() {
         label=""
         inputRef={chatInput}
         variant="outlined"
-        sx={{ width: '800px', fontFamily: 'MaplestoryOTFBold' }}
+        sx={{ width: '100%', fontFamily: 'MaplestoryOTFBold', p: 2 }}
         // onChange={handleChange}
         onKeyDown={enterSubmit}
       />
+
       <Button
         variant="contained"
         color="primary"
-        sx={{ alignItems: 'center', fontFamily: 'MaplestoryOTFBold' }}
+        sx={{
+          height: '100%',
+          alignItems: 'center',
+          fontFamily: 'MaplestoryOTFBold',
+          position: 'absolute',
+          right: 0,
+        }}
         onClick={handleSubmit}
       >
         전송

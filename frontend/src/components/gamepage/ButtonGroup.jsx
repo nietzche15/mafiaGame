@@ -1,8 +1,8 @@
 import { Box, Button } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { socket } from '../utils/socket';
-import GlobalStyle from './common/GlobalStyle';
+import { socket } from '../../utils/socket';
+import GlobalStyle from '../common/GlobalStyle';
 
 export default function ButtonGroup() {
   const [isReady, setIsReady] = useState(false);
