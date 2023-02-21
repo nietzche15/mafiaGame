@@ -1,30 +1,19 @@
 import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import { socket } from '../utils/socket';
-let jobList;
 
 export default function MafiaText() {
-  const userList = useSelector((state) => state.room.userList);
-  const roomID = useSelector((state) => state.room.roomID);
-  const jobList = useSelector((state) => state.room.jobList);
-  const myJob = useSelector((state) => state.room.myJob);
-  console.log('inMafiaTxt: ', myJob);
-
-  let onlyMafia = userList.length <= 4; // userList.length <=4 면 mafia 한 명(true)
-
+  const { state: roomID } = useLocation();
+  const { timeStatus } = useSelector((state) => state.status);
+  const { jobList, myJob, userList } = useSelector((state) => state.room);
+  const onlyMafia = userList.length <= 4; // userList.length <=4 면 mafia 한 명(true)
   const DMInput = useRef();
-  const selectDM = useRef();
-
-  // useEffect(() => {
-  //   socket.on('gameStart', (data) => {
-  //     jobList = data.jobList;
-  //   });
-  // }, []);
 
   const handleSubmit = () => {
     socket.emit('sendDM', {
-      roomID: roomID,
+      roomID,
       from_id: socket.id,
       to_id:
         userList.filter(
@@ -36,6 +25,14 @@ export default function MafiaText() {
   const enterSubmit = (e) => {
     if (e.key === 'Enter') handleSubmit();
   };
+
+  if (myJob !== 'mafia') {
+    return null;
+  }
+
+  if (timeStatus === 'day') {
+    return null;
+  }
 
   return (
     <Box
@@ -55,7 +52,7 @@ export default function MafiaText() {
         sx={{ width: '100%' }}
         // onChange={handleChange}
         onKeyDown={enterSubmit}
-        disabled={onlyMafia ? true : false}
+        disabled={onlyMafia}
         placeholder={
           onlyMafia
             ? 'CHOOSE ONE TO KILL'

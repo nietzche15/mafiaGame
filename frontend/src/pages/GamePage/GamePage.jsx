@@ -9,7 +9,6 @@ import ButtonGroup from '../../components/gamepage/ButtonGroup';
 import Chatting from '../../components/gamepage/Chatting';
 import Video from '../../components/gamepage/Video';
 
-// socket 연결
 socket.on('connect', () => {
   console.log('User Connected', socket.id);
 });
@@ -23,7 +22,7 @@ export default function GamePage() {
     <>
       <GlobalStyle />
       <Box sx={{ backgroundColor: '#2B1D23', p: 2 }}>
-        <Box xs={12}>{gameStatus === 'playing' || <ButtonGroup />}</Box>
+        <Box xs={12}>{gameStatus !== 'playing' && <ButtonGroup />}</Box>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Box mr={2}>
             {userList.map((user, index) => {

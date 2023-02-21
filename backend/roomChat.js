@@ -92,7 +92,7 @@ module.exports = (server) => {
         : ((checkReady[roomID] = 1),
           io.to(roomID).emit('gameNotice', {
             dayNight: false,
-            msg: 'Player들이 <mark>Ready</mark> 중 입니다.',
+            msg: 'Player들이 Ready 중 입니다.',
             killed: false,
           }));
       console.log('readyOrNot: ', checkReady[roomID], readyCnt);
@@ -108,7 +108,7 @@ module.exports = (server) => {
       });
       io.to(roomID).emit('gameNotice', {
         dayNight: 'night',
-        msg: '<mark>밤이 되었습니다</mark>',
+        msg: '밤이 되었습니다',
         killed: false,
       });
       delete checkReady[roomID];
@@ -121,10 +121,11 @@ module.exports = (server) => {
     let mafiaVotedList = {};
     socket.on('mafiaVoted', (data) => {
       let roomID = userToRoom[data.from_id];
+      console.log(data);
       if (roomToUser[roomID]?.length <= 4) {
         io.to(roomID).emit('gameNotice', {
           dayNight: 'day',
-          msg: '<mark>낮이 되었습니다</mark>',
+          msg: '낮이 되었습니다',
           killed: data.killed_id,
         });
       } else {
@@ -136,12 +137,12 @@ module.exports = (server) => {
           mafiaVotedList[0] === mafiaVotedList[1]
             ? io.to(roomID).emit('gameNotice', {
                 dayNight: 'day',
-                msg: '<mark>낮이 되었습니다</mark>',
+                msg: '낮이 되었습니다',
                 killed: data.killed_id,
               })
             : io.to(roomID).emit('gameNotice', {
                 dayNight: 'day',
-                msg: '<mark>낮이 되었습니다</mark>',
+                msg: '낮이 되었습니다',
                 killed: false,
               });
         }
@@ -189,12 +190,12 @@ module.exports = (server) => {
         finalVoteCnt[roomID] > 0
           ? io.to(roomID).emit('gameNotice', {
               dayNight: 'night',
-              msg: '<mark>밤이 되었습니다</mark>',
+              msg: '밤이 되었습니다',
               killed: data.to_id,
             })
           : io.to(roomID).emit('gameNotice', {
               dayNight: 'night',
-              msg: '<mark>밤이 되었습니다</mark>',
+              msg: '밤이 되었습니다',
               killed: false,
             });
       }

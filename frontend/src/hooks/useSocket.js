@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
-import { setJobList, getUserList, setFinalListId } from '../store/modules/room';
+import {
+  setJobList,
+  getUserList,
+  setSocketId,
+  setFinalListId,
+} from '../store/modules/room';
 import { addMessage } from '../store/modules/message';
 import {
   setGameStatus,
@@ -12,12 +17,11 @@ import {
 
 const useSocket = () => {
   const dispatch = useDispatch();
-  const { userList, jobList } = useSelector((state) => state.room);
+  const { userList } = useSelector((state) => state.room);
   const { state: roomID } = useLocation();
 
-  // 채팅방 입장 시 입퇴장 알림
   useEffect(() => {
-    // 채팅방 입장,
+    // 채팅방 입장
     socket.emit('join room', roomID);
 
     // Realtime User Notice
@@ -49,14 +53,14 @@ const useSocket = () => {
 
       if (dayNight === 'day') {
         dispatch(addMessage(msg, 'gameNotice_Day'));
+        dispatch(setTimeStatus(dayNight));
         return;
       }
 
       if (dayNight === 'night') {
         dispatch(addMessage(msg, 'gameNotice_Night'));
+        dispatch(setTimeStatus(dayNight));
       }
-
-      dispatch(setTimeStatus(dayNight));
     });
 
     // 낮 - 지목 결과 받음
@@ -85,13 +89,6 @@ const useSocket = () => {
       } else {
         dispatch(addMessage(data.msg, 'ServerChat', data.from_id));
       }
-
-      // chatBox.current.insertAdjacentHTML(
-      //   'beforeend',
-      //   data.from_id === socket.id
-      //     ? `<div class='MyChatBox'><div>ME</div><div class='MyChat'>${data.msg}</div></div>`
-      //     : `<div class='NickName'>${data.from_id}<div><div class='ServerChat'>${data.msg}</div>`
-      // );
     });
 
     // 보낸 DM과 받은 DM 구별하여 수신
@@ -101,20 +98,16 @@ const useSocket = () => {
       } else {
         dispatch(addMessage(data.msg, 'DirectChat', data.from_id));
       }
-      // chatBox.current.insertAdjacentHTML(
-      //   'beforeend',
-      //   data.from_id === socket.id
-      //     ? `<div class='MyChatBox'><div class='MyDM'>DM to ${data.to_id} : ${data.msg}</div></div>`
-      //     : `<div class='DirectChat'>${data.from_id} : ${data.msg}</div>`
-      // );
     });
-  }, [dispatch]);
+  }, [dispatch, roomID]);
 
   useEffect(() => {
     // gameStart시, jobList, myJob update
     socket.on('gameStart', (data) => {
+      const job = data.jobList[userList.indexOf(socket.id)];
       dispatch(setGameStatus('playing'));
-      dispatch(setJobList(data.jobList, jobList[userList.indexOf(socket.id)]));
+      dispatch(setJobList(data.jobList, job));
+      dispatch(setSocketId(socket.id));
     });
   }, [userList, dispatch]);
 

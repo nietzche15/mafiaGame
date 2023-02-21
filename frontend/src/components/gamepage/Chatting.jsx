@@ -1,34 +1,22 @@
 import { Box, Button } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { socket } from '../../utils/socket';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import '../styles/Chatting.css';
-import { setJobList } from '../../store/modules/room';
 import Message from './Message';
 import MafiaText from '../MafiaText';
 import GlobalStyle from '../common/GlobalStyle';
-import SystemCahtting from './SystemCahtting';
 import ChattingText from './ChattingText';
 import DMText from '../DMText';
 
-export default function Chatting(props) {
+export default function Chatting() {
   const [isDM, setIsDM] = useState(false);
-
-  const dispatch = useDispatch();
   const { timeStatus } = useSelector((state) => state.status);
-  const { userList, jobList, myJob } = useSelector((state) => state.room);
+  const { userList } = useSelector((state) => state.room);
   const { messages } = useSelector((state) => state.message);
-  const changeToDM = () => {
-    setIsDM(!isDM);
-    // socket.emit('reqUserList', { from_id: socket.id });
-  };
+  const changeToDM = () => setIsDM(!isDM);
+  // socket.emit('reqUserList', { from_id: socket.id });
 
-  useEffect(() => {
-    socket.on('gameStart', (data) => {
-      dispatch(setJobList(data.jobList, jobList[userList.indexOf(socket.id)]));
-    });
-  }, [userList, dispatch]);
+  console.log(timeStatus);
 
   return (
     <>
@@ -50,7 +38,13 @@ export default function Chatting(props) {
 
         <Box>
           {messages.map((message) => (
-            <Message key={message.id} msg={message.msg} type={message.type} />
+            <Message
+              key={message.id}
+              msg={message.msg}
+              type={message.type}
+              fromId={message.fromId}
+              toId={message.toId}
+            />
           ))}
         </Box>
         <Box
@@ -72,7 +66,7 @@ export default function Chatting(props) {
           )}
 
           {isDM ? <DMText userList={userList} /> : <ChattingText />}
-          {myJob === 'mafia' && <MafiaText />}
+          <MafiaText />
         </Box>
       </Box>
     </>

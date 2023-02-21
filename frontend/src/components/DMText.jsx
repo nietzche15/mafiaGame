@@ -1,20 +1,16 @@
 import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import { socket } from '../utils/socket';
 
 export default function DMText() {
   const { timeStatus } = useSelector((state) => state.status);
   const userList = useSelector((state) => state.room.userList);
-  const roomID = useSelector((state) => state.room.roomID);
+  const { state: roomID } = useLocation();
 
   const DMInput = useRef();
   const selectDM = useRef();
-
-  // socket.on('getUserList', (data) => {
-  //   console.log('getUserList: ', userList);
-  //   userList = data.userList;
-  // });
 
   const showUserList = () => {
     console.log('userList in DM: ', userList);
@@ -31,15 +27,18 @@ export default function DMText() {
     // socket.emit('join', value);
     console.log('selectDM:', selectDM.current.value);
     socket.emit('sendDM', {
-      roomID: roomID,
+      roomID,
       from_id: socket.id,
       to_id: selectDM.current.value,
       msg: DMInput.current.value,
     });
   };
+
   const enterSubmit = (e) => {
     if (e.key === 'Enter') handleSubmit();
   };
+
+  if (timeStatus === 'night') return null;
 
   return (
     <Box
