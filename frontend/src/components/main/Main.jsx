@@ -4,7 +4,7 @@ import Rules from './Rules';
 import '../styles/main.css';
 
 export default function Main() {
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=openid,account_email,talk_message`;
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=openid,profile_image,account_email,profile_nickname`;
 
   const kakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
