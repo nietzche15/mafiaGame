@@ -5,9 +5,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useSelector } from 'react-redux';
-import { socket } from '../utils/socket';
+import { socket } from '../../utils/socket';
 
-export default function Vote() {
+export default function Vote(props) {
   const [job, setJob] = React.useState('');
   const myJob = useSelector((state) => state.room.myJob);
 
@@ -32,7 +32,7 @@ export default function Vote() {
     setJob(event.target.value);
   };
   return (
-    <Box sx={{ minWidth: 15, display: 'none' }}>
+    <Box sx={{ minWidth: 15 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">투표</InputLabel>
         <Select
@@ -41,10 +41,14 @@ export default function Vote() {
           value={job}
           onChange={handleChange}
         >
-          <MenuItem value={10}>닉네임</MenuItem>
-          <MenuItem value={20}>닉네임</MenuItem>
-          <MenuItem value={30}>닉네임</MenuItem>
-          <MenuItem value={40}>닉네임</MenuItem>
+          <MenuItem value={10}> {props.name}</MenuItem>
+          <MenuItem value={20}> {props.name}</MenuItem>
+          <MenuItem value={30}> {props.name}</MenuItem>
+          <MenuItem value={40}> {props.name}</MenuItem>
+          <MenuItem value={50}> {props.name}</MenuItem>
+          <MenuItem value={60}> {props.name}</MenuItem>
+          <MenuItem value={70}> {props.name}</MenuItem>
+          <MenuItem value={80}> {props.name}</MenuItem>
         </Select>
       </FormControl>
     </Box>

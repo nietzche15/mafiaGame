@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Checkbox, Typography } from '@mui/material';
 // import VolumeDown from "@mui/icons-material/VolumeDown";
 // import VolumeUp from "@mui/icons-material/VolumeUp";
@@ -8,6 +8,10 @@ import Vote from './Vote';
 // import Target from "./Target";
 
 export default function Video(props) {
+  function kill() {
+    console.log(props);
+  }
+
   return (
     <Box
       sx={{
@@ -18,6 +22,7 @@ export default function Video(props) {
         justifyContent: 'center',
         width: 465,
       }}
+      onClick={kill}
     >
       <Box>
         <Box
@@ -45,17 +50,7 @@ export default function Video(props) {
             borderRadius: '10px',
           }}
         >
-          <JobMemo />
-        </Box>
-        <Box
-          sx={{
-            width: '200px',
-            backgroundColor: '#D9D9D9',
-            mt: 1,
-            borderRadius: '10px',
-          }}
-        >
-          <JobMemo />
+          <JobMemo name={props.name} />
         </Box>
         <Box
           sx={{
@@ -77,6 +72,16 @@ export default function Video(props) {
           borderRadius: '10px',
         }}
       >
+        <img
+          src="./images/killimg.png"
+          style={{
+            position: 'absolute',
+            width: '200px',
+            height: '200px',
+            display: 'block',
+          }}
+        />
+
         <img
           src="./images/mafiaImg.png"
           alt="mafiaImg"
