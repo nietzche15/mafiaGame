@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
-import { getUserList } from '../store/modules/room';
+import { setJobList, getUserList, setFinalListId } from '../store/modules/room';
 import { addMessage } from '../store/modules/message';
+import {
+  setGameStatus,
+  setTimeStatus,
+  setMyStatus,
+} from '../store/modules/status';
 
 const useSocket = () => {
   const dispatch = useDispatch();
-  const { userId, userList } = useSelector((state) => state.room);
+  const { userList, jobList } = useSelector((state) => state.room);
+  const { state: roomID } = useLocation();
 
-  const [isDM, setIsDM] = useState(false);
-  const [isNight, setIsNight] = useState(false);
-  const [isMafia, setIsMafia] = useState(false);
-  const [isKilled, setIsKilled] = useState(false);
-  const [isFinalist, setIsFinalist] = useState(true);
-
-  //채팅방 입장 시 입퇴장 알림
+  // 채팅방 입장 시 입퇴장 알림
   useEffect(() => {
+    // 채팅방 입장,
+    socket.emit('join room', roomID);
+
     // Realtime User Notice
     socket.on('notice', (data) => {
       const outMessgae = '님이 방을 나갔습니다.';
@@ -33,38 +37,46 @@ const useSocket = () => {
     // 게임 중 서버 메세지
     socket.on('gameNotice', ({ msg, dayNight, killed }) => {
       // killed_id 확인
-      killed === socket.id ? setIsKilled(true) : false;
-      // dayNight - day/night/false 확인
+      if (killed === socket.id) {
+        dispatch(setMyStatus('dead'));
+      }
 
+      // dayNight - day/night/false 확인
       if (!dayNight) {
         dispatch(addMessage(msg, 'gameNotice'));
         return;
       }
 
       if (dayNight === 'day') {
-        setIsNight(false);
         dispatch(addMessage(msg, 'gameNotice_Day'));
         return;
       }
 
       if (dayNight === 'night') {
-        setIsNight(true);
         dispatch(addMessage(msg, 'gameNotice_Night'));
       }
+
+      dispatch(setTimeStatus(dayNight));
     });
 
     // 낮 - 지목 결과 받음
     // 누가 누구를 지목했는지 보여주고,
     // 최종 변론 후보 산출
     socket.on('votedResult', (data) => {
-      let peopleVotedList = data.peopleVotedList;
+      const { peopleVotedList } = data;
       // { '지목당한 사람1' : [지목한 사람1, 지목한 사람2,..], '지목당한 사람2' : [...], ...  }
-      let list = Object.keys(peopleVotedList);
-      let listCnt = list.map((e) => peopleVotedList[e].length);
-      let result = list[listCnt.indexOf(Math.max(...listCnt))];
-      finalist = result;
-      finalist === socket.id ? setIsFinalist(true) : setIsFinalist(false);
+      const list = Object.keys(peopleVotedList);
+      const listCnt = list.map((e) => peopleVotedList[e].length);
+      const result = list[listCnt.indexOf(Math.max(...listCnt))];
+      dispatch(setFinalListId(result));
     });
+
+    // 낮 - 찬반 투표 결과 전송
+    // socket.emit('finalVote', {
+    //   from_id: socket.id,
+    //   to_id: finalist,
+    //   voted: 'true/false',
+    // });
 
     // MyChat과 다른 Chat 구별하여 수신
     socket.on('getChat', (data) => {
@@ -96,7 +108,15 @@ const useSocket = () => {
       //     : `<div class='DirectChat'>${data.from_id} : ${data.msg}</div>`
       // );
     });
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    // gameStart시, jobList, myJob update
+    socket.on('gameStart', (data) => {
+      dispatch(setGameStatus('playing'));
+      dispatch(setJobList(data.jobList, jobList[userList.indexOf(socket.id)]));
+    });
+  }, [userList, dispatch]);
 
   return {};
 };

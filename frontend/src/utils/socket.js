@@ -4,3 +4,5 @@ export const socket = io('http://localhost:4000', {
   cors: { origin: '*' },
   transports: ['websocket'],
 });
+
+export default {};
