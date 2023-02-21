@@ -11,7 +11,7 @@ export default function Rules() {
 
 
   function r1() {
-    setState('첫번째')
+    setState('첫번째d')
     rr1.current.style.width = '25px';
     rr2.current.style.width = '15px';
     rr3.current.style.width = '15px';
