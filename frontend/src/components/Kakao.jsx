@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import { Cookies } from 'react-cookie';
 
 export default function Kakao() {
+  const cookies = new Cookies();
+  // const cookies = Cookies();
+
   useEffect(async () => {
     const code = new URL(window.location.href).searchParams.get('code');
     let grant_type = 'authorization_code';
@@ -21,7 +25,12 @@ export default function Kakao() {
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
       },
     });
-    console.log(res2.data.kakao_account.email);
+    // console.log(res2.data.kakao_account.email)
+    // console.log(res2.data.properties.profile_image)
+    console.log(res2);
+    cookies.set('id1', res2.data.kakao_account.email);
+    cookies.set('id2', res2.data.properties.profile_image);
+    cookies.set('id3', res2.data.properties.nickname);
     location.href = 'http://localhost:3000/lobby';
   }, []);
 
