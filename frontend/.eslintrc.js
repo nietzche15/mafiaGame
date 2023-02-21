@@ -1,8 +1,14 @@
 module.exports = {
-  extends: ['airbnb-base'],
+  extends: ['airbnb', 'prettier'],
   rules: {
     'linebreak-style': 0,
     'no-console': 'off',
+    'no-unused-vars': 'warn',
+    'default-param-last': 'off',
+    'arrow-body-style': 'off',
+    'react/function-component-definition': 'off',
+    'react/prop-types': 'off',
+    'react/no-array-index-key': 'off',
   },
   parserOptions: {
     exmaFeatures: {
@@ -11,21 +17,4 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-};
-
-module.exports = {
-  extends: [
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
-  overrides: [
-    {
-      files: ['*.js', '*.jsx'],
-      rules: {
-        '@typescript-eslint/explicit-function-return-type': 'off',
-      },
-    },
-  ],
 };

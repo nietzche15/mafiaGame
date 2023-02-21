@@ -1,35 +1,24 @@
 import { Box, Button } from '@mui/material';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import DMText from '../DMText';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../../utils/socket';
 import '../styles/Chatting.css';
-import { getJobList, getUserList } from '../../store/modules/room';
+import { setJobList } from '../../store/modules/room';
 import Message from './Message';
 import MafiaText from '../MafiaText';
 import GlobalStyle from '../common/GlobalStyle';
 import SystemCahtting from './SystemCahtting';
 import ChattingText from './ChattingText';
-
-let jobList;
-let myJob;
-let finalist;
+import DMText from '../DMText';
 
 export default function Chatting(props) {
   const [isDM, setIsDM] = useState(false);
-  const [isNight, setIsNight] = useState(false);
-  const [isKilled, setIsKilled] = useState(false);
-  const [isFinalist, setIsFinalist] = useState(true);
-  const [change, setChange] = useState(false);
 
-  const { userList, jobList, myJob, userId } = useSelector(
-    (state) => state.room
-  );
-
+  const dispatch = useDispatch();
+  const { timeStatus } = useSelector((state) => state.status);
+  const { userList, jobList, myJob } = useSelector((state) => state.room);
   const { messages } = useSelector((state) => state.message);
-  console.log('inChatting: ', myJob);
-
   const changeToDM = () => {
     setIsDM(!isDM);
     // socket.emit('reqUserList', { from_id: socket.id });
@@ -37,10 +26,9 @@ export default function Chatting(props) {
 
   useEffect(() => {
     socket.on('gameStart', (data) => {
-      jobList = data.jobList;
-      myJob = jobList[userList.indexOf(socket.id)];
+      dispatch(setJobList(data.jobList, jobList[userList.indexOf(socket.id)]));
     });
-  }, [userList]);
+  }, [userList, dispatch]);
 
   return (
     <>
@@ -60,16 +48,11 @@ export default function Chatting(props) {
         <Timer setChange={setChange} />
       </Box> */}
 
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <SystemCahtting change={change}> </SystemCahtting>
-        </Box>
         <Box>
-          <div ref={chatBox} id="chatBox"></div>
           {messages.map((message) => (
             <Message key={message.id} msg={message.msg} type={message.type} />
           ))}
         </Box>
-
         <Box
           sx={{
             position: 'sticky',
@@ -79,7 +62,7 @@ export default function Chatting(props) {
             alignItems: 'center',
           }}
         >
-          {isNight || (
+          {timeStatus === 'day' && (
             <Button
               onClick={changeToDM}
               sx={{ fontFamily: 'MaplestoryOTFBold' }}
@@ -87,9 +70,9 @@ export default function Chatting(props) {
               {isDM ? 'quitDM' : 'sendDM'}
             </Button>
           )}
-          {!isNight && !isDM && <ChattingText />}
-          {!isNight && isDM && <DMText userList={userList} />}
-          {isNight && myJob === 'mafia' && <MafiaText />}
+
+          {isDM ? <DMText userList={userList} /> : <ChattingText />}
+          {myJob === 'mafia' && <MafiaText />}
         </Box>
       </Box>
     </>

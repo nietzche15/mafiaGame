@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { socket } from '../utils/socket';
 
 export default function DMText() {
+  const { timeStatus } = useSelector((state) => state.status);
   const userList = useSelector((state) => state.room.userList);
   const roomID = useSelector((state) => state.room.roomID);
 
