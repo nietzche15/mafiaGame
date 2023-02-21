@@ -5,7 +5,7 @@ import Main from './components/main/Main';
 import Kakao from './components/main/Kakao';
 import Profile from './components/Profile';
 import Lobby from './components/lobby/Lobby';
-import Mypage from './components/Mypage';
+import Mypage from './components/mypage/Mypage';
 import Naver from './components/main/Naver';
 import NotFound from './pages/NotFound';
 
