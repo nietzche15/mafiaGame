@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import '../styles/lobby.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -7,6 +7,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import GameRoom from './GameRoom';
 import {Cookies} from 'react-cookie';
+import LobbyChat from './LobbyChat';
 
 export default function Lobby() {
   const cookies = new Cookies()
@@ -45,6 +46,26 @@ export default function Lobby() {
     p: 4,
   };
 
+  useEffect(()=>{
+    socket.on('getChat2', (data) => {
+        data.from_id === socket.id
+          ? `${data.msg}` : ''
+    });
+
+
+    // 로비채팅
+        socket.on('getChat2', (data) => {
+          chatBox.current.insertAdjacentHTML(
+            'beforeend',
+            data.from_id === socket.id
+              ? `<div class='MyChatBox'><div >ME</div><div class='MyChat'>${data.msg}</div></div>`
+              : `<div class='NickName'>${data.from_id}<div><div class='ServerChat'>${data.msg}</div>`
+          );
+        });
+
+
+  },[])
+
   return (
     <div className="lobby">
       <div className="left">
@@ -74,14 +95,9 @@ export default function Lobby() {
             <Button onClick={handleOpen} variant="contained" color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989'} }}>
               방 생성
             </Button>
-            
-            <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
+
+            {/* <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+              <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Text in a modal
           </Typography>
@@ -89,8 +105,7 @@ export default function Lobby() {
             Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
           </Typography>
         </Box>
-      </Modal>
-
+      </Modal> */}
 
             <br />
             <br />
@@ -105,7 +120,9 @@ export default function Lobby() {
             </div>
           </div>
         </div>
-        <div className="chatlist">채팅창</div>
+        <div className="chatlist">
+          <LobbyChat/>
+        </div>
       </div>
     </div>
   );
