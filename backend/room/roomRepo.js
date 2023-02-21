@@ -15,7 +15,6 @@ class RoomRepo {
     let autoNum = autoInc();
     const createdRoom = await Room.create({
       _id: autoNum,
-      gameMode: gameMode,
       roomTitle: roomTitle,
       roomCaptain: nickname,
     });
