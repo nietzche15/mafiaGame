@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Box, Checkbox, Typography } from '@mui/material';
-// import VolumeDown from "@mui/icons-material/VolumeDown";
-// import VolumeUp from "@mui/icons-material/VolumeUp";
+import { socket } from '../../utils/socket';
 import JobMemo from './JobMemo';
 import Vote from './Vote';
+
 // import Vote from "./Vote";
 // import Target from "./Target";
 
-export default function Video(props) {
-  function kill() {
-    console.log(props);
-  }
+export default function Video({ name }) {
+  const { timeStatus, myStatus } = useSelector((state) => state.status);
+  const { mySocketId, myJob } = useSelector((state) => state.room);
+
+  const onClickKill = () => {
+    if (myJob === 'mafia' && timeStatus === 'night') {
+      console.log(mySocketId);
+      socket.emit('mafiaVoted', { killed_id: name, from_id: mySocketId });
+    }
+  };
 
   return (
     <Box
@@ -22,7 +29,7 @@ export default function Video(props) {
         justifyContent: 'center',
         width: 465,
       }}
-      onClick={kill}
+      onClick={onClickKill}
     >
       <Box>
         <Box
@@ -38,7 +45,7 @@ export default function Video(props) {
           }}
         >
           <Typography variant="h7" component="div">
-            {props.name}
+            {name}
           </Typography>
           <Checkbox disabled sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }} />
         </Box>
@@ -50,7 +57,7 @@ export default function Video(props) {
             borderRadius: '10px',
           }}
         >
-          <JobMemo name={props.name} />
+          <JobMemo name={name} />
         </Box>
         <Box
           sx={{
@@ -72,15 +79,18 @@ export default function Video(props) {
           borderRadius: '10px',
         }}
       >
-        <img
-          src="./images/killimg.png"
-          style={{
-            position: 'absolute',
-            width: '200px',
-            height: '200px',
-            display: 'block',
-          }}
-        />
+        {myStatus === 'dead' ? (
+          <img
+            src="./images/killimg.png"
+            alt="killImg"
+            style={{
+              position: 'absolute',
+              width: '200px',
+              height: '200px',
+              display: 'block',
+            }}
+          />
+        ) : null}
 
         <img
           src="./images/mafiaImg.png"

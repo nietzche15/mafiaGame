@@ -1,9 +1,15 @@
 const initState = {
+  /** 방 번호 */
   roomID: '',
+  /** 유저 목록 */
   userList: ['', '', '', '', '', '', '', ''],
+  /** 직업 목록 mafia 마피아 */
   jobList: [],
+  /** 내 직업 */
   myJob: '',
+  /** 내 소켓 아이디 */
   mySocketId: '',
+  /** 지목 투표 많이 당한 사람 */
   finalistId: '',
 };
 
