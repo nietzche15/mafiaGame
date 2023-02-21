@@ -27,9 +27,10 @@ export default function Kakao() {
             })
             // console.log(res2.data.kakao_account.email)
             // console.log(res2.data.properties.profile_image)
-            
+            console.log(res2)
             cookies.set('id1', res2.data.kakao_account.email);
             cookies.set('id2', res2.data.properties.profile_image);
+            cookies.set('id3', res2.data.properties.nickname);
             location.href = 'http://localhost:3000/lobby';
 
     }, [])

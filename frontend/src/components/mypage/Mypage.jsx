@@ -10,8 +10,10 @@ export default function Mypage() {
     const cookies = new Cookies()
     console.log(cookies.get('id1'))
     console.log(cookies.get('id2'))
+    console.log(cookies.get('id3'))
     const [email,setEmail] = useState(cookies.get('id1'))
     const [img,setImg] = useState(cookies.get('id2'))
+    const [name,setName] = useState(cookies.get('id3'))
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -35,14 +37,16 @@ export default function Mypage() {
     function kakaoLogout() {
         location.href = `https://kauth.kakao.com/oauth/logout?client_id=${API}&logout_redirect_uri=${logout}`
     }
-    
 
     return (
         <div className='mypage'>
             <div className='info' >
                 <table className='table'>
                     <tr>
-                        <td style={{ width: '170px', textAlign: 'center' }} rowspan="2" ><img style={{ width: '100%', borderRadius:'10px' }} src={img} />닉네임</td>
+                        <td style={{ width: '170px', textAlign: 'center' }} rowspan="2" ><img style={{ width: '100%', borderRadius:'10px' }}
+                        src={
+                            img == 'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg' ? './images/mafiaImg.png' : img }
+                           />{name}</td>
                         <td style={{ height: '100px' }} >{email}</td>
                     </tr>
                     <tr>
