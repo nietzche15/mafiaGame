@@ -1,7 +1,7 @@
 import React from 'react';
-import GlobalStyle from './common/GlobalStyle';
+import GlobalStyle from '../common/GlobalStyle';
 import Rules from './Rules';
-import './styles/main.css';
+import '../styles/main.css';
 
 export default function Main() {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=openid,account_email,talk_message`;

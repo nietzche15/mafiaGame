@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
-import './styles/lobby.css';
+import '../styles/lobby.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { getRoomID } from '../store/modules/room';
+import { getRoomID } from '../../store/modules/room';
 import { Box, Button, TextField } from '@mui/material';
 import GameRoom from './GameRoom';
 
