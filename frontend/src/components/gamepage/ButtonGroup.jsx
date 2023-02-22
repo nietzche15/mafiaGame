@@ -1,5 +1,6 @@
 import { Box, Button } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { socket } from '../../utils/socket';
 import GlobalStyle from '../common/GlobalStyle';
@@ -13,22 +14,32 @@ export default function ButtonGroup() {
   const userList = useSelector((state) => state.room.userList);
 
   // userList의 첫번째 socket.id 가 captain, userList 바뀔때마다 update
+  const navigate = useNavigate();
+
   useEffect(() => {
-    userList.indexOf(socket.id) === 0
-      ? setIsCaptain(true)
-      : setIsCaptain(false);
-    !isCaptain && userList.length >= 4 ? setIsReady(false) : setIsReady(true);
+    if (userList.indexOf(socket.id) === 0) {
+      setIsCaptain(true);
+    } else {
+      setIsCaptain(false);
+    }
+    if (!isCaptain && userList.length >= 4) {
+      setIsReady(false);
+    } else {
+      setIsReady(true);
+    }
   }, [userList]);
 
   const gameReady = () => {
     setIsReady(true);
-    isCaptain
-      ? socket.emit('gameStart', {
-          from_id: socket.id,
-        })
-      : socket.emit('gameReady', {
-          from_id: socket.id,
-        });
+    if (isCaptain) {
+      socket.emit('gameStart', {
+        from_id: socket.id,
+      });
+    } else {
+      socket.emit('gameReady', {
+        from_id: socket.id,
+      });
+    }
   };
 
   // const gameStart = () => {
@@ -69,7 +80,7 @@ export default function ButtonGroup() {
             },
           }}
           onClick={gameReady}
-          disabled={isReady ? true : false}
+          disabled={isReady}
         >
           {isCaptain ? 'Game START' : 'READY'}
         </Button>
@@ -80,8 +91,7 @@ export default function ButtonGroup() {
           color="secondary"
           sx={{ m: 1, fontFamily: 'MaplestoryOTFBold', fontWeight: 'bolder' }}
           onClick={() => {
-            location.href = '/lobby';
-            // navigate('/lobby', { replace: true });
+            navigate('/lobby');
           }}
         >
           나가기
