@@ -1,20 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { socket } from '../../utils/socket';
-// import useSocket from '../../hooks/useSocket';
-// import { InfinitySpin } from 'react-loader-spinner';
-import { useNavigate } from 'react-router';
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
 } from '@mui/material';
+// import useSocket from '../../hooks/useSocket';
+// import { InfinitySpin } from 'react-loader-spinner';
+import { useNavigate } from 'react-router';
 import { asyncRoomList } from '../../store/modules/roomlist';
-let addedRoom = [];
+// import { socket } from '../../utils/socket';
+
+// let addedRoom = [];
 
 export default function GameRoom() {
   const [open, setOpen] = useState(false);
@@ -35,20 +35,24 @@ export default function GameRoom() {
     return state.asyncThunk.data;
   });
 
-  const asyncLoading = useSelector((state) => {
-    return state.asyncThunk.loading;
-  });
+  // const asyncLoading = useSelector((state) => {
+  //   return state.asyncThunk.loading;
+  // });
 
   const enterRoom = (e) => {
-    let roomID = e.currentTarget.getAttribute('value');
-    let roomPW = e.currentTarget.getAttribute('password');
-    setPassword(roomPW);
-    setRoomID(roomID);
-    console.log('roomID,roomPW:', roomID, roomPW);
-    roomPW
+    let room_ID = e.currentTarget.getAttribute('value');
+    let room_PW = e.currentTarget.getAttribute('password');
+    setPassword(room_PW);
+    setRoomID(room_ID);
+    console.log('roomID,roomPW:', room_ID, room_PW);
+    room_PW
       ? setOpen(true)
       : navigate('/gamepage', { state: roomID, replace: true });
   };
+
+  // const enterSubmit = (e) => {
+  //   if (e.key === 'Enter') enterRoom();
+  // };
 
   const handleClose = () => {
     setOpen(false);
