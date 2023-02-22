@@ -3,15 +3,12 @@ import '../../components/styles/lobby.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
-  Typography,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -24,6 +21,7 @@ import LobbyChat from '../../components/lobby/LobbyChat';
 import GameRoom from '../../components/lobby/GameRoom';
 import { getRoomID } from '../../store/modules/room';
 import { socket } from '../../utils/socket';
+import { asyncRoomList } from '../../store/modules/roomlist';
 
 export default function Lobby() {
   const cookies = new Cookies();
@@ -32,10 +30,21 @@ export default function Lobby() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [locked, setLocked] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [alertPW, setAlertPw] = useState(false);
+  // const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setAlertPw(false);
+  };
   const roomName = useRef();
   const roomPW = useRef();
+  useEffect(() => {
+    dispatch(asyncRoomList());
+  }, []);
+
+  socket.on('allRooms', () => {
+    dispatch(asyncRoomList());
+  });
 
   // console.log(cookies.get('id1'));
   // console.log(cookies.get('id2'));
@@ -56,17 +65,33 @@ export default function Lobby() {
   };
 
   const handleSubmit = () => {
-    socket.emit('newRoomInfo', {
-      room_name: roomName.current.value,
-      room_locked: locked,
-      room_PW: roomPW.current?.value || false,
-      room_owner: socket.id,
-    });
-    setOpen(false);
+    console.log('roomPW.current', roomPW.current);
+    console.log('roomPW.current?.value', roomPW.current?.value);
+    locked && roomPW.current.value === ''
+      ? setAlertPw(true)
+      : (setOpen(false),
+        setAlertPw(false),
+        socket.emit('newRoomInfo', {
+          room_name: roomName.current.value,
+          room_locked: locked,
+          room_PW: roomPW.current?.value || false,
+          room_owner: socket.id,
+        }));
+    // console.log('open', open);
   };
 
   const radioChange = (e) => {
     e.target.value === 'Yes' ? setLocked(true) : setLocked(false);
+  };
+
+  const enterSubmitUnlocked = (e) => {
+    console.log('enterSubmitUnlocked');
+    if (e.key === 'Enter') handleSubmit();
+  };
+
+  const enterSubmitLocked = (e) => {
+    console.log('enterSubmitLocked');
+    if (e.key === 'Enter') handleSubmit();
   };
 
   const style = {
@@ -115,7 +140,7 @@ export default function Lobby() {
 
           <div className="right">
             <Button
-              onClick={handleOpen}
+              onClick={createRoom}
               variant="contained"
               color="primary"
               sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}
@@ -153,6 +178,7 @@ export default function Lobby() {
                       value="No"
                       control={<Radio />}
                       label="No"
+                      onKeyDown={enterSubmitUnlocked}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -160,10 +186,11 @@ export default function Lobby() {
                 {locked && (
                   <TextField
                     inputRef={roomPW}
-                    label="Password"
+                    label={alertPW ? 'Enter Password' : 'Password'}
                     variant="outlined"
                     size="small"
                     margin="dense"
+                    onKeyDown={enterSubmitLocked}
                   />
                 )}
               </DialogContent>

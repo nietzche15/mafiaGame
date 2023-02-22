@@ -9,9 +9,9 @@ import {
   TextField,
 } from '@mui/material';
 // import useSocket from '../../hooks/useSocket';
-// import { InfinitySpin } from 'react-loader-spinner';
+import { InfinitySpin } from 'react-loader-spinner';
 import { useNavigate } from 'react-router';
-import { asyncRoomList } from '../../store/modules/roomlist';
+// import { asyncRoomList } from '../../store/modules/roomlist';
 // import { socket } from '../../utils/socket';
 
 // let addedRoom = [];
@@ -27,17 +27,13 @@ export default function GameRoom() {
   const inputPW = useRef();
   const myRefs = useRef([]);
 
-  useEffect(() => {
-    dispatch(asyncRoomList());
-  }, []);
-
   const roomList = useSelector((state) => {
     return state.asyncThunk.data;
   });
 
-  // const asyncLoading = useSelector((state) => {
-  //   return state.asyncThunk.loading;
-  // });
+  const asyncLoading = useSelector((state) => {
+    return state.asyncThunk.loading;
+  });
 
   const enterRoom = (e) => {
     let room_ID = e.currentTarget.getAttribute('value');
@@ -49,10 +45,6 @@ export default function GameRoom() {
       ? setOpen(true)
       : navigate('/gamepage', { state: roomID, replace: true });
   };
-
-  // const enterSubmit = (e) => {
-  //   if (e.key === 'Enter') enterRoom();
-  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -69,6 +61,10 @@ export default function GameRoom() {
       ? (setOpen(false), setCnt(4))
       : (inputPW.current.value = ''),
       inputPW.current.setAttribute('placeholder', `TRY AGAIN(${cnt}/5)`);
+  };
+
+  const enterSubmitPW = (e) => {
+    if (e.key === 'Enter') checkPassword();
   };
 
   return (
@@ -90,7 +86,7 @@ export default function GameRoom() {
           </div>
         </div>
         <div>
-          {/* {asyncLoading && <InfinitySpin width="100" color=" cornflowerblue" />} */}
+          {asyncLoading && <InfinitySpin width="100" color=" cornflowerblue" />}
           {Object.keys(roomList).map((e, i) => {
             return (
               <div
@@ -119,6 +115,7 @@ export default function GameRoom() {
               variant="outlined"
               size="small"
               margin="dense"
+              onKeyDown={enterSubmitPW}
             />
           </DialogContent>
           <DialogActions>

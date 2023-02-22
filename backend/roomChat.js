@@ -133,7 +133,7 @@ module.exports = (server) => {
     // 게임 시작 : setIsGame(true)
     socket.on('gameReady', (data) => {
       let roomID = userToRoom[data.from_id];
-      let readyCnt = roomToUser[roomID].length - 1; // 방장 빼고 전부 ready
+      let readyCnt = roomToUser[roomID]?.length - 1; // 방장 빼고 전부 ready
       checkReady[roomID] === readyCnt - 1
         ? io.to(roomToUser[roomID][0]).emit('readyComplete')
         : checkReady[roomID] > 0
@@ -235,7 +235,7 @@ module.exports = (server) => {
       finalVoteCnt[roomID] ||= 0;
       data.voted ? (finalVoteCnt[roomID] += 1) : (finalVoteCnt[roomID] -= 1);
 
-      if (finalVotedList[roomID].push(data.from_id).length === len) {
+      if (finalVotedList[roomID].push(data.from_id) === len) {
         finalVoteCnt[roomID] > 0
           ? io.to(roomID).emit('gameNotice', {
               dayNight: 'night',
