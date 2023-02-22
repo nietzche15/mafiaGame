@@ -7,6 +7,7 @@ import {
   getUserList,
   setSocketId,
   setFinalListId,
+  addKilledUser,
 } from '../store/modules/room';
 import { addMessage } from '../store/modules/message';
 import {
@@ -40,7 +41,12 @@ const useSocket = () => {
 
     // 게임 중 서버 메세지
     socket.on('gameNotice', ({ msg, dayNight, killed }) => {
-      // killed_id 확인
+      // killed_id 확인 죽는지 확인하는곳
+
+      if (killed) {
+        dispatch(addKilledUser(killed));
+      }
+
       if (killed === socket.id) {
         dispatch(setMyStatus('dead'));
       }
