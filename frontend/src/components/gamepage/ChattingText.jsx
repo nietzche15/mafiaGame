@@ -6,7 +6,7 @@ import { socket } from '../../utils/socket';
 import GlobalStyle from '../common/GlobalStyle';
 
 export default function ChattingText() {
-  const { timeStatus } = useSelector((state) => state.status);
+  const { timeStatus, myStatus } = useSelector((state) => state.status);
   const [value, setValue] = useState('');
   const handleChange = (event) => setValue(event.target.value);
   const handleSubmit = (event) => {
@@ -19,6 +19,7 @@ export default function ChattingText() {
   };
 
   if (timeStatus === 'night') return null;
+  if (myStatus === 'dead') return null;
 
   return (
     <Box

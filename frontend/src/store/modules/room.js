@@ -11,6 +11,8 @@ const initState = {
   mySocketId: '',
   /** 지목 투표 많이 당한 사람 */
   finalistId: '',
+  /** 죽은 유저 목록 */
+  killedUserList: [],
 };
 
 // ACTION TYPE
@@ -24,9 +26,13 @@ const SET_SOCKET_ID = 'SET_SOCKET_ID';
 
 const SET_FINALIST_ID = 'SET_FINALIST_ID';
 
+const ADD_KILLED_USER = 'ADD_KILLED_USER';
+
 // 액션 생성 함수
+/** @param {string} roomID 방 번호 */
 export const getRoomID = (roomID) => ({ type: GETROOMID, payload: roomID });
 
+/** @param {string[]} userList 유저 목록 */
 export const getUserList = (userList) => ({
   type: GETUSERLIST,
   payload: { userList },
@@ -44,6 +50,11 @@ export const setSocketId = (mySocketId) => ({
 
 export const setFinalListId = (id) => ({
   type: SET_FINALIST_ID,
+  payload: { id },
+});
+
+export const addKilledUser = (id) => ({
+  type: ADD_KILLED_USER,
   payload: { id },
 });
 
@@ -69,6 +80,11 @@ export default function room(state = initState, action) {
       };
     case SET_FINALIST_ID:
       return { ...state, finalistId: action.payload.id };
+    case ADD_KILLED_USER:
+      return {
+        ...state,
+        killedUserList: [...state.killedUserList, action.payload.id],
+      };
     default:
       return state;
   }
