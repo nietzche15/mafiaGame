@@ -7,7 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useSelector } from 'react-redux';
 import { socket } from '../../utils/socket';
 
-export default function Vote(props) {
+export default function Vote({ name }) {
   const [job, setJob] = React.useState('');
   const myJob = useSelector((state) => state.room.myJob);
 
@@ -41,14 +41,14 @@ export default function Vote(props) {
           value={job}
           onChange={handleChange}
         >
-          <MenuItem value={10}> {props.name}</MenuItem>
-          <MenuItem value={20}> {props.name}</MenuItem>
-          <MenuItem value={30}> {props.name}</MenuItem>
-          <MenuItem value={40}> {props.name}</MenuItem>
-          <MenuItem value={50}> {props.name}</MenuItem>
-          <MenuItem value={60}> {props.name}</MenuItem>
-          <MenuItem value={70}> {props.name}</MenuItem>
-          <MenuItem value={80}> {props.name}</MenuItem>
+          <MenuItem value={10}> {name}</MenuItem>
+          <MenuItem value={20}> {name}</MenuItem>
+          <MenuItem value={30}> {name}</MenuItem>
+          <MenuItem value={40}> {name}</MenuItem>
+          <MenuItem value={50}> {name}</MenuItem>
+          <MenuItem value={60}> {name}</MenuItem>
+          <MenuItem value={70}> {name}</MenuItem>
+          <MenuItem value={80}> {name}</MenuItem>
         </Select>
       </FormControl>
     </Box>
