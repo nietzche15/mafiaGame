@@ -32,7 +32,8 @@ const ADD_KILLED_USER = 'ADD_KILLED_USER';
 /** @param {string} roomID 방 번호 */
 export const getRoomID = (roomID) => ({ type: GETROOMID, payload: roomID });
 
-/** @param {string[]} userList 유저 목록 */
+/** 유저 목록 저장 함수
+ * @param {string[]} userList 유저 목록 */
 export const getUserList = (userList) => ({
   type: GETUSERLIST,
   payload: { userList },
