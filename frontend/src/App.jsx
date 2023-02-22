@@ -15,11 +15,12 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/gamepage" element={<GamePage />} />
         <Route path="/kakao" element={<Kakao />} />
         <Route path="/naver" element={<Naver />} />
-        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/lobby" element={<Lobby />} />
+        <Route path="/gamepage" element={<GamePage />} />
+
+        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
