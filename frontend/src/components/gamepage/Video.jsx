@@ -9,12 +9,13 @@ import Vote from './Vote';
 // import Target from "./Target";
 
 export default function Video({ name }) {
-  const { timeStatus, myStatus } = useSelector((state) => state.status);
-  const { mySocketId, myJob } = useSelector((state) => state.room);
+  const { timeStatus } = useSelector((state) => state.status);
+  const { mySocketId, myJob, userList, killedUserList } = useSelector(
+    (state) => state.room
+  );
 
   const onClickKill = () => {
     if (myJob === 'mafia' && timeStatus === 'night') {
-      console.log(mySocketId);
       socket.emit('mafiaVoted', { killed_id: name, from_id: mySocketId });
     }
   };
@@ -67,7 +68,7 @@ export default function Video({ name }) {
             borderRadius: '10px',
           }}
         >
-          <Vote />
+          <Vote name={userList} />
         </Box>
       </Box>
 
@@ -79,17 +80,28 @@ export default function Video({ name }) {
           borderRadius: '10px',
         }}
       >
-        {myStatus === 'dead' ? (
-          <img
-            src="./images/killimg.png"
-            alt="killImg"
-            style={{
+        {killedUserList.includes(name) ? (
+          <Box
+            sx={{
               position: 'absolute',
               width: '200px',
               height: '200px',
-              display: 'block',
+              backgroundColor: '#171717',
+              borderRadius: '10px',
             }}
-          />
+          >
+            <img
+              src="./images/killimg.png"
+              alt="killimg"
+              style={{
+                position: 'absolute',
+                width: '200px',
+                height: '200px',
+                backgroundColor: '#171717',
+                borderRadius: '10px',
+              }}
+            />
+          </Box>
         ) : null}
 
         <img

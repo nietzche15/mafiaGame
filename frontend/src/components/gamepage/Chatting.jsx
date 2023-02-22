@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import '../styles/Chatting.css';
 import Message from './Message';
-import MafiaText from '../MafiaText';
+import MafiaText from './MafiaText';
 import GlobalStyle from '../common/GlobalStyle';
 import ChattingText from './ChattingText';
-import DMText from '../DMText';
+import DMText from './DMText';
 
 export default function Chatting() {
   const [isDM, setIsDM] = useState(false);

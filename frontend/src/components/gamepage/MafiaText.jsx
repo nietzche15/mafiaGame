@@ -1,44 +1,38 @@
 import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { socket } from '../utils/socket';
+import { socket } from '../../utils/socket';
 
-export default function DMText() {
-  const { timeStatus } = useSelector((state) => state.status);
-  const userList = useSelector((state) => state.room.userList);
+export default function MafiaText() {
   const { state: roomID } = useLocation();
-
+  const { timeStatus } = useSelector((state) => state.status);
+  const { jobList, myJob, userList } = useSelector((state) => state.room);
+  const onlyMafia = userList.length <= 4; // userList.length <=4 면 mafia 한 명(true)
   const DMInput = useRef();
-  const selectDM = useRef();
-
-  const showUserList = () => {
-    console.log('userList in DM: ', userList);
-    return userList
-      .filter((e) => e !== socket.id)
-      .map((el, idx) => (
-        <MenuItem key={idx} value={el}>
-          {el}
-        </MenuItem>
-      ));
-  };
 
   const handleSubmit = () => {
-    // socket.emit('join', value);
-    console.log('selectDM:', selectDM.current.value);
     socket.emit('sendDM', {
       roomID,
       from_id: socket.id,
-      to_id: selectDM.current.value,
+      to_id:
+        userList.filter(
+          (e, i) => e !== socket.id && jobList[i] === 'mafia'
+        )[0] || socket.id,
       msg: DMInput.current.value,
     });
   };
-
   const enterSubmit = (e) => {
     if (e.key === 'Enter') handleSubmit();
   };
 
-  if (timeStatus === 'night') return null;
+  if (myJob !== 'mafia') {
+    return null;
+  }
+
+  if (timeStatus === 'day') {
+    return null;
+  }
 
   return (
     <Box
@@ -49,9 +43,6 @@ export default function DMText() {
         width: '900px',
       }}
     >
-      <Select label="DM" inputRef={selectDM}>
-        {showUserList()}
-      </Select>
       <TextField
         // value={value}
         id="outlined-basic"
@@ -61,6 +52,12 @@ export default function DMText() {
         sx={{ width: '100%' }}
         // onChange={handleChange}
         onKeyDown={enterSubmit}
+        disabled={onlyMafia}
+        placeholder={
+          onlyMafia
+            ? 'CHOOSE ONE TO KILL'
+            : 'ONLY MAFIA can send a message during the NIGHT'
+        }
       />
       <Button
         variant="contained"
