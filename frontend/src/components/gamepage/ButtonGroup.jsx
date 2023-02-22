@@ -92,6 +92,9 @@ export default function ButtonGroup() {
           sx={{ m: 1, fontFamily: 'MaplestoryOTFBold', fontWeight: 'bolder' }}
           onClick={() => {
             navigate('/lobby');
+            socket.emit('exitRoom', {
+              from_id: socket.id,
+            });
           }}
         >
           나가기

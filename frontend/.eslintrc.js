@@ -1,4 +1,8 @@
 module.exports = {
+  env: {
+    node: true,
+    browser: true,
+  },
   extends: ['airbnb', 'prettier'],
   rules: {
     'linebreak-style': 0,
@@ -9,9 +13,14 @@ module.exports = {
     'react/function-component-definition': 'off',
     'react/prop-types': 'off',
     'react/no-array-index-key': 'off',
-    "globals": {
-      "window": true
-    }
+    camelcase: 'off',
+    'prefer-const': 'warn',
+    'react/jsx-no-useless-fragment': 'warn',
+    'jsx-a11y/click-events-have-key-events': 'warn',
+    'jsx-a11y/no-static-element-interactions': 'warn',
+    'no-restricted-globals': 'warn',
+    'prefer-template': 'warn',
+    'react/self-closing-comp': 'warn',
   },
   parserOptions: {
     exmaFeatures: {
@@ -19,5 +28,5 @@ module.exports = {
     },
     ecmaVersion: 'latest',
     sourceType: 'module',
-  }
+  },
 };
