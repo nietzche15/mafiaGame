@@ -9,6 +9,9 @@ module.exports = {
     'react/function-component-definition': 'off',
     'react/prop-types': 'off',
     'react/no-array-index-key': 'off',
+    globals: {
+      window: true,
+    },
   },
   parserOptions: {
     exmaFeatures: {
