@@ -6,15 +6,46 @@ module.exports = (server) => {
     },
   });
 
+  let cnt = 0;
   const getJobList = require('./jobList');
   let jobList = {};
   let checkReady = {};
+  let roomList = {
+    0: {
+      roomID: 0,
+      roomName: 'test',
+      roomLocked: true,
+      roomPW: 1234,
+      roomOwner: 'admin',
+    },
+  };
 
   const roomToUser = {}; // roomID - [user1(socekt.id) , user2(socekt.id), user3(socekt.id), ...]
   const userToRoom = {}; // socket.id - roomID
 
   io.on('connection', (socket) => {
     console.log('User Connected', socket.id);
+
+    io.emit('allRooms', {
+      roomList: roomList,
+    });
+    console.log('roomList:', roomList);
+
+    socket.on('newRoomInfo', (data) => {
+      cnt++;
+      // let roomID = cnt;
+      roomList[cnt] = {
+        roomID: cnt,
+        roomName: data.room_name,
+        roomLocked: data.room_locked,
+        roomPW: data.room_PW,
+        roomOwner: data.room_owner,
+      };
+      console.log('roomList[cnt]:', roomList[cnt]);
+      io.emit('allRooms', {
+        roomList: roomList,
+      });
+    });
 
     // 방 입장
     // 같은 방 입장한 회원 구분 roomID - socket.id
@@ -57,6 +88,24 @@ module.exports = (server) => {
         (id) => id !== socket.id
       );
       socket.broadcast.to(roomID).emit('usersInThisRoom', usersInThisRoom);
+    });
+
+    // 방 나가기 클릭시,
+    socket.on('exitRoom', async (data) => {
+      let roomID = userToRoom[data.from_id];
+      // let userlistinRoom = await io.in(roomID).fetchSockets();
+      // console.log('userlistinRoom:', userlistinRoom);
+      io.to(roomID).emit('notice', {
+        msg: `${socket.id}님이 방을 나갔습니다.`,
+        roomToUser: roomToUser[roomID],
+      });
+      roomToUser[roomID]?.length > 1
+        ? (roomToUser[roomID] = roomToUser[roomID].filter(
+            (e) => e !== data.from_id
+          ))
+        : delete roomToUser[data.from_id];
+      socket.leave(roomID);
+      delete userToRoom[data.from_id];
     });
 
     // User의 chat 수신 - 전체 전송
@@ -227,7 +276,7 @@ module.exports = (server) => {
 
       console.log('User Disconnected :' + socket.id);
       // console.log('check:', userToRoom[socket.id]?.slice(0, -2));
-      socket.leave(roomID, socket.id);
+      socket.leave(roomID);
       delete userToRoom[socket.id];
     });
   });
