@@ -19,7 +19,6 @@ export default function ChattingText() {
   };
 
   if (timeStatus === 'night') return null;
-
   if (myStatus === 'dead') return null;
 
   return (

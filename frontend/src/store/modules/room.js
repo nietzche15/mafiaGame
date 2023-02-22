@@ -29,8 +29,10 @@ const SET_FINALIST_ID = 'SET_FINALIST_ID';
 const ADD_KILLED_USER = 'ADD_KILLED_USER';
 
 // 액션 생성 함수
+/** @param {string} roomID 방 번호 */
 export const getRoomID = (roomID) => ({ type: GETROOMID, payload: roomID });
 
+/** @param {string[]} userList 유저 목록 */
 export const getUserList = (userList) => ({
   type: GETUSERLIST,
   payload: { userList },
