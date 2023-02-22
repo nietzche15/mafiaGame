@@ -35,7 +35,7 @@ export default function Mypage() {
     const logout = 'http://localhost:3000';
 
     function kakaoLogout() {
-        location.href = `https://kauth.kakao.com/oauth/logout?client_id=${API}&logout_redirect_uri=${logout}`
+        window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=${API}&logout_redirect_uri=${logout}`
     }
 
     return (
@@ -43,7 +43,7 @@ export default function Mypage() {
             <div className='info' >
                 <table className='table'>
                     <tr>
-                        <td style={{ width: '170px', textAlign: 'center' }} rowSpan="2" ><img alt='img' style={{ width: '100%', borderRadius: '10px' }}
+                        <td style={{ width: '170px', textAlign: 'center' }} rowSpan="2" ><img alt='ig' style={{ width: '100%', borderRadius: '10px' }}
                             src={
                                 img === 'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg' ? './images/mafiaImg.png' : img}
                         />{name}</td>
@@ -57,29 +57,9 @@ export default function Mypage() {
                     </tr>
                 </table>
                 <div className='right2'>
-                    <Button variant="contained" onClick={{ kakaoLogout }} color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}>
+                    <Button variant="contained" onClick={() => { kakaoLogout() }} color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}>
                         로그아웃
                     </Button>
-                    <br /><br />
-                    <Button variant="contained" onClick={handleOpen} color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}>
-                        <Link to="/mypage" style={{ textDecoration: "none", color: 'white' }}>수정</Link>
-                    </Button>
-                    <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style2}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                프로필 사진 변경
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-
-                                ss
-                            </Typography>
-                        </Box>
-                    </Modal>
                     <br /><br />
                     <Button variant="contained" color="primary" sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}>
                         <Link to="/lobby" style={{ textDecoration: "none", color: 'white' }}>나가기</Link>
