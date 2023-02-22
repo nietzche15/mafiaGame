@@ -1,7 +1,7 @@
 import React from 'react';
-import GlobalStyle from '../common/GlobalStyle';
-import Rules from './Rules';
-import '../styles/main.css';
+import GlobalStyle from '../../components/common/GlobalStyle';
+import Rules from '../../components/main/Rules';
+import '../../components/styles/main.css';
 
 export default function Main() {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=openid,profile_image,account_email,profile_nickname`;
@@ -10,7 +10,7 @@ export default function Main() {
     window.location.href = KAKAO_AUTH_URL;
   };
 
-  const naver_api_url =
+  const naverApiUrl =
     'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' +
     '27NfAweZlVIdEWFecF3p' +
     '&redirect_uri=' +
@@ -19,7 +19,7 @@ export default function Main() {
     '1234';
 
   const naverLogin = () => {
-    window.location.href = naver_api_url;
+    window.location.href = naverApiUrl;
   };
 
   return (
@@ -28,30 +28,29 @@ export default function Main() {
       <div className="back">
         <div className="wrapper">
           <div className="a">
-            <img src="./images/mafiaImg.png" style={{ width: '80%' }}></img>
+            <img src="./images/mafiaImg.png" alt='img' style={{ width: '80%' }} />
           </div>
           <div className="b">
             <Rules />
           </div>
           <div className="c">
-            <div className="login" onClick={kakaoLogin}>
+            <div role="presentation" className="login" onClick={kakaoLogin}>
               <span>
                 <img
                   className="kakao"
                   style={{ width: '30px' }}
-                  src="./images/kakao.png"
+                  src="./images/kakao.png" alt='img'
                 />
                 카카오 로그인
               </span>
             </div>
             <br />
-            <div className="login2" onClick={naverLogin}>
+            <div role="presentation" className="login2" onClick={naverLogin}>
               <span>
                 <img
                   className="naver"
                   style={{ width: '23px' }}
-                  src="./images/naver.png"
-                ></img>
+                  src="./images/naver.png" alt='img' />
                 네이버 로그인
               </span>
             </div>

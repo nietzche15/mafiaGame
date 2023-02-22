@@ -1,4 +1,9 @@
 module.exports = {
+  eslintConfig: {
+    "globals": {
+      "window": true
+    }
+  },
   extends: ['airbnb', 'prettier'],
   rules: {
     'linebreak-style': 0,
@@ -16,5 +21,5 @@ module.exports = {
     },
     ecmaVersion: 'latest',
     sourceType: 'module',
-  },
+  }
 };
