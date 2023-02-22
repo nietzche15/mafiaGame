@@ -16,6 +16,7 @@ export default function ChattingText() {
       from_id: socket.id,
       msg: value,
     });
+    setValue('')
   };
 
   if (timeStatus === 'night') return null;
