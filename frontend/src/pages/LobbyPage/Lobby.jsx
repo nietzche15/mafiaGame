@@ -54,11 +54,8 @@ export default function Lobby() {
   const createRoom = () => {
     setOpen(true);
   };
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+
   const handleSubmit = () => {
-    // console.log(socket);
     socket.emit('newRoomInfo', {
       room_name: roomName.current.value,
       room_locked: locked,
