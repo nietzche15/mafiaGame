@@ -21,6 +21,7 @@ module.exports = {
     'no-restricted-globals': 'warn',
     'prefer-template': 'warn',
     'react/self-closing-comp': 'warn',
+    'no-param-reassign': 'warn',
   },
   parserOptions: {
     exmaFeatures: {
