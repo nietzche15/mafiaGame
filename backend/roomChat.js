@@ -6,14 +6,28 @@ module.exports = (server) => {
     },
   });
 
-  let cnt = 0;
+  let cnt = 2;
   const getJobList = require('./jobList');
   let jobList = {};
   let checkReady = {};
   let roomList = {
     0: {
       roomID: 0,
-      roomName: '☆*: .｡. o(≧▽≦)o .｡.:*☆ 마피아 ㄱㄱ',
+      roomName: '☆*: .｡. o(≧▽≦)o .｡.:*☆ 마놀ㄱ',
+      roomLocked: false,
+      roomPW: false,
+      roomOwner: 'admin',
+    },
+    1: {
+      roomID: 1,
+      roomName: '▧▧▧▶▷용강중 2-3◁◀▨▨▨ →→ㅂㅂ 방학식 §§',
+      roomLocked: true,
+      roomPW: 1234,
+      roomOwner: 'admin',
+    },
+    2: {
+      roomID: 2,
+      roomName: '༼ つ ◕_◕ ༽つ 해보자 해보자 후회하지 말고 💪💪',
       roomLocked: true,
       roomPW: 1234,
       roomOwner: 'admin',
@@ -125,16 +139,22 @@ module.exports = (server) => {
 
       console.log('roomSize: ', room?.size);
 
-      if (room?.size > 8) {
+      if (room?.size > 7) {
         socket.emit('room full');
         return;
       } else {
-        room
+        room?.size !== undefined
           ? roomToUser[roomID].push(socket.id)
           : ((roomToUser[roomID] = [socket.id]), (checkReady[roomID] = 0));
         socket.join(roomID);
         userToRoom[socket.id] = roomID;
-        console.log('usersInfo: ', roomToUser[roomID]);
+        // console.log('usersInfo: ', roomToUser[roomID]);
+
+        const usersInThisRoom = roomToUser[roomID].filter(
+          (id) => id !== socket.id
+        );
+        console.log('usersInThisRoom', usersInThisRoom);
+        socket.emit('all users', usersInThisRoom);
 
         // emailToSocket[data.user_email] = {
         //   userID: data.user_id,
@@ -147,7 +167,7 @@ module.exports = (server) => {
           roomToUser: roomToUser[roomID],
         });
         // User 입장 시 개인 welcome msg
-        io.to(`${socket.id}`).emit('getDM', {
+        socket.emit('getDM', {
           from_id: 'admin',
           to_id: socket.id,
           msg: `Hello, ${socket.id}`,
@@ -158,11 +178,23 @@ module.exports = (server) => {
       console.log('room :', room);
       console.log('userToRoom:', userToRoom);
       console.log('roomToUser:', roomToUser);
+    });
 
-      const usersInThisRoom = roomToUser[roomID]?.filter(
-        (id) => id !== socket.id
-      );
-      socket.broadcast.to(roomID).emit('usersInThisRoom', usersInThisRoom);
+    socket.on('sending signal', (payload) => {
+      console.log('----------------sending signal');
+      io.to(payload.userToSignal).emit('user joined', {
+        signal: payload.signal,
+        callerID: payload.callerID,
+      });
+    });
+
+    socket.on('returning signal', (payload) => {
+      console.log('----------------returning signal');
+
+      io.to(payload.callerID).emit('receiving returned signal', {
+        signal: payload.signal,
+        id: socket.id,
+      });
     });
 
     // 방 나가기 클릭시,

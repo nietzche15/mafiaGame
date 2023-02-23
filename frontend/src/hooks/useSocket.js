@@ -23,7 +23,7 @@ const useSocket = () => {
 
   useEffect(() => {
     // 채팅방 입장
-    socket.emit('join room', roomID);
+    // socket.emit('join room', roomID);
 
     // socket.on('noticeLB', (data) => {
     //   lobbyChatBox.current.insertAdjacentHTML(

@@ -1,3 +1,7 @@
+* {
+  font-family: 'MaplestoryOTFBold';
+}
+
 .lobby {
   background-color: #2b1d23;
   width: 100%;
@@ -41,10 +45,10 @@
   padding: 20px;
 }
 
-.right{
-    position: absolute;
-    right: -220px;
-    top: 0px;
+.right {
+  position: absolute;
+  right: -220px;
+  top: 0px;
 }
 
 .button {

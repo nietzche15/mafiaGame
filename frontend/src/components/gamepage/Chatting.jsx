@@ -33,8 +33,11 @@ export default function Chatting() {
           borderRadius: '10px',
           minHeight: 976,
           maxHeight: 976,
-          position: 'relative',
+          position: 'absolute',
+          top: 0,
+          left: 465,
           overflowY: 'auto',
+          fontFamily: 'MaplestoryOTFBold',
         }}
       >
         {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
