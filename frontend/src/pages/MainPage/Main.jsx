@@ -63,7 +63,9 @@ export default function Main() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   mb: '20px',
+                  cursor: 'pointer',
                 }}
+                onClick={kakaoLogin}
               >
                 <img
                   src="./images/kakao.png"
@@ -82,7 +84,9 @@ export default function Main() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  cursor: 'pointer',
                 }}
+                onClick={naverLogin}
               >
                 <img
                   src="./images/naver.png"
@@ -92,7 +96,6 @@ export default function Main() {
                 네이버 로그인
               </Box>
             </Box>
-
             <Rules />
           </Box>
         </Box>
