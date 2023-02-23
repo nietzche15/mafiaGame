@@ -22,6 +22,7 @@ import GameRoom from '../../components/lobby/GameRoom';
 import { getRoomID } from '../../store/modules/room';
 import { socket } from '../../utils/socket';
 import { asyncRoomList } from '../../store/modules/roomlist';
+import GlobalStyle from '../../components/common/GlobalStyle';
 // import useSocket from '../../hooks/useSocket';
 
 // socket CONNECT
@@ -125,22 +126,36 @@ export default function Lobby() {
   };
 
   return (
-    <div className="lobby">
-      <div className="left">
-        <div className="room">
-          <div className="roomstate">
-            <Button variant="contained" color="secondary" sx={{ mr: 2, mb: 2 }}>
-              전체
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ mr: 2, mb: 2 }}>
-              공개
-            </Button>
-            <Button variant="contained" color="secondary" sx={{ mr: 2, mb: 2 }}>
-              비밀
-            </Button>
-          </div>
+    <>
+      <GlobalStyle />
+      <div className="lobby">
+        <div className="left">
+          <div className="room">
+            <div className="roomstate">
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ mr: 2, mb: 2, fontFamily: 'MaplestoryOTFBold' }}
+              >
+                전체
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ mr: 2, mb: 2, fontFamily: 'MaplestoryOTFBold' }}
+              >
+                공개
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ mr: 2, mb: 2, fontFamily: 'MaplestoryOTFBold' }}
+              >
+                비밀
+              </Button>
+            </div>
 
-          {/* <div className="gameroom">
+            {/* <div className="gameroom">
             <div className="gamelist">
               <span className="gamenumber">1</span>
               <span className="gametitle">용산 마피아</span>
@@ -153,71 +168,75 @@ export default function Lobby() {
               <span className="gameNoP">1/7</span>
             </div>
           </div> */}
-          <GameRoom />
+            <GameRoom />
 
-          <div className="right">
-            <Button
-              onClick={createRoom}
-              variant="contained"
-              color="primary"
-              sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}
-            >
-              방 생성
-            </Button>
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle sx={{ fontSize: '15px' }}>
-                Room Information
-              </DialogTitle>
-              <DialogContent>
-                {/* <DialogContentText>
+            <div className="right">
+              <Button
+                onClick={createRoom}
+                variant="contained"
+                color="primary"
+                sx={{
+                  m: 0,
+                  '* .Mui_disabled': { background: '#E38989' },
+                  fontFamily: 'MaplestoryOTFBold',
+                }}
+              >
+                방 생성
+              </Button>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle sx={{ fontSize: '15px' }}>
+                  Room Information
+                </DialogTitle>
+                <DialogContent>
+                  {/* <DialogContentText>
                   직접 방을 만들고 친구를 초대해보세요
                 </DialogContentText> */}
-                <TextField
-                  inputRef={roomName}
-                  autoFocus
-                  required
-                  label="Room Name"
-                  variant="outlined"
-                  size="small"
-                  margin="dense"
-                />
-                <br />
-                <FormControl sx={{ margin: '10px 0 10px 0' }}>
-                  <FormLabel sx={{ fontSize: '15px' }}>Private ?</FormLabel>
-                  <RadioGroup row onChange={radioChange}>
-                    <FormControlLabel
-                      value="Yes"
-                      control={<Radio />}
-                      label="Yes"
-                    />
-                    <FormControlLabel
-                      autoFocus
-                      value="No"
-                      control={<Radio />}
-                      label="No"
-                      onKeyDown={enterSubmitUnlocked}
-                    />
-                  </RadioGroup>
-                </FormControl>
-                <br />
-                {locked && (
                   <TextField
-                    inputRef={roomPW}
-                    label={alertPW ? 'Enter Password' : 'Password'}
+                    inputRef={roomName}
+                    autoFocus
+                    required
+                    label="Room Name"
                     variant="outlined"
                     size="small"
                     margin="dense"
-                    onKeyDown={enterSubmitLocked}
                   />
-                )}
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
-              </DialogActions>
-            </Dialog>
+                  <br />
+                  <FormControl sx={{ margin: '10px 0 10px 0' }}>
+                    <FormLabel sx={{ fontSize: '15px' }}>Private ?</FormLabel>
+                    <RadioGroup row onChange={radioChange}>
+                      <FormControlLabel
+                        value="Yes"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        autoFocus
+                        value="No"
+                        control={<Radio />}
+                        label="No"
+                        onKeyDown={enterSubmitUnlocked}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  <br />
+                  {locked && (
+                    <TextField
+                      inputRef={roomPW}
+                      label={alertPW ? 'Enter Password' : 'Password'}
+                      variant="outlined"
+                      size="small"
+                      margin="dense"
+                      onKeyDown={enterSubmitLocked}
+                    />
+                  )}
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleSubmit}>Submit</Button>
+                </DialogActions>
+              </Dialog>
 
-            {/* <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+              {/* <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
               <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Text in a modal
@@ -228,37 +247,38 @@ export default function Lobby() {
         </Box>
       </Modal> */}
 
-            <br />
-            <br />
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}
-            >
-              <Link
-                to="/mypage"
-                style={{ textDecoration: 'none', color: 'white' }}
+              <br />
+              <br />
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}
               >
-                마이 페이지
-              </Link>
-            </Button>
-            <div>
-              <input
-                ref={roomInput}
-                id="roomName"
-                type="text"
-                placeholder="Enter Room Number"
-              />
-              <button id="join" onClick={clickJoinBtn}>
-                Join
-              </button>
+                <Link
+                  to="/mypage"
+                  style={{ textDecoration: 'none', color: 'white' }}
+                >
+                  마이 페이지
+                </Link>
+              </Button>
+              <div>
+                <input
+                  ref={roomInput}
+                  id="roomName"
+                  type="text"
+                  placeholder="Enter Room Number"
+                />
+                <button id="join" onClick={clickJoinBtn}>
+                  Join
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="chatlist">
-          <LobbyChat />
+          <div className="chatlist">
+            <LobbyChat />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

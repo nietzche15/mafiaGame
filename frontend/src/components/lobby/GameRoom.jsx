@@ -11,6 +11,8 @@ import {
 // import useSocket from '../../hooks/useSocket';
 import { InfinitySpin } from 'react-loader-spinner';
 import { useNavigate } from 'react-router';
+import { getRoomID } from '../../store/modules/room';
+import GlobalStyle from '../common/GlobalStyle';
 // import { asyncRoomList } from '../../store/modules/roomlist';
 // import { socket } from '../../utils/socket';
 
@@ -42,7 +44,8 @@ export default function GameRoom() {
     console.log('roomID,roomPW:', room_ID, room_PW);
     room_PW
       ? setOpen(true)
-      : navigate('/gamepage', { state: roomID, replace: true });
+      : (dispatch(getRoomID({ roomID: roomID })),
+        navigate('/gamepage', { state: roomID, replace: true }));
   };
 
   const handleClose = () => {
@@ -53,12 +56,13 @@ export default function GameRoom() {
     setCnt(cnt - 1);
     password === inputPW.current.value
       ? (setOpen(false),
+        dispatch(getRoomID({ roomID: roomID })),
         navigate('/gamepage', { state: roomID, replace: true }),
         setPassword(''),
         setRoomID(''))
       : cnt === 5
-        ? (setOpen(false), setCnt(4))
-        : (inputPW.current.value = ''),
+      ? (setOpen(false), setCnt(4))
+      : (inputPW.current.value = ''),
       inputPW.current.setAttribute('placeholder', `TRY AGAIN(${cnt}/5)`);
   };
 
@@ -68,6 +72,7 @@ export default function GameRoom() {
 
   return (
     <>
+      <GlobalStyle />
       <div className="gameroomBox">
         <div className="gameroom">
           <div className="gamelist">
@@ -85,7 +90,7 @@ export default function GameRoom() {
           </div>
         </div>
         <div>
-          {asyncLoading && <InfinitySpin width="100" color=" cornflowerblue" />}
+          {/* {asyncLoading && <InfinitySpin width="100" color=" cornflowerblue" />} */}
           {Object.keys(roomList).map((e, i) => {
             return (
               <div className="gameroom" key={i + Math.random()}>
@@ -123,7 +128,11 @@ export default function GameRoom() {
             );
           })}
         </div>
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          style={{ fontFamily: 'MaplestoryOTFBold' }}
+        >
           <DialogTitle sx={{ fontSize: '15px' }}>Private Room</DialogTitle>
           <DialogContent>
             <TextField
