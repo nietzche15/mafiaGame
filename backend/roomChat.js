@@ -87,16 +87,23 @@ module.exports = (server) => {
 
     socket.on('sendLBChat', (data) => {
       let from_email = socketToEmail[data.from_id];
-      let from_name = emailToSocket[data.from_email].userName;
+      // let from_name = emailToSocket[data.from_email];
       console.log('data', data);
       console.log('from_email:', from_email);
-      console.log('from_name:', from_name);
+      console.log('from_name:', data.user_name);
       io.emit('getLBChat', {
         from_id: data.from_id,
-        from_name: data.from_name || '익명',
         msg: data.msg,
       });
     });
+
+    // // User의 chat 수신 - 전체 전송
+    // socket.on('sendChat', (data) => {
+    //   io.to(data.from_id).emit('getLBChat', {
+    //     from_id: data.from_id,
+    //     msg: data.msg,
+    //   });
+    // });
 
     //----------------------------------------------// GamePage
     // 방 입장
