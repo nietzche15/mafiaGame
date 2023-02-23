@@ -31,8 +31,8 @@ export default function LobbyChat() {
         ? lobbyChatBox.current.insertAdjacentHTML(
             'beforeend',
             `<div class='MyChatBox'>
-            <div>${userName}</div>
-            <div>${data.msg}</div>
+              <div>ME</div>
+              <div class='MyChat'>${data.msg}</div>
             </div>`
           )
         : lobbyChatBox.current.insertAdjacentHTML(
