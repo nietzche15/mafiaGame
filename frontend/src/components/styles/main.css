@@ -85,63 +85,19 @@
 }
 
 .box {
+    font-size: 20px;
     text-align: left;
     position: relative;
     background-color: #E4D9C6;
     margin-top: 60px;
     width: 330px;
     height: 80%;
-    padding: 60px;
+    padding: 40px;
     border-radius: 10px;
 }
 
-.rbox {
-    bottom: 30px;
+.rulebox {
     position: absolute;
-    display: inline-block
-    
-}
-
-.r1 {
-    width: 25px;
-    height: 15px;
-    background-color: #940404;
-    margin-left: 5px;
-    margin-right: 5px;
-    float: left;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.r2 {
-    width: 15px;
-    height: 15px;
-    background-color: #940404;
-    margin-left: 5px;
-    margin-right: 5px;
-    float: left;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.r3 {
-    width: 15px;
-    height: 15px;
-    background-color: #940404;
-    margin-left: 5px;
-    margin-right: 5px;
-    float: left;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.r4 {
-    width: 15px;
-    height: 15px;
-    background-color: #940404;
-    margin-left: 5px;
-    margin-right: 5px;
-    float: left;
-    border-radius: 10px;
-    cursor: pointer;
+    width: 100%;
+    height: 100%;
 }
