@@ -18,7 +18,6 @@
     height: 350px;
     margin-bottom: 30px;
     padding: 20px;
-    
 }
 
 .chatlist{
@@ -31,7 +30,7 @@
 
 .right{
     position: absolute;
-    right: -240px;
+    right: -220px;
     top: 0px;
 }
 
