@@ -10,7 +10,7 @@ import Vote from './Vote';
 
 export default function Video({ name }) {
   const { timeStatus } = useSelector((state) => state.status);
-  const { mySocketId, myJob, userList, killedUserList } = useSelector(
+  const { mySocketId, myJob, killedUserList } = useSelector(
     (state) => state.room
   );
 
@@ -68,7 +68,7 @@ export default function Video({ name }) {
             borderRadius: '10px',
           }}
         >
-          <Vote name={userList} />
+          <Vote />
         </Box>
       </Box>
 
