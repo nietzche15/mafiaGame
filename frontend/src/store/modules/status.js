@@ -5,7 +5,7 @@ const SET_MY_STATUS = 'SET_MY_STATUS';
 const initalState = {
   /** wait(게임 시작전), playing(게임 중), end (게임 종료) */
   gameStatus: 'wait',
-  /** day(낮), night(밤) */
+  /** dayDiscussion(낮 토론 시간),dayVote(낮 투표 시간),dayFinal,   night(밤) */
   timeStatus: 'day',
   /** alive(살아있음), dead(죽음) */
   myStatus: 'alive',

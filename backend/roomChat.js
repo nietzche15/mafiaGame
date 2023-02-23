@@ -23,6 +23,17 @@ module.exports = (server) => {
   const roomToUser = {}; // roomID - [user1(socekt.id) , user2(socekt.id), user3(socekt.id), ...]
   const userToRoom = {}; // socket.id - roomID
 
+  /**
+   * 방별 타이머 상태
+   * [key : roomId] : Timer
+   * Timer : {
+   *   ms: 설정시간(밀리세컨드)
+   *   type : 타이머 타입()
+   * }
+   */
+  const roomTimer = {};
+  const timerList = require('./timerList');
+
   io.on('connection', (socket) => {
     console.log('User Connected', socket.id);
 
@@ -147,6 +158,43 @@ module.exports = (server) => {
       console.log('readyOrNot: ', checkReady[roomID], readyCnt);
     });
 
+    const setTimer = (id, index) => {
+      roomTimer[id] = { ...timerList[index] };
+    };
+
+    const startTimer = (id) => {
+      console.log(`타이머 시작. 방 번호 ${id}`);
+      let targetIndex = 0;
+      let isNoticeSended = false;
+
+      const interval = setInterval(() => {
+        if (!roomTimer[id]) {
+          isNoticeSended = false;
+          setTimer(id, 0);
+        }
+
+        if (roomTimer[id]?.ms <= 0) {
+          isNoticeSended = false;
+          targetIndex += 1;
+          if (targetIndex > timerList.length - 1) {
+            targetIndex = 0;
+          }
+          setTimer(id, targetIndex);
+        }
+
+        if (!isNoticeSended) {
+          console.log(id, roomTimer, targetIndex);
+          io.to(id).emit('gameNotice', {
+            dayNight: roomTimer[id].type,
+            msg: roomTimer[id].noticeMessage,
+          });
+          isNoticeSended = true;
+        }
+        roomTimer[id].ms -= 1000;
+        io.to(id).emit('timerChange', roomTimer[id]);
+      }, 1000);
+    };
+
     // ------------------------------------------------------[1] 게임 시작
     // 방장이 gameStart 누름
     socket.on('gameStart', (data) => {
@@ -155,13 +203,16 @@ module.exports = (server) => {
       io.to(roomID).emit('gameStart', {
         jobList: jobList[roomID],
       });
-      io.to(roomID).emit('gameNotice', {
-        dayNight: 'night',
-        msg: '밤이 되었습니다',
-        killed: false,
-      });
+      // io.to(roomID).emit('gameNotice', {
+      //   dayNight: 'night',
+      //   msg: '밤이 되었습니다',
+      //   killed: false,
+      // });
+
+      startTimer(roomID);
       delete checkReady[roomID];
     });
+
     // ------------------------------------------------------[2] 밤
     // 밤 - mafia가 고름
     // mafia 한명 - 고른 사람 죽임

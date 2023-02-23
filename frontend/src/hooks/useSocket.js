@@ -57,7 +57,7 @@ const useSocket = () => {
         return;
       }
 
-      if (dayNight === 'day') {
+      if (dayNight.includes('day')) {
         dispatch(addMessage(msg, 'gameNotice_Day'));
         dispatch(setTimeStatus(dayNight));
         return;
