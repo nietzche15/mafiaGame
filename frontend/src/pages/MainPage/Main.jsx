@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import React from 'react';
 import GlobalStyle from '../../components/common/GlobalStyle';
 import Rules from '../../components/main/Rules';
@@ -25,38 +26,80 @@ export default function Main() {
   return (
     <>
       <GlobalStyle />
-      <div className="back">
-        <div className="wrapper">
-          <div className="a">
-            <img src="./images/mafiaImg.png" alt='img' style={{ width: '80%' }} />
-          </div>
-          <div className="b">
-            <Rules />
-          </div>
-          <div className="c">
-            <div role="presentation" className="login" onClick={kakaoLogin}>
-              <span>
+      <Box
+        sx={{
+          backgroundColor: '#2B1D23',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '800px',
+            }}
+          >
+            <Box mr={5}>
+              <img
+                src="./images/main.png"
+                alt="img"
+                style={{ width: '400px' }}
+              />
+              <Box
+                sx={{
+                  width: '390px',
+                  height: '60px',
+                  backgroundColor: '#F4DF6F',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mb: '10px',
+                  cursor: 'pointer',
+                }}
+                onClick={kakaoLogin}
+              >
                 <img
-                  className="kakao"
-                  style={{ width: '30px' }}
-                  src="./images/kakao.png" alt='img'
+                  src="./images/kakao.png"
+                  alt="img"
+                  style={{ width: '47px' }}
                 />
                 카카오 로그인
-              </span>
-            </div>
-            <br />
-            <div role="presentation" className="login2" onClick={naverLogin}>
-              <span>
+              </Box>
+
+              <Box
+                sx={{
+                  width: '390px',
+                  height: '60px',
+                  backgroundColor: '#79C250',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+                onClick={naverLogin}
+              >
                 <img
-                  className="naver"
-                  style={{ width: '23px' }}
-                  src="./images/naver.png" alt='img' />
+                  src="./images/naver.png"
+                  alt="img"
+                  style={{ width: '37px' }}
+                />
                 네이버 로그인
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Box>
+            </Box>
+            <Rules />
+          </Box>
+        </Box>
+      </Box>
     </>
   );
 }

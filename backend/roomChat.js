@@ -35,7 +35,7 @@ module.exports = (server) => {
   };
   const emailToSocket = {}; // email - {userID : socket.id, userName: nickName }
   const socketToEmail = {}; // socket.id - email
-  const friendList = {};
+  // const friendList = {};
   const roomToUser = {}; // roomID - [user1(socekt.id) , user2(socekt.id), user3(socekt.id), ...]
   const userToRoom = {}; // socket.id - roomID
 
@@ -48,7 +48,10 @@ module.exports = (server) => {
    * }
    */
   const roomTimer = {};
+
   const timerList = require('./timerList');
+
+  let peopleVotedList = {};
 
   io.on('connection', (socket) => {
     console.log('User Connected', socket.id);
@@ -63,16 +66,16 @@ module.exports = (server) => {
       socketToEmail[data.user_id] = data.user_email;
 
       console.log('emailToSocket: ', emailToSocket[data.user_email]);
-      console.log('userID: ', emailToSocket[data.user_email].userID);
+      // console.log('userID: ', emailToSocket[data.user_email].userID);
       console.log('userName: ', emailToSocket[data.user_email].userName);
       console.log('userImg: ', data.user_img);
       console.log('socketToEmail: ', socketToEmail[data.user_id]);
 
-      io.emit('noticeLB', {
-        msg: `${data.user_name}님이 입장했습니다.`,
-        emailToSocket: emailToSocket,
-        socketToEmail: socketToEmail,
-      });
+      // io.emit('noticeLB', {
+      //   msg: `${data.user_name}님이 입장했습니다.`,
+      //   emailToSocket: emailToSocket,
+      //   socketToEmail: socketToEmail,
+      // });
     });
     // Lobby에 보일 방 목록 전송
     io.emit('allRooms', {
@@ -100,22 +103,36 @@ module.exports = (server) => {
     });
 
     socket.on('sendLBChat', (data) => {
-      let from_email = socketToEmail[data.from_id];
-      let from_name = emailToSocket[data.from_email].userName;
+      emailToSocket[data.user_email] = {
+        userName: data.user_name,
+        userID: data.from_id,
+        userName: data.user_name,
+        userEmail: data.user_email,
+      };
+      socketToEmail[data.user_id] = data.user_email;
+      let from_email = socketToEmail[data.user_id];
+      let from_name = emailToSocket[data.user_email].userName;
       console.log('data', data);
       console.log('from_email:', from_email);
       console.log('from_name:', from_name);
       io.emit('getLBChat', {
         from_id: data.from_id,
-        from_name: data.from_name || '익명',
         msg: data.msg,
       });
     });
 
+    // // User의 chat 수신 - 전체 전송
+    // socket.on('sendChat', (data) => {
+    //   io.to(data.from_id).emit('getLBChat', {
+    //     from_id: data.from_id,
+    //     msg: data.msg,
+    //   });
+    // });
+
     //----------------------------------------------// GamePage
     // 방 입장
     // 같은 방 입장한 회원 구분 roomID - socket.id
-    socket.on('join room', (roomID) => {
+    socket.on('join room', (roomID, data) => {
       console.log('roomID: ', roomID);
       let rooms = io.sockets.adapter.rooms;
       let room = rooms.get(roomID);
@@ -138,6 +155,12 @@ module.exports = (server) => {
         );
         console.log('usersInThisRoom', usersInThisRoom);
         socket.emit('all users', usersInThisRoom);
+
+        // emailToSocket[data.user_email] = {
+        //   userID: data.user_id,
+        //   userName: data.user_name,
+        // };
+        // socketToEmail[data.user_id] = data.user_email;
 
         io.to(roomID).emit('notice', {
           msg: `${socket.id}님이 입장했습니다.`,
@@ -231,6 +254,30 @@ module.exports = (server) => {
       console.log('readyOrNot: ', checkReady[roomID], readyCnt);
     });
 
+    const getKilledUser = (id) => {
+      if (!peopleVotedList[id]) {
+        return undefined;
+      }
+
+      const votedCountList = Object.keys(peopleVotedList[id])
+        .map((user) => ({
+          id: user,
+          count: peopleVotedList[id][user].length,
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      peopleVotedList[id] = {};
+
+      if (!votedCountList[1]) {
+        return votedCountList[0].id;
+      }
+
+      if (votedCountList[0].count === votedCountList[1].count) {
+        return undefined;
+      }
+      return votedCountList[0].id;
+    };
+
     const setTimer = (id, index) => {
       roomTimer[id] = { ...timerList[index] };
     };
@@ -246,7 +293,7 @@ module.exports = (server) => {
           setTimer(id, 0);
         }
 
-        if (roomTimer[id]?.ms <= 0) {
+        if (roomTimer[id].ms <= 0) {
           isNoticeSended = false;
           targetIndex += 1;
           if (targetIndex > timerList.length - 1) {
@@ -256,12 +303,19 @@ module.exports = (server) => {
         }
 
         if (!isNoticeSended) {
-          console.log(id, roomTimer, targetIndex);
-          io.to(id).emit('gameNotice', {
-            dayNight: roomTimer[id].type,
-            msg: roomTimer[id].noticeMessage,
-          });
           isNoticeSended = true;
+          if (roomTimer[id].type === 'night') {
+            io.to(id).emit('gameNotice', {
+              dayNight: roomTimer[id].type,
+              msg: roomTimer[id].noticeMessage,
+              killed: getKilledUser(id),
+            });
+          } else {
+            io.to(id).emit('gameNotice', {
+              dayNight: roomTimer[id].type,
+              msg: roomTimer[id].noticeMessage,
+            });
+          }
         }
         roomTimer[id].ms -= 1000;
         io.to(id).emit('timerChange', roomTimer[id]);
@@ -323,7 +377,7 @@ module.exports = (server) => {
 
     // ------------------------------------------------------[3] 낮
     // 낮 - 죽일 사람 투표
-    let peopleVotedList = {};
+
     socket.on('peopleVoted', (data) => {
       let roomID = userToRoom[data.from_id];
       let length = roomToUser[roomID]?.length;
@@ -331,10 +385,22 @@ module.exports = (server) => {
 
       peopleVotedList[roomID] ||= {};
 
-      peopleVotedList[roomID][killedid]
-        ? peopleVotedList[roomID][killedid].push(data.from_id)
-        : (peopleVotedList[roomID] = { killedid: [data.from_id] });
-      console.log('peopleVotedList: ', peopleVotedList[roomID]);
+      if (peopleVotedList[roomID][killedid]) {
+        peopleVotedList[roomID][killedid].push(data.from_id);
+      } else {
+        peopleVotedList[roomID] = {
+          ...peopleVotedList[roomID],
+          [killedid]: [data.from_id],
+        };
+      }
+
+      let votedMessage = '';
+
+      Object.keys(peopleVotedList[roomID]).forEach((user) => {
+        votedMessage += `[${user}] : ${peopleVotedList[roomID][user].length} 표 `;
+      });
+
+      io.to(roomID).emit('gameNotice', { msg: votedMessage });
     });
 
     // 낮 - 시간 종료시,

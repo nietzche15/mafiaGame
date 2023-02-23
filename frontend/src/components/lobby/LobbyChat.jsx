@@ -1,14 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { socket } from '../../utils/socket';
 import Message from '../gamepage/Message';
 import { useSelector } from 'react-redux';
 import GlobalStyle from '../common/GlobalStyle';
+import { Cookies } from 'react-cookie';
 
 export default function LobbyChat() {
+  const cookies = new Cookies();
   const lobbyChatBox = useRef();
   const lobbyInput = useRef();
   const { messages } = useSelector((state) => state.message);
+  const [value, setValue] = useState('');
+  const handleChange = (event) => setValue(event.target.value);
+
+  let userEmail = cookies.get('id1');
+  let userImg = cookies.get('id2');
+  let userName = cookies.get('id3');
 
   useEffect(() => {
     socket.on('noticeLB', (data) => {
@@ -23,28 +31,33 @@ export default function LobbyChat() {
         ? lobbyChatBox.current.insertAdjacentHTML(
             'beforeend',
             `<div class='MyChatBox'>
-            <div>${data.from_name}</div>
-            <div>${data.msg}</div>
+              <div>ME</div>
+              <div class='MyChat'>${data.msg}</div>
             </div>`
           )
         : lobbyChatBox.current.insertAdjacentHTML(
             'beforeend',
-            `<div>${data.from_name}</div>
+            `<div>${userName}</div>
           <div class='ServerChat'>${data.msg}</div>`
           );
     });
   }, []);
 
-  const sendLobbyChat = () => {
+  const sendLobbyChat = (event) => {
+    event.preventDefault();
+    console.log('chat input: ', value);
     socket.emit('sendLBChat', {
       from_id: socket.id,
-      msg: lobbyInput.current.value,
+      user_name: userName,
+      user_email: userEmail,
+      msg: value,
     });
+    setValue('');
   };
 
-  const enterLobbyChat = (e) => {
-    if (e.key === 'Enter') sendLobbyChat();
-  };
+  // const enterLobbyChat = (e) => {
+  //   if (e.key === 'Enter') sendLobbyChat();
+  // };
 
   return (
     <>
@@ -65,17 +78,19 @@ export default function LobbyChat() {
         </div>
         <div className="lobbyinput">
           <TextField
+            value={value}
             ref={lobbyInput}
             id="outlined-basic"
             label=""
             variant="outlined"
             size="small"
             sx={{
-              width: '590px',
+              width: '688px',
               backgroundColor: '#D9D9D9',
               borderRadius: '5px',
             }}
-            onKeyDown={enterLobbyChat}
+            // onKeyDown={enterLobbyChat}
+            onChange={handleChange}
           />
           <Button
             variant="contained"

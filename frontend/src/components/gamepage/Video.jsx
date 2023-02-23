@@ -28,14 +28,12 @@
 //   return <StyledVideo playsInline autoPlay ref={ref} />;
 // };
 
-// const Container = styled.div`
-//   padding: 20px;
-//   display: flex;
-//   height: fit-content;
-//   width: 90%;
-//   margin: auto;
-//   flex-wrap: wrap;
-// `;
+
+export default function Video({ name }) {
+  const { timeStatus } = useSelector((state) => state.status);
+  const { mySocketId, myJob, killedUserList } = useSelector(
+    (state) => state.room
+  );
 
 // export default function Video() {
 //   const { roomID, mySocketId, myJob, userList, killedUserList } = useSelector(
@@ -81,6 +79,57 @@
 //           });
 //           setPeers(peers);
 //         });
+  return (
+    <Box
+      sx={{
+        p: 2,
+        backgroundColor: '#8B7F70',
+        borderRadius: '10px',
+        display: 'flex',
+        justifyContent: 'center',
+        width: 465,
+      }}
+      onClick={onClickKill}
+    >
+      <Box>
+        <Box
+          sx={{
+            mt: 1,
+            width: '200px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#D9D9D9',
+            borderRadius: '10px',
+            mr: 2,
+          }}
+        >
+          <Typography variant="h7" component="div">
+            {name}
+          </Typography>
+          <Checkbox disabled sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }} />
+        </Box>
+        <Box
+          sx={{
+            width: '200px',
+            backgroundColor: '#D9D9D9',
+            mt: 1,
+            borderRadius: '10px',
+          }}
+        >
+          <JobMemo name={name} />
+        </Box>
+        <Box
+          sx={{
+            width: '200px',
+            backgroundColor: '#D9D9D9',
+            mt: 1,
+            borderRadius: '10px',
+          }}
+        >
+          {name === mySocketId ? <Vote /> : null}
+        </Box>
+      </Box>
 
 //         socketRef.current.on('user joined', (payload) => {
 //           console.log('--------------------------[3] user joined');
