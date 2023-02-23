@@ -57,11 +57,11 @@ module.exports = (server) => {
       console.log('userImg: ', data.user_img);
       console.log('socketToEmail: ', socketToEmail[data.user_id]);
 
-      io.emit('noticeLB', {
-        msg: `${data.user_name}님이 입장했습니다.`,
-        emailToSocket: emailToSocket,
-        socketToEmail: socketToEmail,
-      });
+      // io.emit('noticeLB', {
+      //   msg: `${data.user_name}님이 입장했습니다.`,
+      //   emailToSocket: emailToSocket,
+      //   socketToEmail: socketToEmail,
+      // });
     });
     // Lobby에 보일 방 목록 전송
     io.emit('allRooms', {
@@ -118,7 +118,7 @@ module.exports = (server) => {
     //----------------------------------------------// GamePage
     // 방 입장
     // 같은 방 입장한 회원 구분 roomID - socket.id
-    socket.on('join room', (roomID) => {
+    socket.on('join room', (roomID, data) => {
       console.log('roomID: ', roomID);
       let rooms = io.sockets.adapter.rooms;
       let room = rooms.get(roomID);
@@ -135,6 +135,12 @@ module.exports = (server) => {
         socket.join(roomID);
         userToRoom[socket.id] = roomID;
         console.log('usersInfo: ', roomToUser[roomID]);
+
+        // emailToSocket[data.user_email] = {
+        //   userID: data.user_id,
+        //   userName: data.user_name,
+        // };
+        // socketToEmail[data.user_id] = data.user_email;
 
         io.to(roomID).emit('notice', {
           msg: `${socket.id}님이 입장했습니다.`,
