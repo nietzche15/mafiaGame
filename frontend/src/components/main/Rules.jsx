@@ -15,10 +15,13 @@ export default function Rules() {
   };
 
   return (
+    <>
     <Box
       sx={{
-        width: '623px',
-        height: '800px',
+        pt:8,
+        pb:8,
+        width: '423px',
+        height: '650px',
         backgroundColor: '#8B7F70',
         borderRadius: '10px',
         display: 'flex',
@@ -26,8 +29,10 @@ export default function Rules() {
         justifyContent: 'center',
       }}
     >
-      <Box p={2} width="500px">
-        <Carousel indicators={true} autoPlay={true} interval={4000}>
+    
+      <Box p={2} width="400px">
+        
+        <Carousel indicators={true} autoPlay={true} height={570} interval={4000}>
           <Box>
             <Typography variant="h3" component="div" mb={5}>
               Tip.
@@ -78,5 +83,6 @@ export default function Rules() {
         </Carousel>
       </Box>
     </Box>
+    </>
   );
 }

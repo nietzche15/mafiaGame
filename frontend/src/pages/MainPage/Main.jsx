@@ -47,22 +47,22 @@ export default function Main() {
               height: '800px',
             }}
           >
-            <Box mr={10}>
+            <Box mr={5}>
               <img
                 src="./images/main.png"
                 alt="img"
-                style={{ width: '488px' }}
+                style={{ width: '400px' }}
               />
               <Box
                 sx={{
-                  width: '479px',
-                  height: '80px',
+                  width: '390px',
+                  height: '60px',
                   backgroundColor: '#F4DF6F',
                   borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  mb: '20px',
+                  mb: '10px',
                   cursor: 'pointer',
                 }}
                 onClick={kakaoLogin}
@@ -70,15 +70,15 @@ export default function Main() {
                 <img
                   src="./images/kakao.png"
                   alt="img"
-                  style={{ width: '50px' }}
+                  style={{ width: '47px' }}
                 />
                 카카오 로그인
               </Box>
 
               <Box
                 sx={{
-                  width: '479px',
-                  height: '80px',
+                  width: '390px',
+                  height: '60px',
                   backgroundColor: '#79C250',
                   borderRadius: '10px',
                   display: 'flex',
@@ -91,7 +91,7 @@ export default function Main() {
                 <img
                   src="./images/naver.png"
                   alt="img"
-                  style={{ width: '50px' }}
+                  style={{ width: '37px' }}
                 />
                 네이버 로그인
               </Box>
