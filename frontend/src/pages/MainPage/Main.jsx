@@ -28,32 +28,20 @@ export default function Main() {
       <div className="back">
         <div className="wrapper">
           <div className="a">
-            <img src="./images/mafiaImg.png" alt='img' style={{ width: '80%' }} />
+            <div className='a1'>
+              <img src="./images/main.png" alt='img' style={{ width: '75%' }} />
+            </div>
+            <div className="a2">
+              <div role="presentation" className="login" onClick={kakaoLogin} style={{marginBottom:'10px'}}>
+                <span><img className="kakao" style={{ width: '30px' }} src="./images/kakao.png" alt='img'/>카카오 로그인</span>
+              </div>
+              <div role="presentation" className="login2" onClick={naverLogin}>
+                <span><img className="naver" style={{ width: '23px' }} src="./images/naver.png" alt='img' />네이버 로그인</span>
+              </div>
+            </div>
           </div>
           <div className="b">
             <Rules />
-          </div>
-          <div className="c">
-            <div role="presentation" className="login" onClick={kakaoLogin}>
-              <span>
-                <img
-                  className="kakao"
-                  style={{ width: '30px' }}
-                  src="./images/kakao.png" alt='img'
-                />
-                카카오 로그인
-              </span>
-            </div>
-            <br />
-            <div role="presentation" className="login2" onClick={naverLogin}>
-              <span>
-                <img
-                  className="naver"
-                  style={{ width: '23px' }}
-                  src="./images/naver.png" alt='img' />
-                네이버 로그인
-              </span>
-            </div>
           </div>
         </div>
       </div>
