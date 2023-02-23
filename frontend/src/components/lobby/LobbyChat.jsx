@@ -4,13 +4,20 @@ import { socket } from '../../utils/socket';
 import Message from '../gamepage/Message';
 import { useSelector } from 'react-redux';
 import GlobalStyle from '../common/GlobalStyle';
+import { Cookies } from 'react-cookie';
 
 export default function LobbyChat() {
+  const cookies = new Cookies();
   const lobbyChatBox = useRef();
   const lobbyInput = useRef();
   const { messages } = useSelector((state) => state.message);
   const [value, setValue] = useState('');
   const handleChange = (event) => setValue(event.target.value);
+
+  let userEmail = cookies.get('id1');
+  let userImg = cookies.get('id2');
+  let userName = cookies.get('id3');
+
   useEffect(() => {
     socket.on('noticeLB', (data) => {
       lobbyChatBox.current.insertAdjacentHTML(
@@ -24,13 +31,13 @@ export default function LobbyChat() {
         ? lobbyChatBox.current.insertAdjacentHTML(
             'beforeend',
             `<div class='MyChatBox'>
-            <div>${data.from_name}</div>
+            <div>${userName}</div>
             <div>${data.msg}</div>
             </div>`
           )
         : lobbyChatBox.current.insertAdjacentHTML(
             'beforeend',
-            `<div>${data.from_name}</div>
+            `<div>${userName}</div>
           <div class='ServerChat'>${data.msg}</div>`
           );
     });
@@ -41,6 +48,8 @@ export default function LobbyChat() {
     console.log('chat input: ', value);
     socket.emit('sendLBChat', {
       from_id: socket.id,
+      user_name: userName,
+      user_email: userEmail,
       msg: value,
     });
     setValue('');
