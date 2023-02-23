@@ -21,7 +21,7 @@ module.exports = (server) => {
   };
   const emailToSocket = {}; // email - {userID : socket.id, userName: nickName }
   const socketToEmail = {}; // socket.id - email
-  const friendList = {};
+  // const friendList = {};
   const roomToUser = {}; // roomID - [user1(socekt.id) , user2(socekt.id), user3(socekt.id), ...]
   const userToRoom = {}; // socket.id - roomID
 
@@ -52,7 +52,7 @@ module.exports = (server) => {
       socketToEmail[data.user_id] = data.user_email;
 
       console.log('emailToSocket: ', emailToSocket[data.user_email]);
-      console.log('userID: ', emailToSocket[data.user_email].userID);
+      // console.log('userID: ', emailToSocket[data.user_email].userID);
       console.log('userName: ', emailToSocket[data.user_email].userName);
       console.log('userImg: ', data.user_img);
       console.log('socketToEmail: ', socketToEmail[data.user_id]);
@@ -89,11 +89,18 @@ module.exports = (server) => {
     });
 
     socket.on('sendLBChat', (data) => {
-      let from_email = socketToEmail[data.from_id];
-      // let from_name = emailToSocket[data.from_email];
+      emailToSocket[data.user_email] = {
+        userName: data.user_name,
+        userID: data.from_id,
+        userName: data.user_name,
+        userEmail: data.user_email,
+      };
+      socketToEmail[data.user_id] = data.user_email;
+      let from_email = socketToEmail[data.user_id];
+      let from_name = emailToSocket[data.user_email].userName;
       console.log('data', data);
       console.log('from_email:', from_email);
-      console.log('from_name:', data.user_name);
+      console.log('from_name:', from_name);
       io.emit('getLBChat', {
         from_id: data.from_id,
         msg: data.msg,
