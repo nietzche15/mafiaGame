@@ -5,9 +5,13 @@
     height: 100vh;
     color: rgb(237, 241, 245);
     padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 
 .info {
+    margin: auto;
     position: relative;;
     border-radius: 5px;
     background-color: #8B7F70;
