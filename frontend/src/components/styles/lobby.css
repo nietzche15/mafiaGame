@@ -4,24 +4,40 @@
   height: 100vh;
   color: rgb(18, 19, 20);
   padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
 
+.left{
+  margin: auto;
+}
 
 .room{
     position: relative;
     border-radius: 5px;
     background-color: #8B7F70;
-    width: 700px;
-    height: 350px;
+    width: 800px;
+    height: 400px;
     margin-bottom: 30px;
     padding: 20px;
     }
 
+.chatbox {
+  background-color: #d9d9d9;
+  width: 100%;
+  height: 255px;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-y: auto;
+}
+
+
 .chatlist {
   border-radius: 5px;
   background-color: #8b7f70;
-  width: 700px;
-  height: 250px;
+  width: 800px;
+  height: 350px;
   padding: 20px;
 }
 
@@ -83,15 +99,6 @@
 .lobbyinput {
   position: absolute;
   bottom: 0px;
-}
-
-.chatbox {
-  background-color: #d9d9d9;
-  width: 100%;
-  height: 155px;
-  padding: 10px;
-  border-radius: 5px;
-  overflow-y: auto;
 }
 
 .chatNotice {
