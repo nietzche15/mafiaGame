@@ -25,6 +25,13 @@ const useSocket = () => {
     // 채팅방 입장
     socket.emit('join room', roomID);
 
+    // socket.on('noticeLB', (data) => {
+    //   lobbyChatBox.current.insertAdjacentHTML(
+    //     'beforeend',
+    //     `<div class='chatNotice'>${data.msg}</div>`
+    //   );
+    // })
+
     // Realtime User Notice
     socket.on('notice', (data) => {
       const outMessgae = '님이 방을 나갔습니다.';
