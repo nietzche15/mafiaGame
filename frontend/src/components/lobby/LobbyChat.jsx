@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { socket } from '../../utils/socket';
 import Message from '../gamepage/Message';
@@ -9,7 +9,8 @@ export default function LobbyChat() {
   const lobbyChatBox = useRef();
   const lobbyInput = useRef();
   const { messages } = useSelector((state) => state.message);
-
+  const [value, setValue] = useState('');
+  const handleChange = (event) => setValue(event.target.value);
   useEffect(() => {
     socket.on('noticeLB', (data) => {
       lobbyChatBox.current.insertAdjacentHTML(
@@ -35,16 +36,19 @@ export default function LobbyChat() {
     });
   }, []);
 
-  const sendLobbyChat = () => {
+  const sendLobbyChat = (event) => {
+    event.preventDefault();
+    console.log('chat input: ', value);
     socket.emit('sendLBChat', {
       from_id: socket.id,
-      msg: lobbyInput.current.value,
+      msg: value,
     });
+    setValue('');
   };
 
-  const enterLobbyChat = (e) => {
-    if (e.key === 'Enter') sendLobbyChat();
-  };
+  // const enterLobbyChat = (e) => {
+  //   if (e.key === 'Enter') sendLobbyChat();
+  // };
 
   return (
     <>
@@ -65,6 +69,7 @@ export default function LobbyChat() {
         </div>
         <div className="lobbyinput">
           <TextField
+            value={value}
             ref={lobbyInput}
             id="outlined-basic"
             label=""
@@ -75,7 +80,8 @@ export default function LobbyChat() {
               backgroundColor: '#D9D9D9',
               borderRadius: '5px',
             }}
-            onKeyDown={enterLobbyChat}
+            // onKeyDown={enterLobbyChat}
+            onChange={handleChange}
           />
           <Button
             variant="contained"
