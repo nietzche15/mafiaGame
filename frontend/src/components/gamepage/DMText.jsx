@@ -5,7 +5,7 @@ import { useLocation } from 'react-router';
 import { socket } from '../../utils/socket';
 
 export default function DMText() {
-  const { timeStatusm, myStatus } = useSelector((state) => state.status);
+  const { timeStatus, myStatus } = useSelector((state) => state.status);
   const userList = useSelector((state) => state.room.userList);
   const { state: roomID } = useLocation();
 
@@ -38,7 +38,7 @@ export default function DMText() {
     if (e.key === 'Enter') handleSubmit();
   };
 
-  if (timeStatusm === 'night') return null;
+  if (timeStatus === 'night') return null;
   if (myStatus === 'dead') return null;
 
   return (
