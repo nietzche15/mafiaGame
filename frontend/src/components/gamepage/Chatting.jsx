@@ -1,5 +1,6 @@
 import { Box, Button } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { socket } from '../../utils/socket';
 import { useSelector } from 'react-redux';
 import '../styles/Chatting.css';
 import Message from './Message';
@@ -14,9 +15,13 @@ export default function Chatting() {
   const { userList } = useSelector((state) => state.room);
   const { messages } = useSelector((state) => state.message);
   const changeToDM = () => setIsDM(!isDM);
-  // socket.emit('reqUserList', { from_id: socket.id });
+  const [timer, setTimer] = useState(0);
 
-  console.log(timeStatus);
+  useEffect(() => {
+    socket.on('timerChange', ({ ms }) => {
+      setTimer(ms);
+    });
+  }, []);
 
   return (
     <>
@@ -35,6 +40,8 @@ export default function Chatting() {
         {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Timer setChange={setChange} />
       </Box> */}
+
+        <Box>{timer / 1000}초</Box>
 
         <Box>
           {messages.map((message) => (
@@ -56,7 +63,7 @@ export default function Chatting() {
             alignItems: 'center',
           }}
         >
-          {timeStatus === 'day' && (
+          {timeStatus !== 'night' && (
             <Button
               onClick={changeToDM}
               sx={{ fontFamily: 'MaplestoryOTFBold' }}

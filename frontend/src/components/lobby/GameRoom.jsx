@@ -57,8 +57,8 @@ export default function GameRoom() {
         setPassword(''),
         setRoomID(''))
       : cnt === 5
-      ? (setOpen(false), setCnt(4))
-      : (inputPW.current.value = ''),
+        ? (setOpen(false), setCnt(4))
+        : (inputPW.current.value = ''),
       inputPW.current.setAttribute('placeholder', `TRY AGAIN(${cnt}/5)`);
   };
 
@@ -129,7 +129,6 @@ export default function GameRoom() {
             <TextField
               autoFocus
               inputRef={inputPW}
-              autoFocus
               required
               label="Password"
               variant="outlined"

@@ -26,11 +26,7 @@ export default function MafiaText() {
     if (e.key === 'Enter') handleSubmit();
   };
 
-  if (myJob !== 'mafia') {
-    return null;
-  }
-
-  if (timeStatus === 'day') {
+  if (myJob !== 'mafia' || timeStatus !== 'night') {
     return null;
   }
 
