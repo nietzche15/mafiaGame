@@ -223,6 +223,10 @@ module.exports = (server) => {
 
       peopleVotedList[id] = {};
 
+      if (!votedCountList[1]) {
+        return votedCountList[0].id;
+      }
+
       if (votedCountList[0].count === votedCountList[1].count) {
         return undefined;
       }
