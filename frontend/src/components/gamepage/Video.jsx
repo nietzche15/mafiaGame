@@ -68,7 +68,7 @@ export default function Video({ name }) {
             borderRadius: '10px',
           }}
         >
-          <Vote />
+          {name === mySocketId ? <Vote /> : null}
         </Box>
       </Box>
 

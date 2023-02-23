@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import React from 'react';
 import GlobalStyle from '../../components/common/GlobalStyle';
 import Rules from '../../components/main/Rules';
@@ -25,26 +26,77 @@ export default function Main() {
   return (
     <>
       <GlobalStyle />
-      <div className="back">
-        <div className="wrapper">
-          <div className="a">
-            <div className='a1'>
-              <img src="./images/main.png" alt='img' style={{ width: '75%' }} />
-            </div>
-            <div className="a2">
-              <div role="presentation" className="login" onClick={kakaoLogin} style={{marginBottom:'10px'}}>
-                <span><img className="kakao" style={{ width: '30px' }} src="./images/kakao.png" alt='img'/>카카오 로그인</span>
-              </div>
-              <div role="presentation" className="login2" onClick={naverLogin}>
-                <span><img className="naver" style={{ width: '23px' }} src="./images/naver.png" alt='img' />네이버 로그인</span>
-              </div>
-            </div>
-          </div>
-          <div className="b">
+      <Box
+        sx={{
+          backgroundColor: '#2B1D23',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '800px',
+            }}
+          >
+            <Box mr={10}>
+              <img
+                src="./images/main.png"
+                alt="img"
+                style={{ width: '488px' }}
+              />
+              <Box
+                sx={{
+                  width: '479px',
+                  height: '80px',
+                  backgroundColor: '#F4DF6F',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mb: '20px',
+                }}
+              >
+                <img
+                  src="./images/kakao.png"
+                  alt="img"
+                  style={{ width: '50px' }}
+                />
+                카카오 로그인
+              </Box>
+
+              <Box
+                sx={{
+                  width: '479px',
+                  height: '80px',
+                  backgroundColor: '#79C250',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src="./images/naver.png"
+                  alt="img"
+                  style={{ width: '50px' }}
+                />
+                네이버 로그인
+              </Box>
+            </Box>
+
             <Rules />
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     </>
   );
 }

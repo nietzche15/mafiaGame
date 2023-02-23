@@ -11,7 +11,9 @@ export default function Vote() {
   const { gameStatus, timeStatus, myStatus } = useSelector(
     (state) => state.status
   );
-  const { userList, mySocketId } = useSelector((state) => state.room);
+  const { userList, mySocketId, killedUserList } = useSelector(
+    (state) => state.room
+  );
   const [select, setSelect] = useState('');
 
   // // 밤 - 마피아 지목 내용 전송
@@ -56,7 +58,7 @@ export default function Vote() {
           value={select}
         >
           {userList.map((user) =>
-            user && user !== mySocketId ? (
+            user && !killedUserList.includes(user) ? (
               <MenuItem value={user} key={user}>
                 {user}
               </MenuItem>
