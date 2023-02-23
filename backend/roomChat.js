@@ -13,13 +13,15 @@ module.exports = (server) => {
   let roomList = {
     0: {
       roomID: 0,
-      roomName: 'test',
+      roomName: '☆*: .｡. o(≧▽≦)o .｡.:*☆ 마피아 ㄱㄱ',
       roomLocked: true,
       roomPW: 1234,
       roomOwner: 'admin',
     },
   };
-
+  const emailToSocket = {}; // email - {userID : socket.id, userName: nickName }
+  const socketToEmail = {}; // socket.id - email
+  const friendList = {};
   const roomToUser = {}; // roomID - [user1(socekt.id) , user2(socekt.id), user3(socekt.id), ...]
   const userToRoom = {}; // socket.id - roomID
 
@@ -37,11 +39,36 @@ module.exports = (server) => {
   io.on('connection', (socket) => {
     console.log('User Connected', socket.id);
 
+    //----------------------------------------------// Lobby Page
+
+    socket.on('setUserInfo', (data) => {
+      emailToSocket[data.user_email] = {
+        userID: data.user_id,
+        userName: data.user_name,
+      };
+      socketToEmail[data.user_id] = data.user_email;
+
+      console.log('emailToSocket: ', emailToSocket[data.user_email]);
+      console.log('userID: ', emailToSocket[data.user_email].userID);
+      console.log('userName: ', emailToSocket[data.user_email].userName);
+      console.log('userImg: ', data.user_img);
+      console.log('socketToEmail: ', socketToEmail[data.user_id]);
+
+      io.emit('noticeLB', {
+        msg: `${data.user_name}님이 입장했습니다.`,
+        emailToSocket: emailToSocket,
+        socketToEmail: socketToEmail,
+      });
+    });
+    // Lobby에 보일 방 목록 전송
     io.emit('allRooms', {
       roomList: roomList,
     });
     console.log('roomList:', roomList);
 
+    // 새로 만든 방 정보 목록에 추가
+    // 추가된 방 목록 Lobby로 전송
+    // 방 roomID 는 cnt로 autoIncrement
     socket.on('newRoomInfo', (data) => {
       cnt++;
       // let roomID = cnt;
@@ -58,6 +85,20 @@ module.exports = (server) => {
       });
     });
 
+    socket.on('sendLBChat', (data) => {
+      let from_email = socketToEmail[data.from_id];
+      let from_name = emailToSocket[data.from_email].userName;
+      console.log('data', data);
+      console.log('from_email:', from_email);
+      console.log('from_name:', from_name);
+      io.emit('getLBChat', {
+        from_id: data.from_id,
+        from_name: data.from_name || '익명',
+        msg: data.msg,
+      });
+    });
+
+    //----------------------------------------------// GamePage
     // 방 입장
     // 같은 방 입장한 회원 구분 roomID - socket.id
     socket.on('join room', (roomID) => {
@@ -215,14 +256,13 @@ module.exports = (server) => {
 
     // ------------------------------------------------------[2] 밤
     // 밤 - mafia가 고름
-    // mafia 한명 - 고른 사람 죽임
-    // mafia 두명 - 고른 사람 같으면 죽고 다르면 안죽음
-    // 아니면 마지막으로 고른 사람 죽게할지 ?
+    // mafia 한명 - 고른 사람 죽음
+    // mafia 두명 - 마지막으로 고른 사람 죽음
     let mafiaVotedList = {};
     socket.on('mafiaVoted', (data) => {
       let roomID = userToRoom[data.from_id];
       console.log(data);
-      if (roomToUser[roomID]?.length <= 4) {
+      if (roomToUser[roomID]?.length <= 5) {
         io.to(roomID).emit('gameNotice', {
           dayNight: 'day',
           msg: '낮이 되었습니다',
@@ -314,7 +354,13 @@ module.exports = (server) => {
 
     socket.on('disconnect', () => {
       let roomID = userToRoom[socket.id];
+      let email = socketToEmail[socket.id];
+      delete emailToSocket[email];
+      delete socketToEmail[socket.id];
+      console.log('emailToSocket[email]: ', emailToSocket[email]);
+      console.log('socketToEmail: ', socketToEmail);
       checkReady[roomID] -= 1;
+
       io.to(roomID).emit('notice', {
         msg: `${socket.id}님이 방을 나갔습니다.`,
         roomToUser: roomToUser[roomID],
@@ -324,7 +370,6 @@ module.exports = (server) => {
             (e) => e !== socket.id
           ))
         : delete roomToUser[socket.id];
-
       console.log('User Disconnected :' + socket.id);
       // console.log('check:', userToRoom[socket.id]?.slice(0, -2));
       socket.leave(roomID);

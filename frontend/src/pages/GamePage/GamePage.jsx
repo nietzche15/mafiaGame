@@ -9,10 +9,6 @@ import ButtonGroup from '../../components/gamepage/ButtonGroup';
 import Chatting from '../../components/gamepage/Chatting';
 import Video from '../../components/gamepage/Video';
 
-socket.on('connect', () => {
-  console.log('User Connected', socket.id);
-});
-
 export default function GamePage() {
   useSocket();
   const userList = useSelector((state) => state.room.userList);
