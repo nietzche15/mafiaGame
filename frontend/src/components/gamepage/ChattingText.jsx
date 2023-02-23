@@ -7,6 +7,7 @@ import GlobalStyle from '../common/GlobalStyle';
 
 export default function ChattingText() {
   const { timeStatus, myStatus } = useSelector((state) => state.status);
+  const { finalistId, mySocketId } = useSelector((state) => state.room);
   const [value, setValue] = useState('');
   const handleChange = (event) => setValue(event.target.value);
   const handleSubmit = (event) => {
@@ -16,9 +17,10 @@ export default function ChattingText() {
       from_id: socket.id,
       msg: value,
     });
-    setValue('')
+    setValue('');
   };
 
+  if (timeStatus === 'dayFinal' && finalistId !== mySocketId) return null;
   if (timeStatus === 'night') return null;
   if (myStatus === 'dead') return null;
 
