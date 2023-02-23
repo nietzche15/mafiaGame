@@ -22,8 +22,15 @@ import GameRoom from '../../components/lobby/GameRoom';
 import { getRoomID } from '../../store/modules/room';
 import { socket } from '../../utils/socket';
 import { asyncRoomList } from '../../store/modules/roomlist';
+// import useSocket from '../../hooks/useSocket';
+
+// socket CONNECT
+socket.on('connect', () => {
+  console.log('User Connected', socket.id);
+});
 
 export default function Lobby() {
+  // useSocket();
   const cookies = new Cookies();
   const roomInput = useRef();
   const dispatch = useDispatch();
@@ -38,16 +45,26 @@ export default function Lobby() {
   };
   const roomName = useRef();
   const roomPW = useRef();
+  let userEmail = cookies.get('id1');
+  let userImg = cookies.get('id2');
+  let userName = cookies.get('id3');
+
+  console.log('userInfo: ', userEmail, userImg, userName);
+
   useEffect(() => {
     dispatch(asyncRoomList());
+
+    socket.emit('setUserInfo', {
+      user_id: socket.id,
+      user_email: userEmail,
+      user_img: userImg,
+      user_name: userName,
+    });
   }, []);
 
   socket.on('allRooms', () => {
     dispatch(asyncRoomList());
   });
-
-  // console.log(cookies.get('id1'));
-  // console.log(cookies.get('id2'));
 
   let roomID;
 
@@ -123,7 +140,7 @@ export default function Lobby() {
             </Button>
           </div>
 
-          <div className="gameroom">
+          {/* <div className="gameroom">
             <div className="gamelist">
               <span className="gamenumber">1</span>
               <span className="gametitle">용산 마피아</span>
@@ -135,8 +152,8 @@ export default function Lobby() {
               </span>
               <span className="gameNoP">1/7</span>
             </div>
-            <GameRoom />
-          </div>
+          </div> */}
+          <GameRoom />
 
           <div className="right">
             <Button

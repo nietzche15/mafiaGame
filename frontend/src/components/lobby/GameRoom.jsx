@@ -23,7 +23,6 @@ export default function GameRoom() {
   const [cnt, setCnt] = useState(4);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const gameroomBox = useRef();
   const inputPW = useRef();
   const myRefs = useRef([]);
 
@@ -69,10 +68,10 @@ export default function GameRoom() {
 
   return (
     <>
-      <div className="gameroomBox" ref={gameroomBox}>
+      <div className="gameroomBox">
         <div className="gameroom">
           <div className="gamelist">
-            <span className="gamenumber">1</span>
+            <span className="gamenumber">0</span>
             <span className="gametitle" value={1234} onClick={enterRoom}>
               용산 마피아
             </span>
@@ -89,16 +88,37 @@ export default function GameRoom() {
           {asyncLoading && <InfinitySpin width="100" color=" cornflowerblue" />}
           {Object.keys(roomList).map((e, i) => {
             return (
-              <div
-                key={i}
-                value={roomList[e].roomID}
-                password={roomList[e].roomPW || ''}
-                ref={(element) =>
-                  (myRefs.current[roomList[e].roomName] = element)
-                }
-                onClick={enterRoom}
-              >
-                {roomList[e].roomName}
+              <div className="gameroom" key={i + Math.random()}>
+                <div className="gamelist" key={i + Math.random()}>
+                  <span className="gamenumber" key={i + Math.random()}>
+                    {i + 1}
+                  </span>
+                  <span
+                    className="gametitle"
+                    key={i + Math.random()}
+                    value={roomList[e].roomID}
+                    password={roomList[e].roomPW || ''}
+                    ref={(element) =>
+                      (myRefs.current[roomList[e].roomName] = element)
+                    }
+                    onClick={enterRoom}
+                  >
+                    {roomList[e].roomName}
+                  </span>
+                  <span key={i + Math.random()} className="gamestate">
+                    {roomList[e].roomLocked && (
+                      <img
+                        key={i + Math.random()}
+                        style={{
+                          width: '19px',
+                          position: 'relative',
+                          top: '3px',
+                        }}
+                        src="./images/lock.png"
+                      />
+                    )}
+                  </span>
+                </div>
               </div>
             );
           })}

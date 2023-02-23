@@ -8,7 +8,7 @@ export default function MafiaText() {
   const { state: roomID } = useLocation();
   const { timeStatus } = useSelector((state) => state.status);
   const { jobList, myJob, userList } = useSelector((state) => state.room);
-  const onlyMafia = userList.length <= 4; // userList.length <=4 면 mafia 한 명(true)
+  const onlyMafia = userList.length <= 5; // userList.length <=5 면 mafia 한 명(true)
   const DMInput = useRef();
 
   const handleSubmit = () => {
