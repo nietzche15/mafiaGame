@@ -35,9 +35,6 @@ export default function Kakao() {
 
     }, [])
 
-
-
-
     return (
         <div>
             .

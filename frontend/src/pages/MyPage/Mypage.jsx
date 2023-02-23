@@ -34,8 +34,14 @@ export default function Mypage() {
     const API = 'ec651559127139e56f9dc2e455e69667';
     const logout = 'http://localhost:3000';
 
-    function kakaoLogout() {
-        window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=${API}&logout_redirect_uri=${logout}`
+    function delcookies(){
+        cookies.remove('id1');
+        cookies.remove('id2');
+        cookies.remove('id3');
+    }
+    function kakaoLogout() {        
+        window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=${API}&logout_redirect_uri=${logout}`;
+        delcookies()
     }
 
     return (
