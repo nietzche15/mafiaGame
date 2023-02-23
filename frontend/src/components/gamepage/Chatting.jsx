@@ -11,7 +11,7 @@ import DMText from './DMText';
 
 export default function Chatting() {
   const [isDM, setIsDM] = useState(false);
-  const { timeStatus } = useSelector((state) => state.status);
+  const { timeStatus, gameStatus } = useSelector((state) => state.status);
   const { userList } = useSelector((state) => state.room);
   const { messages } = useSelector((state) => state.message);
   const changeToDM = () => setIsDM(!isDM);
@@ -41,7 +41,19 @@ export default function Chatting() {
         <Timer setChange={setChange} />
       </Box> */}
 
-        <Box>{timer / 1000}초</Box>
+        {gameStatus === 'wait' ? null : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'red',
+              height: '50px',
+            }}
+          >
+            현재 {timer / 1000}초 남았습니다.
+          </Box>
+        )}
 
         <Box>
           {messages.map((message) => (

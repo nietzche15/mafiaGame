@@ -32,7 +32,10 @@ module.exports = (server) => {
    * }
    */
   const roomTimer = {};
+
   const timerList = require('./timerList');
+
+  let peopleVotedList = {};
 
   io.on('connection', (socket) => {
     console.log('User Connected', socket.id);
@@ -158,6 +161,26 @@ module.exports = (server) => {
       console.log('readyOrNot: ', checkReady[roomID], readyCnt);
     });
 
+    const getKilledUser = (id) => {
+      if (!peopleVotedList[id]) {
+        return undefined;
+      }
+
+      const votedCountList = Object.keys(peopleVotedList[id])
+        .map((user) => ({
+          id: user,
+          count: peopleVotedList[id][user].length,
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      peopleVotedList[id] = {};
+
+      if (votedCountList[0].count === votedCountList[1].count) {
+        return undefined;
+      }
+      return votedCountList[0].id;
+    };
+
     const setTimer = (id, index) => {
       roomTimer[id] = { ...timerList[index] };
     };
@@ -173,7 +196,7 @@ module.exports = (server) => {
           setTimer(id, 0);
         }
 
-        if (roomTimer[id]?.ms <= 0) {
+        if (roomTimer[id].ms <= 0) {
           isNoticeSended = false;
           targetIndex += 1;
           if (targetIndex > timerList.length - 1) {
@@ -183,12 +206,19 @@ module.exports = (server) => {
         }
 
         if (!isNoticeSended) {
-          console.log(id, roomTimer, targetIndex);
-          io.to(id).emit('gameNotice', {
-            dayNight: roomTimer[id].type,
-            msg: roomTimer[id].noticeMessage,
-          });
           isNoticeSended = true;
+          if (roomTimer[id].type === 'night') {
+            io.to(id).emit('gameNotice', {
+              dayNight: roomTimer[id].type,
+              msg: roomTimer[id].noticeMessage,
+              killed: getKilledUser(id),
+            });
+          } else {
+            io.to(id).emit('gameNotice', {
+              dayNight: roomTimer[id].type,
+              msg: roomTimer[id].noticeMessage,
+            });
+          }
         }
         roomTimer[id].ms -= 1000;
         io.to(id).emit('timerChange', roomTimer[id]);
@@ -251,7 +281,7 @@ module.exports = (server) => {
 
     // ------------------------------------------------------[3] 낮
     // 낮 - 죽일 사람 투표
-    let peopleVotedList = {};
+
     socket.on('peopleVoted', (data) => {
       let roomID = userToRoom[data.from_id];
       let length = roomToUser[roomID]?.length;
@@ -259,10 +289,22 @@ module.exports = (server) => {
 
       peopleVotedList[roomID] ||= {};
 
-      peopleVotedList[roomID][killedid]
-        ? peopleVotedList[roomID][killedid].push(data.from_id)
-        : (peopleVotedList[roomID] = { killedid: [data.from_id] });
-      console.log('peopleVotedList: ', peopleVotedList[roomID]);
+      if (peopleVotedList[roomID][killedid]) {
+        peopleVotedList[roomID][killedid].push(data.from_id);
+      } else {
+        peopleVotedList[roomID] = {
+          ...peopleVotedList[roomID],
+          [killedid]: [data.from_id],
+        };
+      }
+
+      let votedMessage = '';
+
+      Object.keys(peopleVotedList[roomID]).forEach((user) => {
+        votedMessage += `[${user}] : ${peopleVotedList[roomID][user].length} 표 `;
+      });
+
+      io.to(roomID).emit('gameNotice', { msg: votedMessage });
     });
 
     // 낮 - 시간 종료시,
