@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalStyle from '../../components/common/GlobalStyle';
 import { socket } from '../../utils/socket';
@@ -8,18 +8,30 @@ import useStream from '../../hooks/useStream';
 import Chatting from '../../components/gamepage/Chatting';
 import ProfileCard from '../../components/gamepage/ProfileCard';
 import ButtonGroup from '../../components/gamepage/ButtonGroup';
+import MafiaCard from '../../components/gamepage/JobCard/MafiaCard';
 
 export default function GamePage() {
   useSocket();
   const { peerList, stream } = useStream();
   const { gameStatus } = useSelector((state) => state.status);
-  const { userList } = useSelector((state) => state.room);
+  const { userList, myJob, mySocketId } = useSelector((state) => state.room);
+  const [showCard, setShowCard] = useState(false);
 
   useEffect(() => {
     socket.on('room full', () => {
       navigate('/lobby');
       alert('This rooom is not available');
     });
+  }, []);
+
+  useEffect(() => {
+    if (myJob === 'mafia') {
+      setShowCard(true);
+    }
+  }, [myJob]);
+
+  const onCloseCard = useCallback(() => {
+    setShowCard(false);
   }, []);
 
   return (
@@ -43,6 +55,16 @@ export default function GamePage() {
           </Box>
           <Box>
             <Chatting />
+            {showCard ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <MafiaCard onClose={onCloseCard} />
+              </Box>
+            ) : null}
           </Box>
           <Box>
             <Box mr={2}>
