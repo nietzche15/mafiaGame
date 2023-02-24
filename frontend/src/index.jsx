@@ -14,7 +14,12 @@ import App from './App';
 const reduxDevTool =
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 
-const store = configureStore({ reducer: rootReducer }, reduxDevTool);
+const store = configureStore(
+  {
+    reducer: rootReducer,
+  },
+  reduxDevTool
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
