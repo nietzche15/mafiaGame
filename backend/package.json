@@ -4,7 +4,8 @@
   "description": "MafiaGame using NodeJs, WebRTC and Websockets",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "startup": "nohup node index.js &"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.2",
