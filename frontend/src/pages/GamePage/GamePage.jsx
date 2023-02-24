@@ -9,13 +9,15 @@ import Chatting from '../../components/gamepage/Chatting';
 import ProfileCard from '../../components/gamepage/ProfileCard';
 import ButtonGroup from '../../components/gamepage/ButtonGroup';
 import MafiaCard from '../../components/gamepage/JobCard/MafiaCard';
+import Citizencard from '../../components/gamepage/JobCard/Citizencard';
 
 export default function GamePage() {
   useSocket();
   const { peerList, stream } = useStream();
   const { gameStatus } = useSelector((state) => state.status);
-  const { userList, myJob, mySocketId } = useSelector((state) => state.room);
-  const [showCard, setShowCard] = useState(false);
+  const { userList, myJob } = useSelector((state) => state.room);
+  const [showMafiaCard, setShowMafiaCard] = useState(false);
+  const [showCitizencardCard, setShowCitizencardCard] = useState(false);
 
   useEffect(() => {
     socket.on('room full', () => {
@@ -26,12 +28,23 @@ export default function GamePage() {
 
   useEffect(() => {
     if (myJob === 'mafia') {
-      setShowCard(true);
+      setShowMafiaCard(true);
+    }
+  }, [myJob]);
+
+  useEffect(() => {
+    if (myJob === 'citizen') {
+      setShowCitizencardCard(true);
     }
   }, [myJob]);
 
   const onCloseCard = useCallback(() => {
-    setShowCard(false);
+    setShowMafiaCard(false);
+  }, []);
+
+  const onCloseCitizencardCard = useCallback(() => {
+    console.log('클릭');
+    setShowCitizencardCard(false);
   }, []);
 
   return (
@@ -55,7 +68,7 @@ export default function GamePage() {
           </Box>
           <Box>
             <Chatting />
-            {showCard ? (
+            {showMafiaCard ? (
               <Box
                 sx={{
                   display: 'flex',
@@ -63,6 +76,17 @@ export default function GamePage() {
                 }}
               >
                 <MafiaCard onClose={onCloseCard} />
+              </Box>
+            ) : null}
+
+            {showCitizencardCard ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Citizencard onClose={onCloseCitizencardCard} />
               </Box>
             ) : null}
           </Box>
