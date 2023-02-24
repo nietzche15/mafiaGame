@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { socket } from '../../utils/socket';
@@ -9,10 +9,13 @@ import Vote from './Vote';
 // import Target from "./Target";
 
 export default function ProfileCard({ userId, peerList, stream }) {
+  const videoRef = useRef();
   const { timeStatus } = useSelector((state) => state.status);
   const { mySocketId, myJob, killedUserList } = useSelector(
     (state) => state.room
   );
+
+  const [noVideo, setNoVideo] = useState(true);
 
   const onClickKill = () => {
     if (myJob === 'mafia' && timeStatus === 'night') {
@@ -20,14 +23,22 @@ export default function ProfileCard({ userId, peerList, stream }) {
     }
   };
 
-  const video = useMemo(() => {
+  useEffect(() => {
     if (mySocketId === userId) {
-      return stream;
+      videoRef.current.srcObject = stream;
+      return;
     }
-    return peerList.find((peer) => peer.userId === userId)?.peer;
-  }, [userId, peerList, stream, mySocketId]);
 
-  console.log(video);
+    const target = peerList.find((peer) => peer.userId === userId)?.peer;
+
+    if (target) {
+      target.on('stream', (peerStream) => {
+        console.log(peerStream);
+        videoRef.current.srcObject = peerStream;
+      });
+    }
+    setNoVideo(Boolean(target));
+  }, [userId, stream, mySocketId, peerList]);
 
   return (
     <Box
@@ -112,15 +123,23 @@ export default function ProfileCard({ userId, peerList, stream }) {
             />
           </Box>
         ) : null}
-        {video ? (
-          <video src={video} style={{ width: '200px', height: '200px' }} />
-        ) : (
+
+        <video
+          style={{
+            width: '200px',
+            height: '200px',
+            // display: noVideo ? 'none' : 'block',
+          }}
+          ref={videoRef}
+          autoPlay
+        />
+        {/* {noVideo && (
           <img
             src="./images/mafiaImg.png"
             alt="mafiaImg"
             style={{ width: '200px', height: '200px' }}
           />
-        )}
+        )} */}
       </Box>
     </Box>
   );

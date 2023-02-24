@@ -67,6 +67,7 @@ const useStream = () => {
   }, [dispatch, roomID, myEmail]);
 
   useEffect(() => {
+    if (!stream) return;
     /** 첫 입장 */
     socket.on('all users', (users) => {
       dispatch(getUserList([...users, socket.id]));
@@ -84,7 +85,7 @@ const useStream = () => {
         { userId: callerID, peer: addNewPeer(signal, callerID, stream) },
       ]);
     });
-  }, [dispatch]);
+  }, [dispatch, stream]);
 
   useEffect(() => {
     socket.on('receiving returned signal', (payload) => {
