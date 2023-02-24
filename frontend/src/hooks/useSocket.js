@@ -17,9 +17,15 @@ import {
 } from '../store/modules/status';
 import { setUsersInfo } from '../store/modules/userInfo';
 
+const videoConstraints = {
+  height: 200,
+  width: 200,
+};
+
 const useSocket = () => {
   const dispatch = useDispatch();
   const { userList } = useSelector((state) => state.room);
+
   const { state: roomID } = useLocation();
 
   useEffect(() => {
@@ -125,7 +131,6 @@ const useSocket = () => {
       const job = data.jobList[userList.indexOf(socket.id)];
       dispatch(setGameStatus('playing'));
       dispatch(setJobList(data.jobList, job));
-      dispatch(setSocketId(socket.id));
     });
   }, [userList, dispatch]);
 

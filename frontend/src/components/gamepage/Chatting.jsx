@@ -35,23 +35,16 @@ export default function Chatting() {
       <GlobalStyle />
       <Box
         sx={{
-          width: '900px',
+          width: '800px',
           backgroundColor: '#8B7F70',
           borderRadius: '10px',
           minHeight: 976,
           maxHeight: 976,
-          position: 'absolute',
-          top: 0,
-          left: 465,
           overflowY: 'auto',
           fontFamily: 'MaplestoryOTFBold',
           zIndex: 10000,
         }}
       >
-        {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Timer setChange={setChange} />
-      </Box> */}
-
         {gameStatus === 'wait' ? null : (
           <Box
             sx={{
