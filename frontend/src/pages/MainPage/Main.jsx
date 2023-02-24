@@ -10,7 +10,7 @@ export default function Main() {
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${
     process.env.REACT_APP_REST_API_KEY
   }&redirect_uri=${
-    isProduction
+    !isProduction
       ? process.env.REACT_APP_KAKAO_DEVELOP_REDIRECT_URI
       : process.env.REACT_APP_KAKAO_PRODUCTION_REDIRECT_URI
   }&response_type=code&scope=openid,profile_image,account_email,profile_nickname`;
@@ -23,9 +23,11 @@ export default function Main() {
     'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' +
     '27NfAweZlVIdEWFecF3p' +
     '&redirect_uri=' +
-    'http://localhost:3000/naver' +
-    '&state=' +
-    '1234';
+    !isProduction
+      ? `${process.env.REACT_APP_NAVER_DEVELOP_REDIRECT_URI}`
+      : `${process.env.REACT_APP_NAVER_PRODUCTION_REDIRECT_URI}` +
+        '&state=' +
+        '1234';
 
   const naverLogin = () => {
     window.location.href = naverApiUrl;
