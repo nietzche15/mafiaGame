@@ -95,7 +95,7 @@ export default function LobbyChat() {
             variant="outlined"
             size="small"
             sx={{
-              width: '688px',
+              width: '990px',
               backgroundColor: '#D9D9D9',
               borderRadius: '5px',
             }}

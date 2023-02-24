@@ -178,6 +178,7 @@ export default function Lobby() {
                 variant="contained"
                 color="primary"
                 sx={{
+                  width:'100px',
                   m: 0,
                   '* .Mui_disabled': { background: '#E38989' },
                   fontFamily: 'MaplestoryOTFBold',
@@ -237,24 +238,12 @@ export default function Lobby() {
                   <Button onClick={handleSubmit}>Submit</Button>
                 </DialogActions>
               </Dialog>
-
-              {/* <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-              <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal> */}
-
               <br />
               <br />
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ m: 0, '* .Mui_disabled': { background: '#E38989' } }}
+                sx={{ width:'100px',m: 0, '* .Mui_disabled': { background: '#E38989' } }}
               >
                 <Link
                   to="/mypage"

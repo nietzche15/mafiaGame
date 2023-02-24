@@ -5,43 +5,42 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-.wrapper {
-    margin-top: 70px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 700px;
-    height: 600px;
-    display: grid;
-    grid-gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
-}
-.main-img {
-    background-color: red;
-    grid-column: 1 / 2 ;
-    grid-row: 1 / 3 ;
-}
-.rule {
-    background-color: aqua;
-    grid-column: 2;
-    grid-row: 1 / 4;
-}
-.login {
-    background-color: aquamarine;
-    grid-column: 1 / 2;
-    grid-row:  3;
-}
-body{
-    
-}
-
-    </style>
 </head>
+<style>
+    .table, tr, td {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #444444;
+}
+</style>
 <body>
-    <div class="wrapper">
-        <div class="main-img">One</div>
-        <div class="rule">Two</div>
-        <div class="login">Three</div>
-    </div>
+    <table>
+        <tr>
+            <td rowspan="3">
+                프로필
+            </td>
+            <td>
+                이메일
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                닉네임
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                점수
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                승률
+            </td>
+        </tr>
+
+    </table>
 </body>
 </html>
