@@ -8,7 +8,7 @@ module.exports = (server) => {
 
   let cnt = 2;
   const getJobList = require('./jobList');
-  let jobList = {};
+
   let checkReady = {};
   let roomList = {
     0: {
@@ -51,7 +51,10 @@ module.exports = (server) => {
 
   const timerList = require('./timerList');
 
-  let peopleVotedList = {};
+  const peopleVotedList = {};
+  const finalVoteList = {};
+  const userJobList = {};
+  const mafiaVoteList = {};
 
   io.on('connection', (socket) => {
     console.log('User Connected', socket.id);
@@ -264,6 +267,11 @@ module.exports = (server) => {
     socket.on('gameReady', (data) => {
       let roomID = userToRoom[data.from_id];
       let readyCnt = roomToUser[roomID]?.length - 1; // 방장 빼고 전부 ready
+
+      finalVoteList[roomID] = {};
+      peopleVotedList[roomID] = {};
+      userJobList[roomID] = {};
+
       checkReady[roomID] === readyCnt - 1
         ? io.to(roomToUser[roomID][0]).emit('readyComplete')
         : checkReady[roomID] > 0
@@ -277,6 +285,71 @@ module.exports = (server) => {
       console.log('readyOrNot: ', checkReady[roomID], readyCnt);
     });
 
+    socket.on('finalVote', ({ from_id, agree }) => {
+      const roomID = userToRoom[from_id];
+      finalVoteList[roomID] ||= {};
+      finalVoteList[roomID][from_id] = agree;
+      let agreeCount = 0;
+      let disagreeCount = 0;
+
+      Object.keys(finalVoteList[roomID]).forEach((key) => {
+        if (finalVoteList[roomID][key]) {
+          agreeCount += 1;
+        } else {
+          disagreeCount += 1;
+        }
+      });
+
+      io.to(roomID).emit('gameNotice', {
+        msg: `찬성 : ${agreeCount}표, 반대 : ${disagreeCount}표`,
+      });
+    });
+
+    const checkGameEnd = (id) => {
+      const target = userJobList[id];
+
+      console.log(target);
+
+      let mafiaCount = 0;
+      let citizenCount = 0;
+
+      target.forEach((user) => {
+        if (user.status === 'alive') {
+          if (user.job === 'mafia') {
+            mafiaCount += 1;
+          } else {
+            citizenCount += 1;
+          }
+        }
+      });
+
+      if (mafiaCount === 0) {
+        io.to(id).emit('gameNotice', {
+          msg: '마피아가 죽었으므로, 시민이 승리했습니다',
+        });
+        return true;
+      }
+
+      if (mafiaCount >= citizenCount) {
+        io.to(id).emit('gameNotice', {
+          msg: '마피아가 승리했습니다',
+        });
+        return true;
+      }
+      return false;
+    };
+
+    const clearGameData = (id) => {
+      io.to(id).emit('gameEnd', true);
+
+      console.log(`방 ${id} 게임 끝`);
+      delete roomTimer[id];
+      delete checkReady[id];
+      delete mafiaVoteList[id];
+      delete peopleVotedList[id];
+      delete finalVoteList[id];
+    };
+
     const getKilledUser = (id) => {
       if (!peopleVotedList[id]) {
         return undefined;
@@ -289,10 +362,8 @@ module.exports = (server) => {
         }))
         .sort((a, b) => b.count - a.count);
 
-      peopleVotedList[id] = {};
-
       if (!votedCountList[1]) {
-        return votedCountList[0].id;
+        return votedCountList[0]?.id;
       }
 
       if (votedCountList[0].count === votedCountList[1].count) {
@@ -327,19 +398,92 @@ module.exports = (server) => {
 
         if (!isNoticeSended) {
           isNoticeSended = true;
-          if (roomTimer[id].type === 'night') {
-            io.to(id).emit('gameNotice', {
-              dayNight: roomTimer[id].type,
-              msg: roomTimer[id].noticeMessage,
-              killed: getKilledUser(id),
-            });
-          } else {
-            io.to(id).emit('gameNotice', {
-              dayNight: roomTimer[id].type,
-              msg: roomTimer[id].noticeMessage,
-            });
+
+          switch (roomTimer[id].type) {
+            case 'dayDiscussion': {
+              io.to(id).emit('gameNotice', {
+                dayNight: roomTimer[id].type,
+                msg: roomTimer[id].noticeMessage,
+                killed: mafiaVoteList[id],
+              });
+
+              const userIndex = userJobList[id].findIndex(
+                (user) => user.userId === mafiaVoteList[id]
+              );
+
+              if (userIndex >= 0) {
+                userJobList[id][userIndex].status = 'dead';
+              }
+
+              mafiaVoteList[id] = undefined;
+
+              if (checkGameEnd(id)) {
+                clearGameData(id);
+                clearInterval(interval);
+                targetIndex = 0;
+                return;
+              }
+              break;
+            }
+            case 'dayFinal': {
+              io.to(id).emit('votedResult', { id: getKilledUser(id) });
+              io.to(id).emit('gameNotice', {
+                dayNight: roomTimer[id].type,
+                msg: roomTimer[id].noticeMessage,
+              });
+              break;
+            }
+            case 'night': {
+              let agreeCount = 0;
+              let disagreeCount = 0;
+
+              Object.keys(finalVoteList[id]).forEach((key) => {
+                if (finalVoteList[id][key]) {
+                  agreeCount += 1;
+                } else {
+                  disagreeCount += 1;
+                }
+              });
+
+              const killedUser =
+                agreeCount > disagreeCount && getKilledUser(id);
+
+              io.to(id).emit('gameNotice', {
+                dayNight: roomTimer[id].type,
+                msg: roomTimer[id].noticeMessage,
+                killed: killedUser,
+              });
+
+              const userIndex = userJobList[id].findIndex(
+                (user) => user.userId === killedUser
+              );
+
+              if (userIndex >= 0) {
+                userJobList[id][userIndex].status = 'dead';
+              }
+
+              finalVoteList[id] = {};
+              peopleVotedList[id] = {};
+
+              if (checkGameEnd(id)) {
+                clearGameData(id);
+                clearInterval(interval);
+                targetIndex = 0;
+
+                return;
+              }
+              break;
+            }
+            default: {
+              io.to(id).emit('gameNotice', {
+                dayNight: roomTimer[id].type,
+                msg: roomTimer[id].noticeMessage,
+              });
+              break;
+            }
           }
         }
+
         roomTimer[id].ms -= 1000;
         io.to(id).emit('timerChange', roomTimer[id]);
       }, 1000);
@@ -347,63 +491,36 @@ module.exports = (server) => {
 
     // ------------------------------------------------------[1] 게임 시작
     // 방장이 gameStart 누름
-    socket.on('gameStart', (data) => {
-      let roomID = userToRoom[data.from_id];
-      jobList[roomID] = getJobList();
-      io.to(roomID).emit('gameStart', {
-        jobList: jobList[roomID],
+    socket.on('gameStart', ({ from_id, userList }) => {
+      const roomID = userToRoom[from_id];
+      const jobList = getJobList();
+
+      io.to(roomID).emit('gameStart', { jobList });
+
+      const userJob = [];
+      userList.forEach((user, index) => {
+        if (user) {
+          userJob.push({ userId: user, job: jobList[index], status: 'alive' });
+        }
       });
-      // io.to(roomID).emit('gameNotice', {
-      //   dayNight: 'night',
-      //   msg: '밤이 되었습니다',
-      //   killed: false,
-      // });
+      userJobList[roomID] = userJob;
 
       startTimer(roomID);
-      delete checkReady[roomID];
+      checkReady[roomID] = {};
     });
 
     // ------------------------------------------------------[2] 밤
     // 밤 - mafia가 고름
-    // mafia 한명 - 고른 사람 죽음
-    // mafia 두명 - 마지막으로 고른 사람 죽음
-    let mafiaVotedList = {};
-    socket.on('mafiaVoted', (data) => {
-      let roomID = userToRoom[data.from_id];
-      console.log(data);
-      if (roomToUser[roomID]?.length <= 5) {
-        io.to(roomID).emit('gameNotice', {
-          dayNight: 'day',
-          msg: '낮이 되었습니다',
-          killed: data.killed_id,
-        });
-      } else {
-        mafiaVotedList[roomID]
-          ? mafiaVotedList[roomID].push(data.killed_id)
-          : (mafiaVotedList[roomID] = [data.killed_id]);
-
-        if (mafiaVotedList.length > 1) {
-          mafiaVotedList[0] === mafiaVotedList[1]
-            ? io.to(roomID).emit('gameNotice', {
-                dayNight: 'day',
-                msg: '낮이 되었습니다',
-                killed: data.killed_id,
-              })
-            : io.to(roomID).emit('gameNotice', {
-                dayNight: 'day',
-                msg: '낮이 되었습니다',
-                killed: false,
-              });
-        }
-      }
+    socket.on('mafiaVoted', ({ from_id, killed_id }) => {
+      const roomID = userToRoom[from_id];
+      io.to(roomID).emit('mafiaPick', killed_id);
+      mafiaVoteList[roomID] = killed_id;
     });
 
     // ------------------------------------------------------[3] 낮
     // 낮 - 죽일 사람 투표
-
     socket.on('peopleVoted', (data) => {
       let roomID = userToRoom[data.from_id];
-      let length = roomToUser[roomID]?.length;
       let killedid = data.killed_id;
 
       peopleVotedList[roomID] ||= {};
@@ -420,46 +537,10 @@ module.exports = (server) => {
       let votedMessage = '';
 
       Object.keys(peopleVotedList[roomID]).forEach((user) => {
-        votedMessage += `[${user}] : ${peopleVotedList[roomID][user].length} 표 `;
+        votedMessage += `[ ${user} ] : ${peopleVotedList[roomID][user].length} 표 `;
       });
 
       io.to(roomID).emit('gameNotice', { msg: votedMessage });
-    });
-
-    // 낮 - 시간 종료시,
-    socket.on('timeOut', (data) => {
-      let roomID = userToRoom[data.from_id];
-      io.to(roomID).emit('votedResult', {
-        peopleVotedList: peopleVotedList[roomID],
-      });
-    });
-
-    // 낮 - 최종 투표 결과
-    // finalVoteCnt>0 killed : finalist
-    // 다시 밤으로
-    let finalVoteCnt = {};
-    let finalVotedList = {};
-    socket.on('finalVote', (data) => {
-      let roomID = userToRoom[data.from_id];
-      let len = roomToUser[roomID]?.length;
-      finalVotedList[roomID] ||= [];
-
-      finalVoteCnt[roomID] ||= 0;
-      data.voted ? (finalVoteCnt[roomID] += 1) : (finalVoteCnt[roomID] -= 1);
-
-      if (finalVotedList[roomID].push(data.from_id) === len) {
-        finalVoteCnt[roomID] > 0
-          ? io.to(roomID).emit('gameNotice', {
-              dayNight: 'night',
-              msg: '밤이 되었습니다',
-              killed: data.to_id,
-            })
-          : io.to(roomID).emit('gameNotice', {
-              dayNight: 'night',
-              msg: '밤이 되었습니다',
-              killed: false,
-            });
-      }
     });
 
     // ------------------------------------------------------[4] 게임 종료
@@ -467,10 +548,9 @@ module.exports = (server) => {
     socket.on('gameEnd', (data) => {
       let roomID = userToRoom[data.from_id];
       delete checkReady[roomID];
-      delete mafiaVotedList[roomID];
+      delete mafiaVoteList[roomID];
       delete peopleVotedList[roomID];
-      delete finalVotedList[roomID];
-      delete finalVoteCnt[roomID];
+      delete finalVoteList[roomID];
     });
 
     socket.on('disconnect', () => {

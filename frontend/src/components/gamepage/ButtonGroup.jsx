@@ -34,6 +34,7 @@ export default function ButtonGroup() {
     if (isCaptain) {
       socket.emit('gameStart', {
         from_id: socket.id,
+        userList,
       });
     } else {
       socket.emit('gameReady', {

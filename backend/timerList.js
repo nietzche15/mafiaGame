@@ -2,7 +2,7 @@ module.exports = [
   {
     /** 밤 시간 */
     type: 'night',
-    ms: 10 * 1000,
+    ms: 5 * 1000,
     noticeMessage: '밤이 되었습니다',
   },
   {
@@ -14,7 +14,7 @@ module.exports = [
   {
     /** 낮 투표 시간 */
     type: 'dayVote',
-    ms: 30 * 1000,
+    ms: 15 * 1000,
     noticeMessage: '투표시간이 되었습니다. 마피아를 골라주세요.',
   },
   {
@@ -22,5 +22,11 @@ module.exports = [
     type: 'dayFinal',
     ms: 10 * 1000,
     noticeMessage: '지목되신분은 최후의 변론을 하세요.',
+  },
+  {
+    /** 최종 찬반 투표시간 */
+    type: 'dayFinalVote',
+    ms: 20 * 1000,
+    noticeMessage: '(을)를 살리느냐 죽이느냐 그것이 문제로다.',
   },
 ];
