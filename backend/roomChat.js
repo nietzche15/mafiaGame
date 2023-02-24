@@ -10,7 +10,7 @@ module.exports = (server) => {
   const getJobList = require('./jobList');
 
   let checkReady = {};
-  let roomList = {
+  var roomList = {
     0: {
       roomID: 0,
       roomName: '☆*: .｡. o(≧▽≦)o .｡.:*☆ 마놀ㄱ',
@@ -33,6 +33,7 @@ module.exports = (server) => {
       roomOwner: 'admin',
     },
   };
+
   const emailToSocket = {}; // email - {userID : socket.id, userName: nickName }
   const socketToEmail = {}; // socket.id - email
   // const friendList = {};
@@ -61,18 +62,27 @@ module.exports = (server) => {
 
     //----------------------------------------------// Lobby Page
 
-    socket.on('setUserInfo', (data) => {
-      emailToSocket[data.user_email] = {
+    socket.on('setUserInfo', async (data) => {
+      emailToSocket[data.user_email] = await {
         userID: data.from_id,
         userName: data.user_name,
       };
-      socketToEmail[data.from_id] = data.user_email;
+      // console.log('data', data);
+      socketToEmail[data.from_id] = await data.user_email;
 
-      console.log('emailToSocket: ', emailToSocket[data.user_email]);
+      // let userData = { userID: data.from_id, userName: data.user_name };
+
+      // const setUserInfo = async (userData) => {
+      //   let result = await redis.hmset(data.user_email, userData);
+      //   console.log('result', result);
+      // };
+      // setUserInfo(userData);
+
+      // console.log('emailToSocket: ', emailToSocket[data.user_email]);
       // console.log('userID: ', emailToSocket[data.user_email].userID);
-      console.log('userName: ', emailToSocket[data.user_email]?.userName);
-      console.log('userImg: ', data.user_img);
-      console.log('socketToEmail: ', socketToEmail[data.from_id]);
+      // console.log('userName: ', emailToSocket[data.user_email]?.userName);
+      // console.log('userImg: ', data.user_img);
+      // console.log('socketToEmail: ', socketToEmail[data.from_id]);
 
       io.emit('noticeLB', {
         //   msg: `${data.user_name}님이 입장했습니다.`,
@@ -84,7 +94,7 @@ module.exports = (server) => {
     io.emit('allRooms', {
       roomList: roomList,
     });
-    console.log('roomList:', roomList);
+    // console.log('roomList:', roomList);
 
     // 새로 만든 방 정보 목록에 추가
     // 추가된 방 목록 Lobby로 전송
@@ -99,6 +109,7 @@ module.exports = (server) => {
         roomPW: data.room_PW,
         roomOwner: data.room_owner,
       };
+
       console.log('roomList[cnt]:', roomList[cnt]);
       io.emit('allRooms', {
         roomList: roomList,
@@ -114,9 +125,9 @@ module.exports = (server) => {
       socketToEmail[data.from_id] = data.user_email;
       let from_email = socketToEmail[data.from_id];
       let from_name = emailToSocket[data.user_email]?.userName;
-      console.log('data', data);
-      console.log('from_email:', from_email);
-      console.log('from_name:', from_name);
+      // console.log('data', data);
+      // console.log('from_email:', from_email);
+      // console.log('from_name:', from_name);
       io.emit('getLBChat', {
         from_id: data.from_id,
         from_name: data.user_name,
@@ -149,8 +160,8 @@ module.exports = (server) => {
         ? (emailToSocket[myEmail].userID = socket.id)
         : false;
 
-      console.log('emailToSocket jr: ', emailToSocket);
-      console.log('socketToEmail jr: ', socketToEmail);
+      // console.log('emailToSocket jr: ', emailToSocket);
+      // console.log('socketToEmail jr: ', socketToEmail);
 
       if (room?.size > 7) {
         socket.emit('room full');
@@ -196,7 +207,7 @@ module.exports = (server) => {
     });
 
     socket.on('sending signal', (payload) => {
-      console.log('----------------sending signal');
+      // console.log('----------------sending signal');
       io.to(payload.userToSignal).emit('user joined', {
         signal: payload.signal,
         callerID: payload.callerID,
@@ -204,7 +215,7 @@ module.exports = (server) => {
     });
 
     socket.on('returning signal', (payload) => {
-      console.log('----------------returning signal');
+      // console.log('----------------returning signal');
 
       io.to(payload.callerID).emit('receiving returned signal', {
         signal: payload.signal,
@@ -559,8 +570,8 @@ module.exports = (server) => {
       let myName = emailToSocket[myEmail]?.userName;
       emailToSocket[myEmail] ? (emailToSocket[myEmail].userID = '') : false;
       delete socketToEmail[socket.id];
-      console.log('emailToSocket: ', emailToSocket);
-      console.log('socketToEmail: ', socketToEmail);
+      // console.log('emailToSocket: ', emailToSocket);
+      // console.log('socketToEmail: ', socketToEmail);
       checkReady[roomID] -= 1;
 
       roomToUser[roomID]?.length > 1

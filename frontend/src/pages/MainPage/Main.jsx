@@ -3,6 +3,12 @@ import React from 'react';
 import GlobalStyle from '../../components/common/GlobalStyle';
 import Rules from '../../components/main/Rules';
 import '../../components/styles/main.css';
+import { socket } from '../../utils/socket';
+
+// socket CONNECT
+socket.on('connect', () => {
+  console.log('User Connected', socket.id);
+});
 
 const isProduction = `${process.env.NODE_ENV === 'production'}`;
 
