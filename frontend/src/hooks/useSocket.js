@@ -5,15 +5,17 @@ import { socket } from '../utils/socket';
 import {
   setJobList,
   getUserList,
-  setSocketId,
   setFinalListId,
   addKilledUser,
+  setMafiaPickId,
+  resetRoomState,
 } from '../store/modules/room';
 import { addMessage } from '../store/modules/message';
 import {
   setGameStatus,
   setTimeStatus,
   setMyStatus,
+  resetStatusState,
 } from '../store/modules/status';
 import { setUsersInfo } from '../store/modules/userInfo';
 
@@ -59,8 +61,7 @@ const useSocket = () => {
 
     // 게임 중 서버 메세지
     socket.on('gameNotice', ({ msg, dayNight, killed }) => {
-      // killed_id 확인 죽는지 확인하는곳
-
+      console.log(killed);
       if (killed) {
         dispatch(addKilledUser(killed));
       }
@@ -87,16 +88,9 @@ const useSocket = () => {
       }
     });
 
-    // 낮 - 지목 결과 받음
-    // 누가 누구를 지목했는지 보여주고,
-    // 최종 변론 후보 산출
-    socket.on('votedResult', (data) => {
-      const { peopleVotedList } = data;
-      // { '지목당한 사람1' : [지목한 사람1, 지목한 사람2,..], '지목당한 사람2' : [...], ...  }
-      const list = Object.keys(peopleVotedList);
-      const listCnt = list.map((e) => peopleVotedList[e].length);
-      const result = list[listCnt.indexOf(Math.max(...listCnt))];
-      dispatch(setFinalListId(result));
+    socket.on('votedResult', ({ id }) => {
+      console.log('투표결과', id);
+      dispatch(setFinalListId(id));
     });
 
     // 낮 - 찬반 투표 결과 전송
@@ -122,6 +116,15 @@ const useSocket = () => {
       } else {
         dispatch(addMessage(data.msg, 'DirectChat', data.from_id));
       }
+    });
+
+    socket.on('mafiaPick', (data) => {
+      dispatch(setMafiaPickId(data));
+    });
+
+    socket.on('gameEnd', () => {
+      dispatch(resetRoomState());
+      dispatch(resetStatusState());
     });
   }, [dispatch, roomID]);
 

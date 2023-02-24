@@ -6,7 +6,7 @@ import '../styles/Chatting.css';
 import Message from './Message';
 import MafiaText from './MafiaText';
 import GlobalStyle from '../common/GlobalStyle';
-import ChattingText from './ChattingText';
+import ChattingInput from './ChattingInput';
 import DMText from './DMText';
 
 export default function Chatting() {
@@ -45,14 +45,17 @@ export default function Chatting() {
           zIndex: 10000,
         }}
       >
-        {gameStatus === 'wait' ? null : (
+        {gameStatus === 'wait' && timer === 0 ? null : (
           <Box
             sx={{
               display: 'flex',
+              position: 'sticky',
+              top: 0,
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'red',
               height: '50px',
+              fontSize: '30px',
             }}
           >
             현재 {timer / 1000}초 남았습니다.
@@ -89,7 +92,7 @@ export default function Chatting() {
             </Button>
           )}
 
-          {isDM ? <DMText userList={userList} /> : <ChattingText />}
+          {isDM ? <DMText userList={userList} /> : <ChattingInput />}
           <MafiaText />
         </Box>
       </Box>

@@ -12,10 +12,8 @@ import ButtonGroup from '../../components/gamepage/ButtonGroup';
 export default function GamePage() {
   useSocket();
   const { peerList, stream } = useStream();
-  const { timeStatus, gameStatus } = useSelector((state) => state.status);
-  const { roomID, mySocketId, myJob, userList, killedUserList } = useSelector(
-    (state) => state.room
-  );
+  const { gameStatus } = useSelector((state) => state.status);
+  const { userList } = useSelector((state) => state.room);
 
   useEffect(() => {
     socket.on('room full', () => {

@@ -11,7 +11,7 @@ import Vote from './Vote';
 export default function ProfileCard({ userId, peerList, stream }) {
   const videoRef = useRef();
   const { timeStatus } = useSelector((state) => state.status);
-  const { mySocketId, myJob, killedUserList } = useSelector(
+  const { mySocketId, myJob, killedUserList, mafiaPickId } = useSelector(
     (state) => state.room
   );
 
@@ -40,6 +40,8 @@ export default function ProfileCard({ userId, peerList, stream }) {
     setNoVideo(Boolean(target));
   }, [userId, stream, mySocketId, peerList]);
 
+  console.log(killedUserList);
+
   return (
     <Box
       sx={{
@@ -62,13 +64,13 @@ export default function ProfileCard({ userId, peerList, stream }) {
             justifyContent: 'center',
             backgroundColor: '#D9D9D9',
             borderRadius: '10px',
+            height: '50px',
             mr: 2,
           }}
         >
           <Typography variant="h7" component="div">
             {userId}
           </Typography>
-          <Checkbox disabled sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }} />
         </Box>
         <Box
           sx={{
@@ -124,10 +126,32 @@ export default function ProfileCard({ userId, peerList, stream }) {
           </Box>
         ) : null}
 
+        {userId === mafiaPickId && myJob === 'mafia' ? (
+          <Box
+            sx={{
+              position: 'absolute',
+              width: '200px',
+              height: '200px',
+              borderRadius: '10px',
+            }}
+          >
+            <img
+              src="./images/killimg.png"
+              alt="killimg"
+              style={{
+                position: 'absolute',
+                width: '200px',
+                height: '200px',
+              }}
+            />
+          </Box>
+        ) : null}
+
         <video
           style={{
             width: '200px',
             height: '200px',
+            borderRadius: '10px',
             // display: noVideo ? 'none' : 'block',
           }}
           ref={videoRef}
