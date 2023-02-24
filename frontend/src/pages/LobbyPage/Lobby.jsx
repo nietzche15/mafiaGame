@@ -26,13 +26,9 @@ import GlobalStyle from '../../components/common/GlobalStyle';
 import { getMyInfo } from '../../store/modules/userInfo';
 // import useSocket from '../../hooks/useSocket';
 
-// socket CONNECT
-socket.on('connect', () => {
-  console.log('User Connected', socket.id);
-});
-
 export default function Lobby() {
   // useSocket();
+  const [socketID, setSocketID] = useState(socket.id);
   const cookies = new Cookies();
   const roomInput = useRef();
   const dispatch = useDispatch();
@@ -50,6 +46,7 @@ export default function Lobby() {
   let userEmail = cookies.get('id1');
   let userImg = cookies.get('id2');
   let userName = cookies.get('id3');
+  console.log('socket', socket.id);
 
   console.log('userInfo: ', userEmail, userImg, userName);
 
@@ -62,17 +59,21 @@ export default function Lobby() {
       user_img: userImg,
       user_name: userName,
     });
+    console.log('socket.id', socket.id);
     dispatch(getMyInfo(userEmail, userName));
   }, []);
 
   socket.on('allRooms', () => {
     dispatch(asyncRoomList());
   });
+  useEffect(() => {
+    console.log(socket.id, '------------------------------------------');
+  }, [socket.id]);
 
   let roomID;
 
   const clickJoinBtn = () => {
-    console.log('roomInput.current.value: ', roomInput.current.value);
+    // console.log('roomInput.current.value: ', roomInput.current.value);
     /* eslint-disable */
     roomInput.current.value === ''
       ? alert('Please enter a room name')
@@ -181,7 +182,7 @@ export default function Lobby() {
                 variant="contained"
                 color="primary"
                 sx={{
-                  width:'100px',
+                  width: '100px',
                   m: 0,
                   '* .Mui_disabled': { background: '#E38989' },
                   fontFamily: 'MaplestoryOTFBold',
@@ -246,7 +247,11 @@ export default function Lobby() {
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ width:'100px',m: 0, '* .Mui_disabled': { background: '#E38989' } }}
+                sx={{
+                  width: '100px',
+                  m: 0,
+                  '* .Mui_disabled': { background: '#E38989' },
+                }}
               >
                 <Link
                   to="/mypage"

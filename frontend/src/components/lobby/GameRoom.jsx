@@ -93,14 +93,14 @@ export default function GameRoom() {
           {/* {asyncLoading && <InfinitySpin width="100" color=" cornflowerblue" />} */}
           {Object.keys(roomList).map((e, i) => {
             return (
-              <div className="gameroom" key={i + Math.random()}>
-                <div className="gamelist" key={i + Math.random()}>
-                  <span className="gamenumber" key={i + Math.random()}>
+              <div className="gameroom" key={i}>
+                <div className="gamelist" key={i}>
+                  <span className="gamenumber" key={i}>
                     {i + 1}
                   </span>
                   <span
                     className="gametitle"
-                    key={i + Math.random()}
+                    key={i}
                     value={roomList[e].roomID}
                     password={roomList[e].roomPW || ''}
                     ref={(element) =>
@@ -110,10 +110,10 @@ export default function GameRoom() {
                   >
                     {roomList[e].roomName}
                   </span>
-                  <span key={i + Math.random()} className="gamestate">
+                  <span key={i} className="gamestate">
                     {roomList[e].roomLocked && (
                       <img
-                        key={i + Math.random()}
+                        key={i}
                         style={{
                           width: '19px',
                           position: 'relative',

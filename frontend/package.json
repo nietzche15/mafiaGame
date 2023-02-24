@@ -24,6 +24,7 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
+    "redis": "^4.6.4",
     "redux": "^4.2.1",
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.6.0",
