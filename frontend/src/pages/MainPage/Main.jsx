@@ -3,23 +3,9 @@ import React from 'react';
 import GlobalStyle from '../../components/common/GlobalStyle';
 import Rules from '../../components/main/Rules';
 import '../../components/styles/main.css';
-import { socket } from '../../utils/socket';
-
-// socket CONNECT
-socket.on('connect', () => {
-  console.log('User Connected', socket.id);
-});
-
-const isProduction = `${process.env.NODE_ENV === 'production'}`;
 
 export default function Main() {
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${
-    process.env.REACT_APP_REST_API_KEY
-  }&redirect_uri=${
-    !isProduction
-      ? process.env.REACT_APP_KAKAO_DEVELOP_REDIRECT_URI
-      : process.env.REACT_APP_KAKAO_PRODUCTION_REDIRECT_URI
-  }&response_type=code&scope=openid,profile_image,account_email,profile_nickname`;
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code&scope=openid,profile_image,account_email,profile_nickname`;
 
   const kakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
@@ -29,11 +15,9 @@ export default function Main() {
     'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' +
     '27NfAweZlVIdEWFecF3p' +
     '&redirect_uri=' +
-    !isProduction
-      ? `${process.env.REACT_APP_NAVER_DEVELOP_REDIRECT_URI}`
-      : `${process.env.REACT_APP_NAVER_PRODUCTION_REDIRECT_URI}` +
-        '&state=' +
-        '1234';
+    'http://localhost:3000/naver' +
+    '&state=' +
+    '1234';
 
   const naverLogin = () => {
     window.location.href = naverApiUrl;
