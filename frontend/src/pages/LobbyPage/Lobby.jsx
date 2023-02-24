@@ -170,7 +170,10 @@ export default function Lobby() {
               <span className="gameNoP">1/7</span>
             </div>
           </div> */}
+          <div style={{overflowY:'scroll',height:'400px'}}>
             <GameRoom />
+          </div>
+            
 
             <div className="right">
               <Button
