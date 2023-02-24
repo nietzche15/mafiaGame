@@ -46,75 +46,87 @@ export default function Mypage() {
         delcookies()
     }
 
-  return (
-    <>
-      <GlobalStyle />
-      <div className="mypage">
-        <div className="info">
-          <table className="table">
-            <tr>
-              <td style={{ width: '170px', textAlign: 'center' }} rowSpan="2">
-                <img
-                  alt="ig"
-                  style={{ width: '100%', borderRadius: '10px' }}
-                  src={
-                    img ===
-                    'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg'
-                      ? './images/mafiaImg.png'
-                      : img
-                  }
-                />
-                {name}
-              </td>
-              <td style={{ height: '100px' }}>{email}</td>
-            </tr>
-            <tr>
-              <td style={{ height: '100px' }}>점수</td>
-            </tr>
-            <tr>
-              <td colSpan="2">승률</td>
-            </tr>
-          </table>
-          <div className="right2">
-            <Button
-              variant="contained"
-              onClick={() => {
-                kakaoLogout();
-              }}
-              color="primary"
-              sx={{
-                m: 0,
-                '* .Mui_disabled': { background: '#E38989' },
-                fontFamily: 'MaplestoryOTFBold',
-              }}
-            >
-              로그아웃
-            </Button>
-            <br />
-            <br />
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                m: 0,
-                '* .Mui_disabled': { background: '#E38989' },
-                fontFamily: 'MaplestoryOTFBold',
-              }}
-            >
-              <Link
-                to="/lobby"
-                style={{
-                  textDecoration: 'none',
-                  color: 'white',
+    return (
+      <>
+        <GlobalStyle />
+        <div className="mypage">
+          <div className="info">
+            <table className="table">
+              <tr>
+                <td style={{ width: '300px', textAlign: 'center' }} rowSpan="3">
+                  <img
+                    alt="ig"
+                    style={{ width: '100%', borderRadius: '10px' }}
+                    src={
+                      img ===
+                      'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg'
+                        ? './images/mafiaImg.png'
+                        : img
+                    }
+                  />
+                  
+                </td>
+                <td style={{ height: '100px' }}>{email}</td>
+              </tr>
+              <tr>
+                <td style={{ height: '100px' }}>{name}</td>
+              </tr>
+              <tr>
+                <td style={{ height: '100px' }} colSpan="2">점수</td>
+              </tr>
+              <tr>
+                <td style={{ height: '140px', paddingLeft:'70px'}}  colSpan='2'>
+                승률:
+                </td>
+              </tr>
+              <tr>
+                <td colSpan='2'>
+                  
+                </td>
+              </tr>
+            </table>
+            <div className="mypagebtn">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  kakaoLogout();
+                }}
+                color="primary"
+                sx={{
+                  width:'100px',
+                  m: 0,
+                  '* .Mui_disabled': { background: '#E38989' },
                   fontFamily: 'MaplestoryOTFBold',
                 }}
               >
-                나가기
-              </Link>
-            </Button>
+                로그아웃
+              </Button>
+              <br />
+              <br />
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  width:'100px',
+                  m: 0,
+                  '* .Mui_disabled': { background: '#E38989' },
+                  fontFamily: 'MaplestoryOTFBold',
+                }}
+              >
+                <Link
+                  to="/lobby"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    fontFamily: 'MaplestoryOTFBold',
+                  }}
+                >
+                  나가기
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
 }
