@@ -10,6 +10,7 @@ import ChattingText from './ChattingText';
 import DMText from './DMText';
 
 export default function Chatting() {
+  const [only, setOnly] = useState(true);
   const [isDM, setIsDM] = useState(false);
   const { timeStatus, gameStatus } = useSelector((state) => state.status);
   const { userList } = useSelector((state) => state.room);
@@ -22,6 +23,12 @@ export default function Chatting() {
       setTimer(ms);
     });
   }, []);
+
+  useEffect(() => {
+    userList.filter((e) => e !== '').length > 1
+      ? setOnly(false)
+      : setOnly(true);
+  }, [userList]);
 
   return (
     <>
@@ -38,6 +45,7 @@ export default function Chatting() {
           left: 465,
           overflowY: 'auto',
           fontFamily: 'MaplestoryOTFBold',
+          zIndex: 10000,
         }}
       >
         {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -82,6 +90,7 @@ export default function Chatting() {
             <Button
               onClick={changeToDM}
               sx={{ fontFamily: 'MaplestoryOTFBold' }}
+              disabled={only}
             >
               {isDM ? 'quitDM' : 'sendDM'}
             </Button>

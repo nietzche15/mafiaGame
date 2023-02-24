@@ -2,9 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { socket } from '../../utils/socket';
 import Message from '../gamepage/Message';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import GlobalStyle from '../common/GlobalStyle';
 import { Cookies } from 'react-cookie';
+import { setUsersInfo } from '../../store/modules/userInfo';
+
+let emailToSocket;
+let socketToEmail;
 
 export default function LobbyChat() {
   const cookies = new Cookies();
@@ -13,6 +17,7 @@ export default function LobbyChat() {
   const { messages } = useSelector((state) => state.message);
   const [value, setValue] = useState('');
   const handleChange = (event) => setValue(event.target.value);
+  const dispatch = useDispatch();
 
   let userEmail = cookies.get('id1');
   let userImg = cookies.get('id2');
@@ -20,10 +25,15 @@ export default function LobbyChat() {
 
   useEffect(() => {
     socket.on('noticeLB', (data) => {
-      lobbyChatBox.current.insertAdjacentHTML(
-        'beforeend',
-        `<div class='chatNotice'>${data.msg}</div>`
-      );
+      emailToSocket = data.emailToSocket;
+      socketToEmail = data.socketToEmail;
+
+      dispatch(setUsersInfo(emailToSocket, socketToEmail));
+
+      // lobbyChatBox.current.insertAdjacentHTML(
+      //   'beforeend',
+      //   `<div class='chatNotice'>${data.msg}</div>`
+      // );
     });
 
     socket.on('getLBChat', (data) => {
@@ -37,7 +47,7 @@ export default function LobbyChat() {
           )
         : lobbyChatBox.current.insertAdjacentHTML(
             'beforeend',
-            `<div>${userName}</div>
+            `<div>${data.from_name}</div>
           <div class='ServerChat'>${data.msg}</div>`
           );
     });

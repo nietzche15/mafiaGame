@@ -23,6 +23,7 @@ import { getRoomID } from '../../store/modules/room';
 import { socket } from '../../utils/socket';
 import { asyncRoomList } from '../../store/modules/roomlist';
 import GlobalStyle from '../../components/common/GlobalStyle';
+import { getMyInfo } from '../../store/modules/userInfo';
 // import useSocket from '../../hooks/useSocket';
 
 // socket CONNECT
@@ -56,11 +57,12 @@ export default function Lobby() {
     dispatch(asyncRoomList());
 
     socket.emit('setUserInfo', {
-      user_id: socket.id,
+      from_id: socket.id,
       user_email: userEmail,
       user_img: userImg,
       user_name: userName,
     });
+    dispatch(getMyInfo(userEmail, userName));
   }, []);
 
   socket.on('allRooms', () => {

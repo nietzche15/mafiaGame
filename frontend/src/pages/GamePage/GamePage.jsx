@@ -33,7 +33,7 @@ export default function GamePage() {
   return (
     <>
       <GlobalStyle />
-      {/* <Video /> */}
+      <Video />
       <Box>
         <Chatting />
       </Box>

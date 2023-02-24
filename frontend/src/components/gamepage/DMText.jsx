@@ -6,7 +6,11 @@ import { socket } from '../../utils/socket';
 
 export default function DMText() {
   const { timeStatus, myStatus } = useSelector((state) => state.status);
-  const userList = useSelector((state) => state.room.userList);
+  const { userList } = useSelector((state) => state.room);
+  const { emailToSocket, socketToEmail } = useSelector(
+    (state) => state.userInfo
+  );
+
   const { state: roomID } = useLocation();
 
   const DMInput = useRef();
@@ -14,11 +18,12 @@ export default function DMText() {
 
   const showUserList = () => {
     console.log('userList in DM: ', userList);
+
     return userList
       .filter((e) => e !== socket.id)
       .map((el, idx) => (
         <MenuItem key={idx} value={el}>
-          {el}
+          {emailToSocket[socketToEmail[el]]?.userName}
         </MenuItem>
       ));
   };

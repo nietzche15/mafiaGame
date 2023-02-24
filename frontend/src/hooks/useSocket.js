@@ -15,6 +15,7 @@ import {
   setTimeStatus,
   setMyStatus,
 } from '../store/modules/status';
+import { setUsersInfo } from '../store/modules/userInfo';
 
 const useSocket = () => {
   const dispatch = useDispatch();
@@ -40,8 +41,12 @@ const useSocket = () => {
         dispatch(
           getUserList(data.roomToUser.filter((user) => user !== outUser))
         );
+        dispatch(setUsersInfo(data.socketToEmail, data.emailToSocket));
       } else {
-        dispatch(getUserList(data.roomToUser));
+        dispatch(
+          getUserList(data.roomToUser, data.socketToEmail, data.emailToSocket)
+        );
+        dispatch(setUsersInfo(data.socketToEmail, data.emailToSocket));
       }
       dispatch(addMessage(data.msg, 'chatNotice'));
     });

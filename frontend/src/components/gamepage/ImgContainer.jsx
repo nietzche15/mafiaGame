@@ -75,7 +75,7 @@ export default function ImgContainer() {
               borderRadius: '10px',
             }}
           >
-            <Vote name={userList} />
+            {/* <Vote name={userList} /> */}
           </Box>
         </Box>
 

@@ -3,6 +3,8 @@ const initState = {
   roomID: '',
   /** 유저 목록 */
   userList: ['', '', '', '', '', '', '', ''],
+  /**유저 nickname 목록 */
+  nameInRoom: [],
   /** 직업 목록 mafia 마피아 */
   jobList: [],
   /** 내 직업 */
@@ -16,9 +18,9 @@ const initState = {
 };
 
 // ACTION TYPE
-const GETROOMID = 'room/GETROOMID';
+const GET_ROOM_ID = 'GET_ROOM_ID';
 
-const GETUSERLIST = 'room/GETUSERLIST';
+const GET_USER_LIST = 'GET_USER_LIST';
 
 const SET_JOB_LIST = 'SET_JOB_LIST';
 
@@ -30,12 +32,12 @@ const ADD_KILLED_USER = 'ADD_KILLED_USER';
 
 // 액션 생성 함수
 /** @param {string} roomID 방 번호 */
-export const getRoomID = (roomID) => ({ type: GETROOMID, payload: roomID });
+export const getRoomID = (roomID) => ({ type: GET_ROOM_ID, payload: roomID });
 
 /** 유저 목록 저장 함수
  * @param {string[]} userList 유저 목록 */
-export const getUserList = (userList) => ({
-  type: GETUSERLIST,
+export const getUserList = (userList, nameInRoom) => ({
+  type: GET_USER_LIST,
   payload: { userList },
 });
 
@@ -64,14 +66,17 @@ export default function room(state = initState, action) {
   switch (action.type) {
     case SET_SOCKET_ID:
       return { ...state, mySocketId: action.payload.mySocketId };
-    case GETROOMID:
+    case GET_ROOM_ID:
       return { ...state, roomID: action.payload.roomID };
-    case GETUSERLIST: {
+    case GET_USER_LIST: {
       const newUserList = [...action.payload.userList];
       for (let i = 0; i < 8; i += 1) {
         if (!newUserList[i]) newUserList.push('');
       }
-      return { ...state, userList: newUserList };
+      return {
+        ...state,
+        userList: newUserList,
+      };
     }
     case SET_JOB_LIST:
       return {

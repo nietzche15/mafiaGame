@@ -60,22 +60,22 @@ module.exports = (server) => {
 
     socket.on('setUserInfo', (data) => {
       emailToSocket[data.user_email] = {
-        userID: data.user_id,
+        userID: data.from_id,
         userName: data.user_name,
       };
-      socketToEmail[data.user_id] = data.user_email;
+      socketToEmail[data.from_id] = data.user_email;
 
       console.log('emailToSocket: ', emailToSocket[data.user_email]);
       // console.log('userID: ', emailToSocket[data.user_email].userID);
-      console.log('userName: ', emailToSocket[data.user_email].userName);
+      console.log('userName: ', emailToSocket[data.user_email]?.userName);
       console.log('userImg: ', data.user_img);
-      console.log('socketToEmail: ', socketToEmail[data.user_id]);
+      console.log('socketToEmail: ', socketToEmail[data.from_id]);
 
-      // io.emit('noticeLB', {
-      //   msg: `${data.user_name}님이 입장했습니다.`,
-      //   emailToSocket: emailToSocket,
-      //   socketToEmail: socketToEmail,
-      // });
+      io.emit('noticeLB', {
+        //   msg: `${data.user_name}님이 입장했습니다.`,
+        emailToSocket: emailToSocket,
+        socketToEmail: socketToEmail,
+      });
     });
     // Lobby에 보일 방 목록 전송
     io.emit('allRooms', {
@@ -106,17 +106,17 @@ module.exports = (server) => {
       emailToSocket[data.user_email] = {
         userName: data.user_name,
         userID: data.from_id,
-        userName: data.user_name,
-        userEmail: data.user_email,
+        // userEmail: data.user_email,
       };
-      socketToEmail[data.user_id] = data.user_email;
-      let from_email = socketToEmail[data.user_id];
-      let from_name = emailToSocket[data.user_email].userName;
+      socketToEmail[data.from_id] = data.user_email;
+      let from_email = socketToEmail[data.from_id];
+      let from_name = emailToSocket[data.user_email]?.userName;
       console.log('data', data);
       console.log('from_email:', from_email);
       console.log('from_name:', from_name);
       io.emit('getLBChat', {
         from_id: data.from_id,
+        from_name: data.user_name,
         msg: data.msg,
       });
     });
@@ -132,12 +132,22 @@ module.exports = (server) => {
     //----------------------------------------------// GamePage
     // 방 입장
     // 같은 방 입장한 회원 구분 roomID - socket.id
-    socket.on('join room', (roomID, data) => {
-      console.log('roomID: ', roomID);
+    socket.on('join room', ({ roomID, myEmail }) => {
       let rooms = io.sockets.adapter.rooms;
       let room = rooms.get(roomID);
+      let myName = emailToSocket[myEmail]
+        ? emailToSocket[myEmail]?.userName
+        : false;
 
-      console.log('roomSize: ', room?.size);
+      console.log('joinInfo: ', roomID, myEmail);
+      // 게임페이지에서 userInfo UPDATE
+      socketToEmail[socket.id] = myEmail;
+      emailToSocket[myEmail]
+        ? (emailToSocket[myEmail].userID = socket.id)
+        : false;
+
+      console.log('emailToSocket jr: ', emailToSocket);
+      console.log('socketToEmail jr: ', socketToEmail);
 
       if (room?.size > 7) {
         socket.emit('room full');
@@ -164,7 +174,9 @@ module.exports = (server) => {
 
         io.to(roomID).emit('notice', {
           msg: `${socket.id}님이 입장했습니다.`,
-          roomToUser: roomToUser[roomID],
+          roomToUser: roomToUser[roomID], // socketid arr
+          socketToEmail: socketToEmail,
+          emailToSocket: emailToSocket,
         });
         // User 입장 시 개인 welcome msg
         socket.emit('getDM', {
@@ -200,17 +212,28 @@ module.exports = (server) => {
     // 방 나가기 클릭시,
     socket.on('exitRoom', async (data) => {
       let roomID = userToRoom[data.from_id];
+      let myName = emailToSocket[socketToEmail[data.from_id]]?.userName;
+      emailToSocket[socketToEmail[data.from_id]]
+        ? (emailToSocket[socketToEmail[data.from_id]].userID = '')
+        : false;
       // let userlistinRoom = await io.in(roomID).fetchSockets();
       // console.log('userlistinRoom:', userlistinRoom);
-      io.to(roomID).emit('notice', {
-        msg: `${socket.id}님이 방을 나갔습니다.`,
-        roomToUser: roomToUser[roomID],
-      });
+
       roomToUser[roomID]?.length > 1
         ? (roomToUser[roomID] = roomToUser[roomID].filter(
             (e) => e !== data.from_id
           ))
         : delete roomToUser[data.from_id];
+
+      delete socketToEmail[socket.id];
+
+      io.to(roomID).emit('notice', {
+        msg: `${myName}님이 방을 나갔습니다.`,
+        roomToUser: roomToUser[roomID] || false,
+        socketToEmail: socketToEmail,
+        emailToSocket: emailToSocket,
+      });
+
       socket.leave(roomID);
       delete userToRoom[data.from_id];
     });
@@ -452,23 +475,28 @@ module.exports = (server) => {
 
     socket.on('disconnect', () => {
       let roomID = userToRoom[socket.id];
-      let email = socketToEmail[socket.id];
-      delete emailToSocket[email];
+      let myEmail = socketToEmail[socket.id];
+      let myName = emailToSocket[myEmail]?.userName;
+      emailToSocket[myEmail] ? (emailToSocket[myEmail].userID = '') : false;
       delete socketToEmail[socket.id];
-      console.log('emailToSocket[email]: ', emailToSocket[email]);
+      console.log('emailToSocket: ', emailToSocket);
       console.log('socketToEmail: ', socketToEmail);
       checkReady[roomID] -= 1;
 
-      io.to(roomID).emit('notice', {
-        msg: `${socket.id}님이 방을 나갔습니다.`,
-        roomToUser: roomToUser[roomID],
-      });
       roomToUser[roomID]?.length > 1
         ? (roomToUser[roomID] = roomToUser[roomID].filter(
             (e) => e !== socket.id
           ))
         : delete roomToUser[socket.id];
-      console.log('User Disconnected :' + socket.id);
+
+      io.to(roomID).emit('notice', {
+        msg: `${myName}님이 방을 나갔습니다.`,
+        roomToUser: roomToUser[roomID] || false,
+        socketToEmail: socketToEmail,
+        emailToSocket: emailToSocket,
+      });
+
+      console.log(`User Disconnected : ${socket.id}(${myName})`);
       // console.log('check:', userToRoom[socket.id]?.slice(0, -2));
       socket.leave(roomID);
       delete userToRoom[socket.id];
