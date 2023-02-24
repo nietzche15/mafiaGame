@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { socket } from '../../utils/socket';
-import Message from '../gamepage/Message';
+// import Message from '../gamepage/Message';
 import { useDispatch, useSelector } from 'react-redux';
 import GlobalStyle from '../common/GlobalStyle';
 import { Cookies } from 'react-cookie';
@@ -53,8 +53,8 @@ export default function LobbyChat() {
     });
   }, []);
 
-  const sendLobbyChat = (event) => {
-    event.preventDefault();
+  const sendLobbyChat = () => {
+    // event.preventDefault();
     console.log('chat input: ', value);
     socket.emit('sendLBChat', {
       from_id: socket.id,
@@ -65,9 +65,9 @@ export default function LobbyChat() {
     setValue('');
   };
 
-  // const enterLobbyChat = (e) => {
-  //   if (e.key === 'Enter') sendLobbyChat();
-  // };
+  const enterLobbyChat = (e) => {
+    if (e.key === 'Enter') sendLobbyChat();
+  };
 
   return (
     <>
@@ -99,7 +99,7 @@ export default function LobbyChat() {
               backgroundColor: '#D9D9D9',
               borderRadius: '5px',
             }}
-            // onKeyDown={enterLobbyChat}
+            onKeyDown={enterLobbyChat}
             onChange={handleChange}
           />
           <Button
